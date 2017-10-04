@@ -32,6 +32,21 @@ ros::NodeHandle nh;
 #define motor_D_EN 11
 
 
+
+double xSetpoint = 160;
+double ySetpoint = 120;
+
+double xInput, xOutput;
+double yInput, yOutput;
+double ki = 5;
+double kp = 2;
+double kd = 1;
+
+
+PID xPID(&xInput, &xOutput, &xSetpoint, ki, kp, kd, DIRECT);
+PID yPID(&yInput, &yOutput, &ySetpoint, ki, kp, kd, DIRECT);
+
+
 //Variables to hold coordinates for end effector
 float x, y, z;
 
@@ -40,13 +55,23 @@ void messageCb( const geometry_msgs::Point& data){
   x = data.x;
   y = data.y;
   z = data.z;
+  
+  xInput = x;
+  yInput = y;
 }
 
 //Create subscriber to coordinate_sender topic
 ros::Subscriber<geometry_msgs::Point> coordinate_subscriber("coordinate_sender", &messageCb);
 
 void setup () {
+  
   motorSetup();
+  xInput = x;
+  yInput = y;
+  
+  //Turn on PID
+  xPID.SetMode(AUTOMATIC);
+  yPID.SetMode(AUTOMATIC);
   
   //Initialize node handler
   nh.initNode();
@@ -58,7 +83,10 @@ void setup () {
 void loop () {
   
   
-  motorController(x, y);
+  xPID.Compute(false);
+  yPID.Compute(false);
+  
+  motorController(xOutput, yOutput);
   //Do ROS stuff once per main loop
   nh.spinOnce();
   
@@ -69,7 +97,8 @@ void motorController(int x, int y){
   
   //assuming point x will be between 0 and 320 & point y between 0 and 240
   if (x < 160){
-      direction_left();  
+      set_direction_left();  
+  }
 }
 
 void motorSetup(){
