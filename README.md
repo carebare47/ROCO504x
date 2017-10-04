@@ -9,4 +9,6 @@ Once ROS Indigo is installed, set up your catkin workspace: http://wiki.ros.org/
 Clone this repository to catkin_ws/src
 Then, from catkin_ws type catkin_make
 
+TODO:
 
+Break this repo down into repos for each node
