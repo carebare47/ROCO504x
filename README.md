@@ -12,3 +12,4 @@ Then, from catkin_ws type catkin_make
 TODO:
 
 Break this repo down into repos for each node
+Discuss / add license information
