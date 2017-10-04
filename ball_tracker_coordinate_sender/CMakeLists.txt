@@ -10,7 +10,6 @@ project(ball_tracker_coordinate_sender)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
-  rosserial
   std_msgs
 )
 
@@ -106,7 +105,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES ball_tracker_coordinate_sender
-#  CATKIN_DEPENDS roscpp rospy rosserial std_msgs
+#  CATKIN_DEPENDS roscpp rospy std_msgs
 #  DEPENDS system_lib
 )
 
