@@ -43,6 +43,7 @@ void calcBackProject(Mat &src, Mat* hist, Mat &dst);
 void getObjParams(Mat &srcBGR, Mat &srcHSV, vector<objParams> &objects, float stdDevs);
 Rect getSubImageRoi(Mat &src, float percent);
 void shiftHue(Mat &src, Mat &dst);
+void getColourMask(Mat &src, Mat &mask, objParams params, bool isBGR);
 
 //////////////////////
 // Global Constants //
@@ -67,13 +68,14 @@ int main()
     ///////////////
     // Variables //
     ///////////////
-    Mat input[2];
+    Mat input[2], mask[2];
+    vector<objParams> objects;
+    Moments moment;
+
     LARGE_INTEGER q1,q2,freqq;
     double fps = 0.0;
     double beta = 0.1;
     int var[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    char state = ' ';
-    vector<objParams> objects;
 
     ////////////////////
     // Initialisation //
@@ -114,16 +116,34 @@ int main()
 
         // User pressed 'c' for 'capture'
         case 'c':
-            getObjParams(input[0], input[2], objects, 2.0);
-            state = 'c';
+//            getObjParams(input[0], input[2], objects, 2.0);
             break;
 
         // For all other use cases, change nothing
         default:
             break;
         }
+
+        // Detect all objects, show only the selected's mask
+        var[6] = 0;
+        for(objParams object : objects)
+        {
+            // Get the BGR & HSV masks separately (for possible viewing later)
+            getColourMask(input[0], mask[0], object, true);
+            getColourMask(input[1], mask[1], object, false);
+
+            // Merge the results
+            bitwise_or(mask[0], mask[1], mask[0]);
+
+            // Get the center of mass of any objects in the mask
+            moment = moments(mask[0]);
+            cout << var[6] << " x:y = " <<
+                    moment.m10/moment.m00 << ":" <<
+                    moment.m01/moment.m00 << endl;
+        }
     }
 
+/// Immediate exit point from code
 end:
 }
 
@@ -131,6 +151,7 @@ end:
 // CUSTOM FUNCTIONS //###################################################################
 //////////////////////###################################################################
 
+// Mass Algorithm Functions
 void shadeReduction(Mat &src, Mat &dst, float range, float mult)
 {
     int ch = src.channels();
@@ -212,6 +233,7 @@ void calcBackProject(Mat &src, Mat* hist, Mat &dst)
     src = src.reshape(0, rows);
 }
 
+// Colour Description
 void getObjParams(Mat &srcBGR, Mat &srcHSV, vector<objParams> &objects, float stdDevs)
 {
     assert(srcBGR.size == srcHSV.size &&
@@ -292,8 +314,33 @@ void shiftHue(Mat &src, Mat &dst)
     dst = dst.reshape(0, rows);
 }
 
+// Colour Tracker
+void getColourMask(Mat &src, Mat &mask, objParams params, bool isBGR)
+{
+    // Initialise
+    minMaxPair limits;
+    Mat splinter3[3];
+    split(src, splinter3);
+    if((isBGR == true) && (params.shiftHue == true))
+    {shiftHue(splinter3[0], splinter3[0]);}
 
+    // Threshold everything
+    for(int i = 0; i < 3; i++)
+    {
+        // Get channel parameters
+        if(isBGR == true)
+        {limits = params.BGR[i];}
+        else
+        {limits = params.HSV[i];}
 
+        // Extract channel mask
+        inRange(splinter3[i], limits.min, limits.max, splinter3[i]);
+    }
+
+    // Bitwise AND the channels together to generate the resultant mask
+    bitwise_and(splinter3[0], splinter3[1], mask);
+    bitwise_and(splinter3[2], mask, mask);
+}
 
 
 
