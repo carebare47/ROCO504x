@@ -1,4 +1,4 @@
-#include <windows.h>
+#include <windows.h>    /// @todo remove - only dependency for it is the fps counter
 #include <cmath>
 #include <iostream>
 #include <opencv2/core.hpp>
@@ -8,14 +8,45 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/opencv_modules.hpp>
 
+////////////////
+// Namespaces //
+////////////////
 using namespace std;
 using namespace cv;
 
+/////////////
+// Structs //
+/////////////
+struct minMaxPair
+{
+    int min;
+    int max;
+};
+struct objParams
+{
+   minMaxPair BGR[3];
+   minMaxPair HSV[3];
+   bool shiftHue;
+};
+
+//////////////////////
+// Custom functions //
+//////////////////////
+
+// Originally for mass increase algorithm
 void shadeReduction(Mat &src, Mat &dst, float range, float mult);
-void getImage(cv::VideoCapture &cap, cv::Mat &frame, uint shrink = 1);
+void getImage(cv::VideoCapture &cap, cv::Mat &frameBGR, Mat &frameHSV, uint shrink = 1);
 Mat calcHist(Mat &src, int channel);
 void calcBackProject(Mat &src, Mat* hist, Mat &dst);
 
+// Originally for colour detection algorithm
+void getObjParams(Mat &srcBGR, Mat &srcHSV, vector<objParams> &objects, float stdDevs);
+Rect getSubImageRoi(Mat &src, float percent);
+void shiftHue(Mat &src, Mat &dst);
+
+//////////////////////
+// Global Constants //
+//////////////////////
 const int imShrink = 2;
 const int histSize = 256;
 const int histReduce = 256 / histSize;
@@ -33,38 +64,28 @@ int main()
 //    if(!maskVideo.isOpened())   // check if we succeeded
 //    {return -1;}
 
-    // Other Variables
-    Mat input, expAvg, motion, incMass, splinter[3];
-    Mat hist[3], histPrev[3], histVelo[3], histThr[3];
+    ///////////////
+    // Variables //
+    ///////////////
+    Mat input[2];
     LARGE_INTEGER q1,q2,freqq;
     double fps = 0.0;
     double beta = 0.1;
-    int var[] = {74, 50, 2, 50, 10, 7, 75, 40, 0, 0, 0};
+    int var[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    char state = ' ';
+    vector<objParams> objects;
 
-    // Initialise
-    getImage(cap, input, imShrink);
-    input.copyTo(expAvg);
-    input.copyTo(incMass);
-    for(int i = 0; i < 3; i++)
-    {
-        hist[i] = Mat::zeros(1,histSize,CV_32F);
-        histPrev[i] = Mat::zeros(1,histSize,CV_32F);
-        histVelo[i] = Mat::zeros(1,histSize,CV_32F);
-        splinter[i] = Mat::zeros(input.rows, input.cols, CV_8UC1);
-    }
-
-    imshow("frame", input);
-    createTrackbar("rng", "frame", &var[0], 100);
-    createTrackbar("mul", "frame", &var[1], 100);
-    createTrackbar("blr", "frame", &var[2], 20);
-    createTrackbar("avg", "frame", &var[3], 100);
-    createTrackbar("thr", "frame", &var[4], 255);
-    createTrackbar("hst", "frame", &var[5], 100);
-    createTrackbar("vhs", "frame", &var[6], 100);
-    createTrackbar("vel", "frame", &var[7], 100);
-
-    // Start Main Code
+    ////////////////////
+    // Initialisation //
+    ////////////////////
     QueryPerformanceCounter(&q1);
+    getImage(cap, input[0], input[1], imShrink);
+    imshow("frame", input[0]);
+    createTrackbar("name", "result", &var[0], 255);
+
+    /////////////////////
+    // Start Main Code //
+    /////////////////////
     for(;;)
     {
         // Get FPS
@@ -78,54 +99,37 @@ int main()
         // ###################################################################################
         // Main code #########################################################################
         // ###################################################################################
-        getImage(cap, input, imShrink);
-        cvtColor(input, input, CV_BGR2HLS);
-//        imshow("ori", input);
 
-        // Normalise the image
-        medianBlur(input, input, var[2]*2+1);
-//        shadeReduction(input, input, double(var[0]), double(var[1]/10.0));
-        medianBlur(input, input, var[2]*2+1);
-        imshow("frame", input);
+        // Get the next image frame
+        getImage(cap, input[0], input[1], imShrink);
+        imshow("frame", input[0]);
 
-        // Apply moving average to remember motion, compare with current frame to get motion
-        expAvg = (1.0-var[3]/100.0) * expAvg + (var[3]/100.0) * input;
-//        absdiff(input, expAvg, motion);
-
-        // Threshold to give a binary image of areas of motion
-//        cvtColor(motion, motion, CV_BGR2GRAY);
-//        threshold(motion, motion, var[4], 255, THRESH_BINARY);
-//        imshow("motion", motion);
-
-        // Obtain a histogram for each colour channel of the original image
-        for(int i = 0; i < 3; i++)
+        // Select action based on the users input
+        switch (waitKey(1))
         {
-            // Get the histogram
-            hist[i] = calcHist(expAvg, i);
-            // Get the smoothed rate of change of "mass"
-            histVelo[i] = (1.0-var[6]/100.0) * histVelo[i] + (var[6]/100.0) * (hist[i] - histPrev[i]);
-            // Get a smoothed prior to compare with
-            histPrev[i] = (1.0-var[7]/100.0) * histPrev[i] + (var[7]/100.0) * hist[i];
-            // Threshold the rate of change of mass to remove -ve values
-            threshold(histVelo[i], histThr[i], 10*var[5], 255, THRESH_TOZERO);
-//            cout << i << ": " << histThr[i] << endl;
+        // User pressed 'q' for 'quit'
+        case 'q':
+            goto end;
+            break;
+
+        // User pressed 'c' for 'capture'
+        case 'c':
+            getObjParams(input[0], input[2], objects, 2.0);
+            state = 'c';
+            break;
+
+        // For all other use cases, change nothing
+        default:
+            break;
         }
-
-        // Project the histogram findings backwards
-        calcBackProject(input, histThr, incMass);
-        imshow("incMass", incMass);
-
-        // Merge the binary images
-//        bitwise_and(incMass, motion, input);
-//        imshow("mask", input);
-
-        cout << "count: " << countNonZero(incMass) << "\t";
-
-        char quit = waitKey(1);
-        if(quit == 'q')
-        {break;}
     }
+
+end:
 }
+
+//////////////////////###################################################################
+// CUSTOM FUNCTIONS //###################################################################
+//////////////////////###################################################################
 
 void shadeReduction(Mat &src, Mat &dst, float range, float mult)
 {
@@ -147,10 +151,12 @@ void shadeReduction(Mat &src, Mat &dst, float range, float mult)
     temp.convertTo(dst, CV_8UC(ch));
 }
 
-void getImage(cv::VideoCapture &cap, cv::Mat &frame, uint shrink)
+void getImage(cv::VideoCapture &cap, cv::Mat &frameBGR, cv::Mat &frameHSV, uint shrink)
 {
+    Mat frame;
     cap >> frame;
-    resize(frame, frame, Size(frame.cols/shrink, frame.rows/shrink));
+    resize(frame, frameBGR, Size(frame.cols/shrink, frame.rows/shrink));
+    cvtColor(frameBGR, frameHSV, CV_BGR2HSV);
 }
 
 Mat calcHist(Mat &src, int channel)
@@ -205,6 +211,100 @@ void calcBackProject(Mat &src, Mat* hist, Mat &dst)
     dst = dst.reshape(0, rows);
     src = src.reshape(0, rows);
 }
+
+void getObjParams(Mat &srcBGR, Mat &srcHSV, vector<objParams> &objects, float stdDevs)
+{
+    assert(srcBGR.size == srcHSV.size &&
+           srcBGR.channels() == srcHSV.channels());
+
+    // Variables
+    objParams newObj;
+    Mat miniImg, splinter3[3], splinter7[7], mean, stdDev;
+    Rect roi = getSubImageRoi(srcBGR, 0.8);
+
+    // Split each image into separate channels
+    // BGR image
+    split(srcBGR(roi), splinter3);
+    for(int i = 0; i < 3; i++)
+    {splinter3[i].copyTo(splinter7[i]);}
+
+    // HSV image
+    split(srcHSV(roi), splinter3);
+    for(int i = 0; i < 3; i++)
+    {splinter3[i].copyTo(splinter7[i+4]);}
+
+    // Shifted hue channel
+    shiftHue(splinter3[0], splinter7[3]);
+
+    // Merge all channels into a single image, and get some statistics
+    cv::merge(splinter7, 7, miniImg);
+    meanStdDev(miniImg, mean, stdDev);
+
+
+    // For each channels stats, find the most appropriate min and max values
+    for(int i = 0; i < 3; i++)
+    {
+        // BGR
+        newObj.BGR[i].min = int(mean[i] - stdDev[i] * stdDevs);
+        newObj.BGR[i].max = int(mean[i] + stdDev[i] * stdDevs);
+
+        // HSV - selecting the more optimal hue variant
+        newObj.shiftHue = false;
+        if((i == 0) && (stdDev[3] < stdDev[4]))
+        {
+            newObj.HSV[i].min = int(mean[3] - stdDev[3] * stdDevs);
+            newObj.HSV[i].max = int(mean[3] + stdDev[3] * stdDevs);
+            newObj.shiftHue = true;
+        }
+        else
+        {
+            newObj.HSV[i].min = int(mean[i+4] - stdDev[i+4] * stdDevs);
+            newObj.HSV[i].max = int(mean[i+4] + stdDev[i+4] * stdDevs);
+        }
+    }
+
+    // Add the newly created object to the vector list
+    objects.push_back(newObj);
+}
+
+Rect getSubImageRoi(Mat &src, float percent)
+{
+    int rows = src.rows*percent;
+    int cols = src.cols*percent;
+    Rect roi = Rect( (src.cols-cols)/2, (src.rows-rows)/2, cols, rows );
+    return roi;
+}
+
+void shiftHue(Mat &src, Mat &dst)
+{
+    assert(src.channels() == 1);
+
+    // Setup
+    int rows = src.rows;
+    dst = src.reshape(0, 1);
+    uchar* dp = dst.ptr<uchar>(0);
+
+    // Begin the conversion
+    for (int i = 0; i < dst.cols; i++)
+    {dp[i] = (dp[i] < 90) ? dp[i]+90 : dp[i]-90;}
+
+    // Return output back to the original dimensions
+    dst = dst.reshape(0, rows);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
