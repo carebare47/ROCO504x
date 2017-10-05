@@ -83,7 +83,13 @@ int main()
     QueryPerformanceCounter(&q1);
     getImage(cap, input[0], input[1], imShrink);
     imshow("frame", input[0]);
-    createTrackbar("name", "result", &var[0], 255);
+    createTrackbar("bm", "frame", &var[0], 255);
+    createTrackbar("bM", "frame", &var[1], 255);
+    createTrackbar("gm", "frame", &var[2], 255);
+    createTrackbar("gM", "frame", &var[3], 255);
+    createTrackbar("rm", "frame", &var[4], 255);
+    createTrackbar("rM", "frame", &var[5], 255);
+    createTrackbar("h?", "frame", &var[7], 1);
 
     /////////////////////
     // Start Main Code //
@@ -116,7 +122,35 @@ int main()
 
         // User pressed 'c' for 'capture'
         case 'c':
-//            getObjParams(input[0], input[2], objects, 2.0);
+            getObjParams(input[0], input[1], objects, 1.5);
+            break;
+
+        // User pressed 'u' for 'update'
+        case 'u':
+            if(objects.size() < 1)
+            {
+                objParams temp;
+                for(int i = 0; i < 3; i++)
+                {
+                    temp.BGR[i].min=0;
+                    temp.BGR[i].max=255;
+                    temp.HSV[i].max=0;
+                    temp.HSV[i].max=255;
+                    temp.shiftHue = false;
+                }
+                objects.push_back(temp);
+            }
+
+            if(var[7] == 0)
+            {
+                for(int i = 0; i < 3; i++)
+                {objects[0].BGR[i].min=var[2*i]; objects[0].BGR[i].max=var[2*i+1];}
+            }
+            else
+            {
+                for(int i = 0; i < 3; i++)
+                {objects[0].HSV[i].min=var[2*i]; objects[0].HSV[i].max=var[2*i+1];}
+            }
             break;
 
         // For all other use cases, change nothing
@@ -132,19 +166,27 @@ int main()
             getColourMask(input[0], mask[0], object, true);
             getColourMask(input[1], mask[1], object, false);
 
+            imshow("bgr", mask[0]);
+            imshow("hsv", mask[1]);
+
             // Merge the results
             bitwise_or(mask[0], mask[1], mask[0]);
+            input[1] = Mat::zeros(input[1].rows, input[1].cols, input[1].type());
+            input[0].copyTo(input[1], mask[0]);
+            imshow("all", input[1]);
 
             // Get the center of mass of any objects in the mask
             moment = moments(mask[0]);
             cout << var[6] << " x:y = " <<
                     moment.m10/moment.m00 << ":" <<
                     moment.m01/moment.m00 << endl;
+            var[6]++;
+            /// @todo link to rest of system
         }
     }
 
 /// Immediate exit point from code
-end:
+end: ;
 }
 
 //////////////////////###################################################################
@@ -242,7 +284,7 @@ void getObjParams(Mat &srcBGR, Mat &srcHSV, vector<objParams> &objects, float st
     // Variables
     objParams newObj;
     Mat miniImg, splinter3[3], splinter7[7], mean, stdDev;
-    Rect roi = getSubImageRoi(srcBGR, 0.8);
+    Rect roi = getSubImageRoi(srcBGR, 1.0);
 
     // Split each image into separate channels
     // BGR image
@@ -262,30 +304,30 @@ void getObjParams(Mat &srcBGR, Mat &srcHSV, vector<objParams> &objects, float st
     cv::merge(splinter7, 7, miniImg);
     meanStdDev(miniImg, mean, stdDev);
 
-
     // For each channels stats, find the most appropriate min and max values
     for(int i = 0; i < 3; i++)
     {
         // BGR
-        newObj.BGR[i].min = int(mean[i] - stdDev[i] * stdDevs);
-        newObj.BGR[i].max = int(mean[i] + stdDev[i] * stdDevs);
+        newObj.BGR[i].min = int(mean.at<uchar>(i) - stdDev.at<uchar>(i) * stdDevs);
+        newObj.BGR[i].max = int(mean.at<uchar>(i) + stdDev.at<uchar>(i) * stdDevs);
 
         // HSV - selecting the more optimal hue variant
         newObj.shiftHue = false;
-        if((i == 0) && (stdDev[3] < stdDev[4]))
+        if((i == 0) && (stdDev.at<uchar>(3) < stdDev.at<uchar>(4)))
         {
-            newObj.HSV[i].min = int(mean[3] - stdDev[3] * stdDevs);
-            newObj.HSV[i].max = int(mean[3] + stdDev[3] * stdDevs);
+            newObj.HSV[i].min = int(mean.at<uchar>(3) - stdDev.at<uchar>(3) * stdDevs);
+            newObj.HSV[i].max = int(mean.at<uchar>(3) + stdDev.at<uchar>(3) * stdDevs);
             newObj.shiftHue = true;
         }
         else
         {
-            newObj.HSV[i].min = int(mean[i+4] - stdDev[i+4] * stdDevs);
-            newObj.HSV[i].max = int(mean[i+4] + stdDev[i+4] * stdDevs);
+            newObj.HSV[i].min = int(mean.at<uchar>(i+4) - stdDev.at<uchar>(i+4) * stdDevs);
+            newObj.HSV[i].max = int(mean.at<uchar>(i+4) + stdDev.at<uchar>(i+4) * stdDevs);
         }
     }
 
     // Add the newly created object to the vector list
+    objects.clear();
     objects.push_back(newObj);
 }
 
@@ -319,7 +361,7 @@ void getColourMask(Mat &src, Mat &mask, objParams params, bool isBGR)
 {
     // Initialise
     minMaxPair limits;
-    Mat splinter3[3];
+    Mat splinter3[3], temp;
     split(src, splinter3);
     if((isBGR == true) && (params.shiftHue == true))
     {shiftHue(splinter3[0], splinter3[0]);}
@@ -340,6 +382,12 @@ void getColourMask(Mat &src, Mat &mask, objParams params, bool isBGR)
     // Bitwise AND the channels together to generate the resultant mask
     bitwise_and(splinter3[0], splinter3[1], mask);
     bitwise_and(splinter3[2], mask, mask);
+
+    cv::merge(splinter3, 3, temp);
+    if(isBGR == true)
+    {imshow("BGR_Mask", temp);}
+    else
+    {imshow("HSV_Mask", temp);}
 }
 
 
