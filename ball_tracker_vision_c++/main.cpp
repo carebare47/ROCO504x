@@ -216,14 +216,14 @@ void calcXYImgs(int rows, int cols, Mat &x, Mat &y)
     // For each row
     for(int i = 0; i < rows; i++)
     {
-        int* xp = x.ptr<int>(i);
-        int* yp = y.ptr<int>(i);
+        float* xp = x.ptr<float>(i);
+        float* yp = y.ptr<float>(i);
 
         // For each column
         for(int j = 0; j < cols; j++)
         {
-            xp[j] = j;  // Make an image where the intensity equals the x-coord
-            yp[j] = i;  // Make an image where the intensity equals the y-coord
+            xp[j] = float(j);  // Make an image where the intensity equals the x-coord
+            yp[j] = float(i);  // Make an image where the intensity equals the y-coord
         }
     }
 }
@@ -263,6 +263,12 @@ void calcFieldOfExpansion(Mat &posX, Mat &posY, Mat &velX, Mat &velY, Mat &foe)
     A = A.t() * A;
     foe = A.inv() * b;
     foe = foe.t();
+
+    // Convert all input images back to their original dimensions
+    posX = posX.reshape(0, rows);
+    posY = posY.reshape(0, rows);
+    velX = velX.reshape(0, rows);
+    velY = velY.reshape(0, rows);
 }
 
 
