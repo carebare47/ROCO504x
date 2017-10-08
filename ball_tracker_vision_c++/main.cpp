@@ -17,9 +17,14 @@ using namespace cv;
 //////////////////////
 // Custom functions //
 //////////////////////
+// Original Functions
 void shadeReduction(Mat &src, Mat &dst, float range, float mult);
 void getImage(cv::VideoCapture &cap, cv::Mat &frame, uint shrink = 1);
 Mat calcHist(Mat &src, int channel);
+
+// New Functions
+void calcXYImgs(int rows, int cols, Mat &x, Mat &y);
+void calcFieldOfExpansion(Mat &posX, Mat &posY, Mat &velX, Mat &velY, Mat &foe);
 
 //////////////////////
 // Global Constants //
@@ -43,6 +48,7 @@ int main()
     // Variables //
     ///////////////
     Mat input, expAvg, flow, splinter2[2], splinter3[3], output;
+    Mat posX, posY, foe;
     LARGE_INTEGER q1,q2,freqq;
     double fps = 0.0;
     double beta = 0.1;
@@ -51,9 +57,15 @@ int main()
     ////////////////////
     // Initialisation //
     ////////////////////
+    // FPS
     QueryPerformanceCounter(&q1);
+
+    // Initialise images
     getImage(cap, input, imShrink);
     input.copyTo(expAvg);
+    calcXYImgs(input.rows, input.cols, posX, posY);
+
+    // Initialise windows
     imshow("frame", input);
 //    createTrackbar("_rng", "frame", &var[0], 100);
 //    createTrackbar("_mul", "frame", &var[1], 100);
@@ -89,18 +101,42 @@ int main()
         // Get the optical flow between the previous image and the current image
         calcOpticalFlowFarneback(expAvg, input, flow, 0.5, var[4]+1,
                                 var[5]*2+1, var[6]+1, 5, 1.2, OPTFLOW_FARNEBACK_GAUSSIAN );
-
-//        // Convert to a BGR CV_8U style image
         split(flow, splinter2);
-        for(int i = 0; i < 2; i++)
-        {
-            splinter2[i] *= 255;
-            splinter2[i].convertTo(splinter3[i], CV_8UC1);
-        }
-        splinter3[2] = Mat::zeros(input.rows, input.cols, CV_8UC1);
-//        splinter3[2] += 255;
-        cv::merge(splinter3, 3, output);
-        imshow("opticalFlow", output);
+        calcFieldOfExpansion(posX, posY, splinter2[0], splinter2[1], foe);
+        cout << foe << endl;
+
+
+
+
+
+
+
+
+
+//        for(int i = 0; i < 2; i++)
+//        {
+//            splinter2[i] *= 255;
+//            splinter2[i].convertTo(splinter3[i], CV_8UC1);
+//        }
+//        splinter3[2] = Mat::zeros(input.rows, input.cols, CV_8UC1);
+////        splinter3[2] += 255;
+//        cv::merge(splinter3, 3, output);
+//        imshow("opticalFlow", output);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         // Apply moving average to remember motion
         expAvg = (1.0-var[3]/100.0) * expAvg + (var[3]/100.0) * input;
@@ -172,9 +208,62 @@ Mat calcHist(Mat &src, int channel)
     return hist.t();
 }
 
+void calcXYImgs(int rows, int cols, Mat &x, Mat &y)
+{
+    x = Mat::zeros(rows, cols, CV_32FC1);
+    y = Mat::zeros(rows, cols, CV_32FC1);
 
+    // For each row
+    for(int i = 0; i < rows; i++)
+    {
+        int* xp = x.ptr<int>(i);
+        int* yp = y.ptr<int>(i);
 
+        // For each column
+        for(int j = 0; j < cols; j++)
+        {
+            xp[j] = j;  // Make an image where the intensity equals the x-coord
+            yp[j] = i;  // Make an image where the intensity equals the y-coord
+        }
+    }
+}
 
+void calcFieldOfExpansion(Mat &posX, Mat &posY, Mat &velX, Mat &velY, Mat &foe)
+{
+    // Assume all sizes & types are identical, & all are single channeled
+    int rows = posX.rows;
+    int cols = posX.cols;
+
+    // A = [Vy(:) -Vx(:)];
+    // b = posX(:).*Vy(:)-posY(:).*Vx(:);
+    // FOE_meas = (A'*A)\A'*b;
+    // FOE = FOE_meas';
+
+    // Convert all input images to vectors
+    posX = posX.reshape(0, rows*cols);
+    posY = posY.reshape(0, rows*cols);
+    velX = velX.reshape(0, rows*cols);
+    velY = velY.reshape(0, rows*cols);
+
+    // Create a matrix containing both velocity vectors
+    // A = [Vy(:) -Vx(:)];
+    Mat A(rows*cols, 2, CV_32FC1);
+    Mat left(A, Rect(0, 0, 1, A.rows));
+    Mat right(A, Rect(1, 0, 1, A.rows));
+    velY.copyTo(left);
+    velX.copyTo(right);
+    right *= -1;
+
+    // b = posX(:).*Vy(:)-posY(:).*Vx(:);
+    Mat b = posX.mul(velY) - posY.mul(velX);
+
+    // FOE_meas = (A'*A)\A'*b;
+    // FOE = FOE_meas';
+    b = A.t() * b;
+    A = A.t() * A;
+    foe = A.inv() * b;
+    foe = foe.t();
+}
 
 
 
