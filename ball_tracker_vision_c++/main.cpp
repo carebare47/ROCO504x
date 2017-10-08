@@ -1,4 +1,4 @@
-//#include <windows.h>    /// @todo remove - only dependency for it is the fps counter
+#include <windows.h>    /// @todo remove - only dependency for it is the fps counter
 #include <cmath>
 #include <iostream>
 #include <opencv2/core.hpp>
@@ -43,15 +43,15 @@ int main()
     // Variables //
     ///////////////
     Mat input, expAvg, flow, splinter2[2], splinter3[3], output;
-//    LARGE_INTEGER q1,q2,freqq;
-//    double fps = 0.0;
-//    double beta = 0.1;
+    LARGE_INTEGER q1,q2,freqq;
+    double fps = 0.0;
+    double beta = 0.1;
     int var[] = {0, 0, 2, 100, 8, 1, 0, 0, 0, 0, 0};
 
     ////////////////////
     // Initialisation //
     ////////////////////
-//    QueryPerformanceCounter(&q1);
+    QueryPerformanceCounter(&q1);
     getImage(cap, input, imShrink);
     input.copyTo(expAvg);
     imshow("frame", input);
@@ -68,13 +68,13 @@ int main()
     /////////////////////
     for(;;)
     {
-//        // Get FPS
-//        QueryPerformanceCounter(&q2);
-//        QueryPerformanceFrequency( &freqq );
-//        fps = (1.0-beta)*fps + beta*(double)freqq.QuadPart/double(q2.QuadPart-q1.QuadPart);
-//        QueryPerformanceCounter(&q1);
-//        if(isfinite(fps) == false) {fps = 0.0;}
-//        cout << "fps: " << fps << endl;
+        // Get FPS
+        QueryPerformanceCounter(&q2);
+        QueryPerformanceFrequency( &freqq );
+        fps = (1.0-beta)*fps + beta*(double)freqq.QuadPart/double(q2.QuadPart-q1.QuadPart);
+        QueryPerformanceCounter(&q1);
+        if(isfinite(fps) == false) {fps = 0.0;}
+        cout << "fps: " << fps << endl;
 
         // ###################################################################################
         // Main code #########################################################################
