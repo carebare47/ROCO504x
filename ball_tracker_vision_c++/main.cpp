@@ -24,7 +24,8 @@ Mat calcHist(Mat &src, int channel);
 
 // New Functions
 void calcXYImgs(int rows, int cols, Mat &x, Mat &y);
-void calcFieldOfExpansion(Mat &posX, Mat &posY, Mat &velX, Mat &velY, Mat &foe);
+void calcFieldOfExpansion(Mat &posX, Mat &posY, Mat &velX, Mat &velY, Point2f &foe);
+void calcTimeToContact(Mat &velX, Mat &velY, Point2f &foe, Mat &ttc);
 
 //////////////////////
 // Global Constants //
@@ -48,7 +49,8 @@ int main()
     // Variables //
     ///////////////
     Mat input, expAvg, flow, splinter2[2], splinter3[3], output;
-    Mat posX, posY, foe;
+    Mat posX, posY, temp;
+//    Point2f foe;
     LARGE_INTEGER q1,q2,freqq;
     double fps = 0.0;
     double beta = 0.1;
@@ -102,26 +104,30 @@ int main()
         calcOpticalFlowFarneback(expAvg, input, flow, 0.5, var[4]+1,
                                 var[5]*2+1, var[6]+1, 5, 1.2, OPTFLOW_FARNEBACK_GAUSSIAN );
         split(flow, splinter2);
-        calcFieldOfExpansion(posX, posY, splinter2[0], splinter2[1], foe);
-        cout << foe << endl;
+//        calcFieldOfExpansion(posX, posY, splinter2[0], splinter2[1], foe);
+
+//        calcTimeToContact(splinter2[0], splinter2[1], foe, output);
+//        output /= 8;
 
 
 
 
+        absdiff(expAvg, input, temp);
+        threshold(temp, temp, 10, 255, CV_THRESH_BINARY);
+        temp.convertTo(temp, CV_8SC1);
+        temp /= -127;
 
-
-
-
-
-//        for(int i = 0; i < 2; i++)
-//        {
-//            splinter2[i] *= 255;
-//            splinter2[i].convertTo(splinter3[i], CV_8UC1);
-//        }
-//        splinter3[2] = Mat::zeros(input.rows, input.cols, CV_8UC1);
-////        splinter3[2] += 255;
-//        cv::merge(splinter3, 3, output);
-//        imshow("opticalFlow", output);
+        for(int i = 0; i < 2; i++)
+        {
+            splinter2[i] *= 8;
+//            splinter2[i] += 128;
+            splinter2[i].convertTo(splinter3[i], CV_8SC1);
+            bitwise_and(temp, splinter3[i], splinter3[i]);
+        }
+        splinter3[2] = Mat::zeros(input.rows, input.cols, CV_8SC1);
+//        splinter3[0] = 0;
+        cv::merge(splinter3, 3, output);
+        imshow("opticalFlow", output);
 
 
 
@@ -228,7 +234,7 @@ void calcXYImgs(int rows, int cols, Mat &x, Mat &y)
     }
 }
 
-void calcFieldOfExpansion(Mat &posX, Mat &posY, Mat &velX, Mat &velY, Mat &foe)
+void calcFieldOfExpansion(Mat &posX, Mat &posY, Mat &velX, Mat &velY, Point2f &foe)
 {
     // Assume all sizes & types are identical, & all are single channeled
     int rows = posX.rows;
@@ -261,8 +267,8 @@ void calcFieldOfExpansion(Mat &posX, Mat &posY, Mat &velX, Mat &velY, Mat &foe)
     // FOE = FOE_meas';
     b = A.t() * b;
     A = A.t() * A;
-    foe = A.inv() * b;
-    foe = foe.t();
+    Mat foeCalc = A.inv() * b;
+    foe = {foeCalc.at<float>(0), foeCalc.at<float>(1)};
 
     // Convert all input images back to their original dimensions
     posX = posX.reshape(0, rows);
@@ -271,7 +277,25 @@ void calcFieldOfExpansion(Mat &posX, Mat &posY, Mat &velX, Mat &velY, Mat &foe)
     velY = velY.reshape(0, rows);
 }
 
+void calcTimeToContact(Mat &velX, Mat &velY, Point2f &foe, Mat &ttc)
+{
+    ttc = Mat::zeros(velX.rows, velX.cols, velX.type());
 
+    // For each row
+    for(int i = 0; i < velX.rows; i++)
+    {
+        float* xp = velX.ptr<float>(i);
+        float* yp = velY.ptr<float>(i);
+        float* tp =  ttc.ptr<float>(i);
+
+        // For each column
+        for(int j = 0; j < velX.cols; j++)
+        {
+            tp[j] = sqrt( pow( j - foe.x, 2 ) + pow( i - foe.y, 2 ) ) /
+                    sqrt( pow( xp[j], 2 ) + pow( yp[j], 2 ) );
+        }
+    }
+}
 
 
 
