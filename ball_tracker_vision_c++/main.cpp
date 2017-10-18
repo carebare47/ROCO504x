@@ -1,4 +1,4 @@
-//#include <windows.h>    /// @todo remove - only dependency for it is the fps counter
+#include <windows.h>    /// @todo remove - only dependency for it is the fps counter
 #include <cmath>
 #include <iostream>
 #include <opencv2/core.hpp>
@@ -14,43 +14,24 @@
 using namespace std;
 using namespace cv;
 
-/////////////
-// Structs //
-/////////////
-struct minMaxPair
-{
-    int min;
-    int max;
-};
-struct objParams
-{
-   minMaxPair BGR[3];
-   minMaxPair HSV[3];
-   bool shiftHue;
-};
-
 //////////////////////
 // Custom functions //
 //////////////////////
-
-// Originally for mass increase algorithm
+// Original Functions
 void shadeReduction(Mat &src, Mat &dst, float range, float mult);
-void getImage(cv::VideoCapture &cap, cv::Mat &frameBGR, Mat &frameHSV, uint shrink = 1);
+void getImage(cv::VideoCapture &cap, cv::Mat &frame, uint shrink = 1);
 Mat calcHist(Mat &src, int channel);
-void calcBackProject(Mat &src, Mat* hist, Mat &dst);
 
-// Originally for colour detection algorithm
-void getObjParams(Mat &srcBGR, Mat &srcHSV, vector<objParams> &objects, float stdDevs);
-Rect getSubImageRoi(Mat &src, float percent);
-void shiftHue(Mat &src, Mat &dst);
-void getColourMask(Mat &src, Mat &mask, objParams params, bool isBGR);
+// New Functions
+void calcXYImgs(int rows, int cols, Mat &x, Mat &y);
+void calcFieldOfExpansion(Mat &posX, Mat &posY, Mat &velX, Mat &velY, Point2f &foe);
+void calcTimeToContact(Mat &velX, Mat &velY, Point2f &foe, Mat &ttc);
+void sumErrAlongRow(Mat &src, Mat &dst);
 
 //////////////////////
 // Global Constants //
 //////////////////////
 const int imShrink = 2;
-const int histSize = 256;
-const int histReduce = 256 / histSize;
 
 int main()
 {
@@ -59,58 +40,86 @@ int main()
     if(!cap.isOpened())   // check if we succeeded
     {return -1;}
 
-//    // Create Video Writer
-//    VideoWriter maskVideo("C:\\Users\\Student\\Desktop\\Experiment.avi",
-//                          -1, cap.get(CV_CAP_PROP_FPS), Size(w, h), false);
-//    if(!maskVideo.isOpened())   // check if we succeeded
-//    {return -1;}
-
     ///////////////
     // Variables //
     ///////////////
-    Mat input[2], mask[2];
-    vector<objParams> objects;
-    Moments moment;
+    Mat input;
+    vector<Mat> pyramid, prevPyramid, diffPyramid;
+    bool isFirstLoop = true;
 
-//    LARGE_INTEGER q1,q2,freqq;
-//    double fps = 0.0;
-//    double beta = 0.1;
-    int var[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    LARGE_INTEGER q1,q2,freqq;
+    double fps = 0.0;
+    double beta = 0.1;
+    int var[] = {5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
     ////////////////////
     // Initialisation //
     ////////////////////
-//    QueryPerformanceCounter(&q1);
-    getImage(cap, input[0], input[1], imShrink);
-    imshow("frame", input[0]);
-    createTrackbar("bm", "frame", &var[0], 255);
-    createTrackbar("bM", "frame", &var[1], 255);
-    createTrackbar("gm", "frame", &var[2], 255);
-    createTrackbar("gM", "frame", &var[3], 255);
-    createTrackbar("rm", "frame", &var[4], 255);
-    createTrackbar("rM", "frame", &var[5], 255);
-    createTrackbar("h?", "frame", &var[7], 1);
+    // FPS
+    QueryPerformanceCounter(&q1);
+
+    // Initialise images
+    getImage(cap, input, imShrink);
+
+    // Initialise windows
+    imshow("frame", input);
+    createTrackbar("gauss", "frame", &var[0], 10);
+    createTrackbar("imgID", "frame", &var[1], 7);
 
     /////////////////////
     // Start Main Code //
     /////////////////////
     for(;;)
     {
-//        // Get FPS
-//        QueryPerformanceCounter(&q2);
-//        QueryPerformanceFrequency( &freqq );
-//        fps = (1.0-beta)*fps + beta*(double)freqq.QuadPart/double(q2.QuadPart-q1.QuadPart);
-//        QueryPerformanceCounter(&q1);
-//        if(isfinite(fps) == false) {fps = 0.0;}
-//        cout << "fps: " << fps << endl;
+        // Get FPS
+        QueryPerformanceCounter(&q2);
+        QueryPerformanceFrequency( &freqq );
+        fps = (1.0-beta)*fps + beta*(double)freqq.QuadPart/double(q2.QuadPart-q1.QuadPart);
+        QueryPerformanceCounter(&q1);
+        if(isfinite(fps) == false) {fps = 0.0;}
+        cout << "fps: " << fps << endl;
 
         // ###################################################################################
         // Main code #########################################################################
         // ###################################################################################
 
-        // Get the next image frame
-        getImage(cap, input[0], input[1], imShrink);
-        imshow("frame", input[0]);
+        // Get the next image frame & normalise
+        getImage(cap, input, imShrink);
+        imshow("frame", input);
+
+        // Create the image pyramid
+        for(int i = 0; i < 7; i++)
+        {
+            pyramid.push_back(input);
+            resize(input, input, Size(input.cols/2, input.rows/2));
+        }
+        pyramid.push_back(input);
+
+        // Perform a difference of gaussians DoG
+        for(int i = 0; i < 8; i++)
+        {
+            GaussianBlur(pyramid[i], input, Size(var[0]*2+1, var[0]*2+1), 0);
+            absdiff(pyramid[i], input, pyramid[i]);
+            cvtColor(pyramid[i], pyramid[i], CV_BGR2GRAY);
+        }
+        imshow("DoG", pyramid[0]);
+
+        // Compare Different Scales
+        for(int i = 1; i < 8; i++)
+        {
+            resize(pyramid[i-1], input, Size(pyramid[i].cols, pyramid[i].rows));
+            pyramid[i-1] = input - pyramid[i];
+        }
+        imshow("Scale", pyramid[var[1]]);
+
+        // Compare with previous values
+        if(isFirstLoop == true)
+        {goto skipTimeAnalysis;}
+
+
+
+skipTimeAnalysis:
+
 
         // Select action based on the users input
         switch (waitKey(1))
@@ -120,69 +129,13 @@ int main()
             goto end;
             break;
 
-        // User pressed 'c' for 'capture'
-        case 'c':
-            getObjParams(input[0], input[1], objects, 1.5);
-            break;
-
-        // User pressed 'u' for 'update'
-        case 'u':
-            if(objects.size() < 1)
-            {
-                objParams temp;
-                for(int i = 0; i < 3; i++)
-                {
-                    temp.BGR[i].min=0;
-                    temp.BGR[i].max=255;
-                    temp.HSV[i].max=0;
-                    temp.HSV[i].max=255;
-                    temp.shiftHue = false;
-                }
-                objects.push_back(temp);
-            }
-
-            if(var[7] == 0)
-            {
-                for(int i = 0; i < 3; i++)
-                {objects[0].BGR[i].min=var[2*i]; objects[0].BGR[i].max=var[2*i+1];}
-            }
-            else
-            {
-                for(int i = 0; i < 3; i++)
-                {objects[0].HSV[i].min=var[2*i]; objects[0].HSV[i].max=var[2*i+1];}
-            }
-            break;
-
         // For all other use cases, change nothing
         default:
             break;
         }
 
-        // Detect all objects, show only the selected's mask
-        var[6] = 0;
-        for(objParams object : objects)
-        {
-            // Get the BGR & HSV masks separately (for possible viewing later)
-            getColourMask(input[0], mask[0], object, true);
-            getColourMask(input[1], mask[1], object, false);
-
-            imshow("bgr", mask[0]);
-            imshow("hsv", mask[1]);
-
-            // Merge the results
-            bitwise_or(mask[0], mask[1], mask[0]);
-            input[1] = Mat::zeros(input[1].rows, input[1].cols, input[1].type());
-            input[0].copyTo(input[1], mask[0]);
-            imshow("all", input[1]);
-
-            // Get the center of mass of any objects in the mask
-            moment = moments(mask[0]);
-            cout << var[6] << " x:y = " <<
-                    moment.m10/moment.m00 << ":" <<
-                    moment.m01/moment.m00 << endl;
-            var[6]++;
-            /// @todo link to rest of system
-        }
+        // Reset the vector
+        pyramid.clear();
     }
 
 /// Immediate exit point from code
@@ -192,8 +145,6 @@ end: ;
 //////////////////////###################################################################
 // CUSTOM FUNCTIONS //###################################################################
 //////////////////////###################################################################
-
-// Mass Algorithm Functions
 void shadeReduction(Mat &src, Mat &dst, float range, float mult)
 {
     int ch = src.channels();
@@ -214,12 +165,11 @@ void shadeReduction(Mat &src, Mat &dst, float range, float mult)
     temp.convertTo(dst, CV_8UC(ch));
 }
 
-void getImage(cv::VideoCapture &cap, cv::Mat &frameBGR, cv::Mat &frameHSV, uint shrink)
+void getImage(cv::VideoCapture &cap, cv::Mat &frame, uint shrink)
 {
-    Mat frame;
     cap >> frame;
-    resize(frame, frameBGR, Size(frame.cols/shrink, frame.rows/shrink));
-    cvtColor(frameBGR, frameHSV, CV_BGR2HSV);
+    resize(frame, frame, Size(frame.cols/shrink, frame.rows/shrink));
+//    cvtColor(frame, frame, CV_BGR2GRAY);
 }
 
 Mat calcHist(Mat &src, int channel)
@@ -228,7 +178,7 @@ Mat calcHist(Mat &src, int channel)
     static const int nDims = 1;
     static const int nImgs = 1;
     static const int channels[] = {channel};
-    static const int histSizes[] = {histSize};
+    static const int histSizes[] = {256};
     static const float range[] = { 0, 256 };// SET TO 256 FOR EXPECTED FUNCTIONALITY, size for thresholding effects
     static const float* ranges[] = { range };
 
@@ -240,162 +190,110 @@ Mat calcHist(Mat &src, int channel)
     return hist.t();
 }
 
-void calcBackProject(Mat &src, Mat* hist, Mat &dst)
+void calcXYImgs(int rows, int cols, Mat &x, Mat &y)
 {
-    // Remember image dimensions
-    int numCh = src.channels();
-    int rows = src.rows;
+    x = Mat::zeros(rows, cols, CV_32FC1);
+    y = Mat::zeros(rows, cols, CV_32FC1);
 
-    // Reshape into a row matrix
-    dst = Mat::zeros(1, src.rows*src.cols, CV_8U);
-//    dst += 255;
-    src = src.reshape(0, 1);
-
-    float* hp[] = {hist[0].ptr<float>(0), hist[1].ptr<float>(0), hist[2].ptr<float>(0)};
-    uchar* dp = dst.ptr<uchar>(0);
-    uchar* sp = src.ptr<uchar>(0);
-    int id = 0;
-
-    // Begin the back projection! (For each pixel)
-    for (int i = 0; i < dst.cols; i++)
+    // For each row
+    for(int i = 0; i < rows; i++)
     {
-        // For each channel
-        for (int j = 0; j < numCh; j++)
+        float* xp = x.ptr<float>(i);
+        float* yp = y.ptr<float>(i);
+
+        // For each column
+        for(int j = 0; j < cols; j++)
         {
-            if(j != 2){continue;}
-            // Get the pixel + channel id
-            id = i*numCh+j;
-            // Find respective histogram entry and provide binary output
-            dp[i] += (hp[j][sp[id]/histReduce] > 0.01) ? 85 : 0;
+            xp[j] = j;  // Make an image where the intensity equals the x-coord
+            yp[j] = i;  // Make an image where the intensity equals the y-coord
         }
     }
-
-    // Return output back to the original dimensions
-    dst = dst.reshape(0, rows);
-    src = src.reshape(0, rows);
 }
 
-// Colour Description
-void getObjParams(Mat &srcBGR, Mat &srcHSV, vector<objParams> &objects, float stdDevs)
+void calcFieldOfExpansion(Mat &posX, Mat &posY, Mat &velX, Mat &velY, Point2f &foe)
 {
-    assert(srcBGR.size == srcHSV.size &&
-           srcBGR.channels() == srcHSV.channels());
+    // Assume all sizes & types are identical, & all are single channeled
+    int rows = posX.rows;
+    int cols = posX.cols;
 
-    // Variables
-    objParams newObj;
-    Mat miniImg, splinter3[3], splinter7[7], mean, stdDev;
-    Rect roi = getSubImageRoi(srcBGR, 1.0);
+    // A = [Vy(:) -Vx(:)];
+    // b = posX(:).*Vy(:)-posY(:).*Vx(:);
+    // FOE_meas = (A'*A)\A'*b;
+    // FOE = FOE_meas';
 
-    // Split each image into separate channels
-    // BGR image
-    split(srcBGR(roi), splinter3);
-    for(int i = 0; i < 3; i++)
-    {splinter3[i].copyTo(splinter7[i]);}
+    // Convert all input images to vectors
+    posX = posX.reshape(0, rows*cols);
+    posY = posY.reshape(0, rows*cols);
+    velX = velX.reshape(0, rows*cols);
+    velY = velY.reshape(0, rows*cols);
 
-    // HSV image
-    split(srcHSV(roi), splinter3);
-    for(int i = 0; i < 3; i++)
-    {splinter3[i].copyTo(splinter7[i+4]);}
+    // Create a matrix containing both velocity vectors
+    // A = [Vy(:) -Vx(:)];
+    Mat A(rows*cols, 2, CV_32FC1);
+    Mat left(A, Rect(0, 0, 1, A.rows));
+    Mat right(A, Rect(1, 0, 1, A.rows));
+    velY.copyTo(left);
+    velX.copyTo(right);
+    right *= -1;
 
-    // Shifted hue channel
-    shiftHue(splinter3[0], splinter7[3]);
+    // b = posX(:).*Vy(:)-posY(:).*Vx(:);
+    Mat b = posX.mul(velY) - posY.mul(velX);
 
-    // Merge all channels into a single image, and get some statistics
-    cv::merge(splinter7, 7, miniImg);
-    meanStdDev(miniImg, mean, stdDev);
+    // FOE_meas = (A'*A)\A'*b;
+    // FOE = FOE_meas';
+    b = A.t() * b;
+    A = A.t() * A;
+    Mat foeCalc = A.inv() * b;
+    foe = {foeCalc.at<float>(0), foeCalc.at<float>(1)};
 
-    // For each channels stats, find the most appropriate min and max values
-    for(int i = 0; i < 3; i++)
+    // Convert all input images back to their original dimensions
+    posX = posX.reshape(0, rows);
+    posY = posY.reshape(0, rows);
+    velX = velX.reshape(0, rows);
+    velY = velY.reshape(0, rows);
+}
+
+void calcTimeToContact(Mat &velX, Mat &velY, Point2f &foe, Mat &ttc)
+{
+    ttc = Mat::zeros(velX.rows, velX.cols, velX.type());
+
+    // For each row
+    for(int i = 0; i < velX.rows; i++)
     {
-        // BGR
-        newObj.BGR[i].min = int(mean.at<uchar>(i) - stdDev.at<uchar>(i) * stdDevs);
-        newObj.BGR[i].max = int(mean.at<uchar>(i) + stdDev.at<uchar>(i) * stdDevs);
+        float* xp = velX.ptr<float>(i);
+        float* yp = velY.ptr<float>(i);
+        float* tp =  ttc.ptr<float>(i);
 
-        // HSV - selecting the more optimal hue variant
-        newObj.shiftHue = false;
-        if((i == 0) && (stdDev.at<uchar>(3) < stdDev.at<uchar>(4)))
+        // For each column
+        for(int j = 0; j < velX.cols; j++)
         {
-            newObj.HSV[i].min = int(mean.at<uchar>(3) - stdDev.at<uchar>(3) * stdDevs);
-            newObj.HSV[i].max = int(mean.at<uchar>(3) + stdDev.at<uchar>(3) * stdDevs);
-            newObj.shiftHue = true;
-        }
-        else
-        {
-            newObj.HSV[i].min = int(mean.at<uchar>(i+4) - stdDev.at<uchar>(i+4) * stdDevs);
-            newObj.HSV[i].max = int(mean.at<uchar>(i+4) + stdDev.at<uchar>(i+4) * stdDevs);
+            tp[j] = sqrt( pow( j - foe.x, 2 ) + pow( i - foe.y, 2 ) ) /
+                    sqrt( pow( xp[j], 2 ) + pow( yp[j], 2 ) );
         }
     }
-
-    // Add the newly created object to the vector list
-    objects.clear();
-    objects.push_back(newObj);
 }
 
-Rect getSubImageRoi(Mat &src, float percent)
+void sumErrAlongRow(Mat &src, Mat &dst)
 {
-    int rows = src.rows*percent;
-    int cols = src.cols*percent;
-    Rect roi = Rect( (src.cols-cols)/2, (src.rows-rows)/2, cols, rows );
-    return roi;
-}
+    dst = Mat::zeros(1, src.rows, CV_32SC1);
+    int* dp = dst.ptr<int>(0);
 
-void shiftHue(Mat &src, Mat &dst)
-{
-    assert(src.channels() == 1);
-
-    // Setup
-    int rows = src.rows;
-    dst = src.reshape(0, 1);
-    uchar* dp = dst.ptr<uchar>(0);
-
-    // Begin the conversion
-    for (int i = 0; i < dst.cols; i++)
-    {dp[i] = (dp[i] < 90) ? dp[i]+90 : dp[i]-90;}
-
-    // Return output back to the original dimensions
-    dst = dst.reshape(0, rows);
-}
-
-// Colour Tracker
-void getColourMask(Mat &src, Mat &mask, objParams params, bool isBGR)
-{
-    // Initialise
-    minMaxPair limits;
-    Mat splinter3[3], temp;
-    split(src, splinter3);
-    if((isBGR == true) && (params.shiftHue == true))
-    {shiftHue(splinter3[0], splinter3[0]);}
-
-    // Threshold everything
-    for(int i = 0; i < 3; i++)
+    // For each row get the sum(abs(x))-abs(sum(x))
+    for(int i = 0; i < src.rows; i++)
     {
-        // Get channel parameters
-        if(isBGR == true)
-        {limits = params.BGR[i];}
-        else
-        {limits = params.HSV[i];}
+        int acc = 0;
+        char* sp = src.ptr<char>(i);
 
-        // Extract channel mask
-        inRange(splinter3[i], limits.min, limits.max, splinter3[i]);
+        // For each column
+        for(int j = 0; j < src.cols; j++)
+        {
+            dp[i] += sp[j];
+            acc   += abs(sp[j]);
+        }
+        dp[i] = acc - abs(dp[i]);
     }
-
-    // Bitwise AND the channels together to generate the resultant mask
-    bitwise_and(splinter3[0], splinter3[1], mask);
-    bitwise_and(splinter3[2], mask, mask);
-
-    cv::merge(splinter3, 3, temp);
-    if(isBGR == true)
-    {imshow("BGR_Mask", temp);}
-    else
-    {imshow("HSV_Mask", temp);}
+//    dst = dst.t();    // If we're being anal, then yes, this would be included
 }
-
-
-
-
-
-
-
 
 
 
