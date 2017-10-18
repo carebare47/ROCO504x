@@ -28,6 +28,7 @@ void calcFieldOfExpansion(Mat &posX, Mat &posY, Mat &velX, Mat &velY, Point2f &f
 void calcTimeToContact(Mat &velX, Mat &velY, Point2f &foe, Mat &ttc);
 void sumErrAlongRow(Mat &src, Mat &dst);
 void diff(Mat &src, cv::Mat &dst, bool isXDiff, int gap = 1);
+void sqrt(Mat &src, Mat &dst);
 
 //////////////////////
 // Global Constants //
@@ -67,7 +68,7 @@ int main()
     imshow("frame", input);
     createTrackbar("gauss", "frame", &var[0], 10);
     createTrackbar("imgID", "frame", &var[1], 6);
-    createTrackbar("diffr", "frame", &var[1], 10);
+    createTrackbar("diffr", "frame", &var[2], 10);
 
     /////////////////////
     // Start Main Code //
@@ -129,15 +130,30 @@ int main()
             input = pyramid[i] + 128;
             diffPyramid[i] = input - prevPyramid[i];
 
-            // Convert to actual signed char to process the result
+            // Convert to actual signed short to process the result
             diffPyramid[i].convertTo(diffPyramid[i], CV_16SC1);
             diffPyramid[i] -= 128;
-            diffPyramid[i].convertTo(diffPyramid[i], CV_8SC1);
 
             // Get the x & y differences & remove them
                 // This *should* remove lateral motions whilst leaving z-blobs
-            diff(diffPyramid[i], diffX, true, var[2]);
-            diff(diffPyramid[i], diffY, false, var[2]);
+            diff( diffPyramid[i], diffX, true,  var[2] );
+            diff( diffPyramid[i], diffY, false, var[2] );
+            diffX *= 100000;
+            diffY *= 100000;
+
+            if(i == var[1])
+            {
+                imshow("X", diffX);
+                imshow("Y", diffY);
+            }
+
+            // Pythag
+            diffX = diffX.mul(diffX) + diffY.mul(diffY);
+            sqrt(diffX, diffX);
+
+            // Difference
+            diffPyramid[i] = cv::abs(diffPyramid[i]) - diffX;
+            diffPyramid[i].convertTo(diffPyramid[i], CV_8UC1);
         }
 
         imshow("Motion", diffPyramid[var[1]]);
@@ -321,7 +337,7 @@ void sumErrAlongRow(Mat &src, Mat &dst)
 
 void diff(Mat &src, cv::Mat &dst, bool isXDiff, int gap)
 {
-    assert(src.type() == CV_8SC(src.channels()));
+    assert(src.type() == CV_16SC(src.channels()));
 
     // If x-diff, leave as is, else rotate the image 90 degrees
     if(isXDiff == false)
@@ -343,7 +359,7 @@ void diff(Mat &src, cv::Mat &dst, bool isXDiff, int gap)
     // Begin!
     for (int i = 0; i < rows; i++)
     {
-        char* dp = dst.ptr<char>(i);
+        short* dp = dst.ptr<short>(i);
 
         // Perform the differentiation
         for (int j = gap; j < cols; j++)
@@ -362,7 +378,29 @@ void diff(Mat &src, cv::Mat &dst, bool isXDiff, int gap)
     }
 }
 
+void sqrt(Mat &src, Mat &dst)
+{
+    assert(src.type() == CV_16SC(src.channels()));
 
+    // Explicitly keep note of how many channels there are
+    int ch = src.channels();
+    int cols = src.cols;
+    int rows = src.rows;
+
+    // Only tinker with 1 image
+    if(&src != &dst)
+    {src.copyTo(dst);}
+    dst = dst.reshape(0, 1);
+
+    short* dp = dst.ptr<short>(0);
+
+    // Element-Wise Square Root
+    for (int i = 0; i < rows * cols * ch; i++)
+    {dp[i] = std::sqrt(dp[i]);}
+
+    // Convert dst to the same dimensions as src
+    dst = dst.reshape(0, rows);
+}
 
 
 
