@@ -27,6 +27,7 @@ void calcXYImgs(int rows, int cols, Mat &x, Mat &y);
 void calcFieldOfExpansion(Mat &posX, Mat &posY, Mat &velX, Mat &velY, Point2f &foe);
 void calcTimeToContact(Mat &velX, Mat &velY, Point2f &foe, Mat &ttc);
 void sumErrAlongRow(Mat &src, Mat &dst);
+void diff(Mat &src, cv::Mat &dst, bool isXDiff, int gap = 1);
 
 //////////////////////
 // Global Constants //
@@ -43,14 +44,14 @@ int main()
     ///////////////
     // Variables //
     ///////////////
-    Mat input;
+    Mat input, diffX, diffY;
     vector<Mat> pyramid, prevPyramid, diffPyramid;
     bool isFirstLoop = true;
 
     LARGE_INTEGER q1,q2,freqq;
     double fps = 0.0;
     double beta = 0.1;
-    int var[] = {5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    int var[] = {10, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0};
 
     ////////////////////
     // Initialisation //
@@ -60,11 +61,13 @@ int main()
 
     // Initialise images
     getImage(cap, input, imShrink);
+    diffPyramid.resize(8);
 
     // Initialise windows
     imshow("frame", input);
     createTrackbar("gauss", "frame", &var[0], 10);
-    createTrackbar("imgID", "frame", &var[1], 7);
+    createTrackbar("imgID", "frame", &var[1], 6);
+    createTrackbar("diffr", "frame", &var[1], 10);
 
     /////////////////////
     // Start Main Code //
@@ -102,24 +105,45 @@ int main()
             absdiff(pyramid[i], input, pyramid[i]);
             cvtColor(pyramid[i], pyramid[i], CV_BGR2GRAY);
         }
-        imshow("DoG", pyramid[0]);
+//        imshow("DoG", pyramid[0]);
 
         // Compare Different Scales
         for(int i = 1; i < 8; i++)
         {
-            resize(pyramid[i-1], input, Size(pyramid[i].cols, pyramid[i].rows));
-            pyramid[i-1] = input - pyramid[i];
+            resize(pyramid[i], input, Size(pyramid[i-1].cols, pyramid[i-1].rows));
+            pyramid[i-1] -= input;// - pyramid[i];
         }
         imshow("Scale", pyramid[var[1]]);
 
-        // Compare with previous values
+        // Check if this is the first loop, if so, skip temporal analysis to allow previous data to exist
         if(isFirstLoop == true)
-        {goto skipTimeAnalysis;}
+        {
+            isFirstLoop = false;
+            goto skipTimeAnalysis;
+        }
 
+        // Get temporal difference & remove lateral motions
+        for(int i = 0; i < 7; i++)
+        {
+            // Convert to psuedo signed char for the subtraction
+            input = pyramid[i] + 128;
+            diffPyramid[i] = input - prevPyramid[i];
 
+            // Convert to actual signed char to process the result
+            diffPyramid[i].convertTo(diffPyramid[i], CV_16SC1);
+            diffPyramid[i] -= 128;
+            diffPyramid[i].convertTo(diffPyramid[i], CV_8SC1);
+
+            // Get the x & y differences & remove them
+                // This *should* remove lateral motions whilst leaving z-blobs
+            diff(diffPyramid[i], diffX, true, var[2]);
+            diff(diffPyramid[i], diffY, false, var[2]);
+        }
+
+        imshow("Motion", diffPyramid[var[1]]);
 
 skipTimeAnalysis:
-
+        prevPyramid = pyramid;
 
         // Select action based on the users input
         switch (waitKey(1))
@@ -295,7 +319,48 @@ void sumErrAlongRow(Mat &src, Mat &dst)
 //    dst = dst.t();    // If we're being anal, then yes, this would be included
 }
 
+void diff(Mat &src, cv::Mat &dst, bool isXDiff, int gap)
+{
+    assert(src.type() == CV_8SC(src.channels()));
 
+    // If x-diff, leave as is, else rotate the image 90 degrees
+    if(isXDiff == false)
+    {cv::rotate(src, src, ROTATE_90_COUNTERCLOCKWISE);}
+
+    // Ensure dst is of correct dimensions
+    dst = Mat::zeros(src.rows, src.cols, src.type());
+
+    // Explicitly keep note of how many channels there are
+    int ch = dst.channels();
+    int cols = dst.cols;
+    int rows = dst.rows;
+
+    // Ensure that "gap" is always at least 1
+    if(gap <= 0)
+    {gap = 1;}
+    int midPixle = gap / 2;
+
+    // Begin!
+    for (int i = 0; i < rows; i++)
+    {
+        char* dp = dst.ptr<char>(i);
+
+        // Perform the differentiation
+        for (int j = gap; j < cols; j++)
+        {
+            // Difference of pixels around and store in middle pixel
+            for (int k = 0; k < ch; k++)
+            {dp[(j-midPixle)*ch+k] = dp[j*ch+k] - dp[(j-gap)*ch+k];}
+        }
+    }
+
+    // If y-diff then rotate everything to their correct orientations
+    if(isXDiff == false)
+    {
+        cv::rotate(src, src, ROTATE_90_CLOCKWISE);
+        cv::rotate(dst, dst, ROTATE_90_CLOCKWISE);
+    }
+}
 
 
 
