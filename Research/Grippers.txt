@@ -1,0 +1,24 @@
+Soft Active:
+Delft 3: https://www.youtube.com/watch?v=AHoFSuSEe6k
+Festo Fin-gripper: https://www.youtube.com/watch?v=90cXfaFM4O8
+DIY Pneumatic Gripper: https://www.youtube.com/watch?v=uPx8xwRpfFk
+Festo octopus gripper: https://www.youtube.com/watch?v=ZPUvA98uSj8
+Coffee bean gripper: https://www.youtube.com/watch?v=3OjhoVuAQkQ
+Grabit electroadhesion: https://www.youtube.com/watch?v=0DgORq2bbTI
+Another electroadhesion: https://www.youtube.com/watch?v=y7UwyC1kOJg
+PaCoMe Gripper: https://www.youtube.com/watch?v=WoKKS-ATGVc
+Adaptive Compliant Gripper: https://www.youtube.com/watch?v=jWD-B796sao
+Gecko Tape Gripper: https://www.youtube.com/watch?v=deHQfqFjkeM
+
+Hard Active:
+Makeblock: https://www.youtube.com/watch?v=9xSvRSg7VZA
+
+Soft Passive:
+Crumple Zone (Popcorn): https://www.youtube.com/watch?v=nsnyl8llfH4
+Crumple Zone (Straws): https://www.youtube.com/watch?v=nsnyl8llfH4
+Air bags: https://www.youtube.com/watch?v=nsnyl8llfH4
+bin + bag
+velcro
+
+Hard Passive:
+Bin
