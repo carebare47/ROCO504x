@@ -66,7 +66,7 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "opencv_kalman2");
     ros::NodeHandle n;
     ros::Publisher Setpoint_Pub = n.advertise<geometry_msgs::Point>("coordinate_send_topic", 10);
-    ros::Rate loop_rate(10);
+    ros::Rate loop_rate(187);
     geometry_msgs::Point Setpoint;
     // Camera frame
     cv::Mat frame;
@@ -139,6 +139,7 @@ int main(int argc, char **argv)
 
     cap.set(CV_CAP_PROP_FRAME_WIDTH, 320);
     cap.set(CV_CAP_PROP_FRAME_HEIGHT, 240);
+    cap.set(CV_CAP_PROP_FPS, 100);
     // <<<<< Camera Settings
 
     cout << "\nHit 'q' to exit...\n";
@@ -234,7 +235,7 @@ int main(int argc, char **argv)
                 ratio = 1.0f / ratio;
 
             // Searching for a bBox almost square
-            if (ratio > 0.75 && bBox.area() >= 4000)
+            if (ratio > 0.75 && bBox.area() >= 1000)
             {
                 balls.push_back(contours[i]);
                 ballsBox.push_back(bBox);
