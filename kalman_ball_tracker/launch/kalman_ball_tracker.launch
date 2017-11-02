@@ -1,0 +1,4 @@
+<launch>
+  <node name="kalman_ball_tracker"          pkg="kalman_ball_tracker"  type="kalman_ball_tracker" output="screen">
+  </node>
+</launch>
