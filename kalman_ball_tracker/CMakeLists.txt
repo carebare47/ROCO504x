@@ -203,7 +203,7 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
-set(SRC_PATH ~/catkin_ws/src/kalman_ball_tracker/src )
+set(SRC_PATH ~/catkin_ws/src/ROCO504x/kalman_ball_tracker/src )
 
 set(${PROJECT_NAME}_SRC
    ${SRC_PATH}/opencv_kalman2.cpp
