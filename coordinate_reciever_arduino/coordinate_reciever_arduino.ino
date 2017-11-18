@@ -57,7 +57,9 @@ int steper_counts_1, steper_counts_2, steper_counts_3, steper_counts_4;
 
 //Variables to hold information about the size of the frame, cable lengths etc...
 //float maxX = 70.7, maxY = 70.7, current_x = 35, current_y = 35, X, Y;
-float maxX = 71.5 - 12, maxY = 89.5 - 12 ;
+float maxX = 71.5, maxY = 89.5;
+float xBorder = 10;
+float yBorder = 10;
 float maxYstop = maxY;
 float minX = 0;
 float minY = 0;
@@ -77,6 +79,7 @@ float scaleX = maxX / 320;
 float scaleY = maxY / 240;
 float spoolD = 10;//BagBag
 float stepScale =  PI * spoolD / 200;
+//float stepScale =  PI * spoolD / 200;
 
 //starting lengths of cable
 float starting_length_1 = 57.28;
@@ -148,16 +151,18 @@ ros::Publisher current_pos("current_pos", &point_msg);
 void messageCb( const geometry_msgs::Point& data);
 ros::Subscriber<geometry_msgs::Point> coordinate_subscriber("coordinate_send_topic", &messageCb);
 
+
+void catcherReturnHomeCb( const std_msgs::Bool& data);
+ros::Subscriber<std_msgs::Bool> catcher_return_home("/catcher_return_home", &catcherReturnHomeCb);
+
 #ifdef ros_everything
 
 void twistMessageCb( const geometry_msgs::Twist& data);
-void speedSetCb( const std_msgs::Int16& data);
-void catcherReturnHomeCb( const std_msgs::Bool& data);
+void speedSetCb( const geometry_msgs::Point& data);
 
 //Create ROS subscribers
 ros::Subscriber<geometry_msgs::Twist> twist_subscriber("/cmd_vel_mux/input/teleop", &twistMessageCb);
-ros::Subscriber<std_msgs::Int16> motor_speed_subscriber("/motor_speed_set", &speedSetCb);
-ros::Subscriber<std_msgs::Bool> catcher_return_home("/catcher_return_home", &catcherReturnHomeCb);
+ros::Subscriber<geometry_msgs::Point> motor_speed_subscriber("/motor_speed_set", &speedSetCb);
 #endif
 ////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////// END OF ROS PUBS & SUBS ///////////////////////////////////////
@@ -169,10 +174,11 @@ void setup () {
   nh.initNode();
   //Initialize subscribers & publishers
   nh.subscribe(coordinate_subscriber);
+  nh.subscribe(catcher_return_home);
+
 #ifdef ros_everything
   nh.subscribe(twist_subscriber);
   nh.subscribe(motor_speed_subscriber);
-  nh.subscribe(catcher_return_home);
   nh.advertise(step_counts);
   nh.advertise(lengths_pub);
   nh.advertise(endstop_publisher);
@@ -214,13 +220,14 @@ void setSpeed1(float speedM1, float speedM2, float speedM3, float speedM4) {
   speed4 = round(stepperSpeed * speedM4);
 
   stepper1.setSpeed(speed1);
+  stepper1.setMaxSpeed(speed1);
   stepper2.setSpeed(speed2);
+  stepper2.setMaxSpeed(speed2);
   stepper3.setSpeed(speed3);
+  stepper3.setMaxSpeed(speed3);
   stepper4.setSpeed(speed4);
-
-
+  stepper4.setMaxSpeed(speed4);
 }
-
 
 void loop() {
 #ifdef ros_everything
@@ -268,7 +275,7 @@ void loop() {
   if ((ball_detected == 0)) {
     //step steppers once per main loop (can this be threaded?)
     // openDrain();
-
+    /*
     stepper1.run();
     // openDrain();
     stepper2.run();
@@ -277,8 +284,8 @@ void loop() {
     // openDrain();
     stepper4.run();
     // openDrain();
-    /*
 
+*/
       stepper1.runSpeedToPosition();
       // openDrain();
       stepper2.runSpeedToPosition();
@@ -288,7 +295,7 @@ void loop() {
       stepper4.runSpeedToPosition ();
       // openDrain();
 
-    */
+  
 
 
   }
@@ -380,58 +387,76 @@ void endStopCal(void) {
   current_y = maxY / 2 + (sq(curent_length_4) - sq(curent_length_1)) / (2 * maxY);
 
   //endStopCheck();
+  /*
+    ((data.z > 160) && (current_x >= (maxX - (xBorder/2)))) {
+    ((data.z < 160) && (current_x <= (minX + (xBorder/2)))) {
 
-  if (((camX < 0) && (current_x <= minX)) || ((camX > 0) && (current_x >= maxX)) || ((camY < 0) && (current_y <= 0  )) || ((camY > 0) && (current_y >= maxYstop))) {
+
+    ((data.y > 120) && (current_y <= (minY + (yBorder/2)))) {
+
+    ((data.y < 120) && (current_y >= (maxY - (yBorder/2)))) {
+  */
+
+
+  if (((camX < 0) && (current_x <= minX)) || ((camX > 0) && (current_x >= maxX)) || ((camY < 0) && (current_y <= (minY + (yBorder / 2))  )) || ((camY > 0) && (current_y >= (maxY - (yBorder / 2))))) {
     endStop = true;
-    //   stepper1.moveTo(stepper1.currentPosition());
-    //   stepper2.moveTo(stepper2.currentPosition());
-    //   stepper3.moveTo(stepper3.currentPosition());
-    //   stepper4.moveTo(stepper4.currentPosition());
+    /*stepper1.moveTo(stepper1.currentPosition());
+      stepper2.moveTo(stepper2.currentPosition());
+      stepper3.moveTo(stepper3.currentPosition());
+      stepper4.moveTo(stepper4.currentPosition());*/
   }
   else
     endStop = false;
 }
-int xFlag, yFlag;
-
+bool lFlag, rFlag, tFlag, bFlag;
 //Message callback to populate x, y and z whenever a message is recieved on the coordinate_sender topic
+
+//point comes in here
 void messageCb( const geometry_msgs::Point& data) {
 
-  quat_msg.x = camX;
-  quat_msg.y = camY;
-  quat_msg.z = current_x;
-  quat_msg.w = current_y;
-  cam_x_cam_y_current_x_current_y_pub.publish(&quat_msg);
+  stepper1.stop();
+  stepper2.stop();
+  stepper3.stop();
+  stepper4.stop();
 
+  //ENdstops are checked, if they're triggered then stop that axis from moving in that direction
   //Check whether the X or Y endstops have been hit. If they have, halt that axis
-  if ((data.z > 160) && (current_x >= maxX)) {
-    camX = 0;    
-  } else if ((data.z < 160) && (current_x <= minX)) {
+  if ((data.z > 160) && (current_x >= (maxX - (xBorder / 2)))) {
+    camX = 0;
+  } else if ((data.z < 160) && (current_x <= (minX + (xBorder / 2)))) {
     camX = 0;
   } else {
+    //if endstop isn't triggered, then populate camX with a scaled (and zeroed) version of the point data
     camX = maxX * (data.z - 160) / 320;
   }
   //) ? camX = 0.5  : camX = maxX * (data.z - 160) / 320;
 
-  
-  if ((data.y > 120) && (current_y <= minY)) {
+
+  if ((data.y > 120) && (current_y <= (minY + (yBorder / 2)))) {
     camY = 0;
   }
-  else if ((data.y < 120) && (current_y >= maxY)) {
+  else if ((data.y < 120) && (current_y >= (maxY - (yBorder / 2)))) {
     camY = 0;
   } else {
     camY = maxY * (120 - data.y) / 240;
   }
 
+
+
+  // camY = maxY * (120 - data.y) / 2400;
+  // camX = maxX * (data.z - 160) / 3200;
+
+
   //? camY = -0.5 : camY = maxY * (120 - data.y) / 240;
   //camY = maxY * (120 - data.y) / 240;
   ball_detected = 0;
-
+#ifdef ros_everything
   quat_msg.x = camX;
   quat_msg.y = camY;
   quat_msg.z = current_x;
   quat_msg.w = current_y;
   cam_x_cam_y_current_x_current_y_pub.publish(&quat_msg);
-
+#endif
 
   //scale (x,y) co-ordinates
   if ((ball_detected == 0)) { // && (!endStop)) {
@@ -440,6 +465,12 @@ void messageCb( const geometry_msgs::Point& data) {
 
     //find new lengths
     lengthCal(X, Y);
+
+    findMax(change_in_length_1, change_in_length_2, change_in_length_3, change_in_length_4);
+    setSpeedMult(maxSpeed1, change_in_length_1, change_in_length_2, change_in_length_3, change_in_length_4);
+    setSpeed1(speedMult1, speedMult2, speedMult3, speedMult4);
+  //  motorSetup();
+
 
     //find step counts
     steper_counts_1 = length2Step(change_in_length_1);
@@ -455,13 +486,13 @@ void messageCb( const geometry_msgs::Point& data) {
     //
 
 
-
+#ifdef ros_everything
     quat_msg.x = length_1;
     quat_msg.y = length_2;
     quat_msg.z = length_3;
     quat_msg.w = length_4;
     lengths_pub.publish(&quat_msg);
-
+#endif
     //set motor positions
     steper_counts_1 += stepper1.currentPosition();
     steper_counts_2 += stepper2.currentPosition();
@@ -476,13 +507,13 @@ void messageCb( const geometry_msgs::Point& data) {
     steper_counts_4 > step_last_4 ? direction_tracker_4 = 1 : direction_tracker_4 = 0;
 
     //  steper_counts_1 > step_last_1 ? digitalWrite(motor1_direction, HIGH) : digitalWrite(motor1_direction, LOW);
-
+#ifdef ros_everything
     quat_msg.x = direction_tracker_1;
     quat_msg.y = direction_tracker_2;
     quat_msg.z = direction_tracker_3;
     quat_msg.w = direction_tracker_4;
     direction_tracker.publish(&quat_msg);
-
+#endif
     step_last_1 = steper_counts_1;
     step_last_2 = steper_counts_2;
     step_last_3 = steper_counts_3;
@@ -543,9 +574,14 @@ void twistMessageCb( const geometry_msgs::Twist & data) {
 
 }
 
-void speedSetCb( const std_msgs::Int16 & data) {
-  stepperMaxSpeed = data.data;
-  stepperSpeed = data.data;
+int pulse_width = 200;
+int motor_acceleration = 2000;
+
+void speedSetCb( const geometry_msgs::Point & data) {
+  pulse_width = data.x;
+  stepperMaxSpeed = data.y;
+  stepperSpeed = stepperMaxSpeed;
+  motor_acceleration = data.z;
   motorSetup();
 }
 
@@ -564,7 +600,7 @@ void openDrain() {
   CORE_PIN8_CONFIG = PORT_PCR_ODE | PORT_PCR_MUX(1) | PORT_PCR_SRE | PORT_PCR_DSE ;
   CORE_PIN9_CONFIG = PORT_PCR_ODE | PORT_PCR_MUX(1) | PORT_PCR_SRE | PORT_PCR_DSE ;
 }
-int pulse_width = 800;
+
 
 void motorSetup() {
 
@@ -590,27 +626,35 @@ void motorSetup() {
   stepper1.setMinPulseWidth(pulse_width);
   stepper1.setMaxSpeed(stepperMaxSpeed);
   stepper1.setSpeed(stepperSpeed);
-  stepper1.setAcceleration(1000);
+  stepper1.setAcceleration(motor_acceleration);
 
   stepper2.setMinPulseWidth(pulse_width);
   stepper2.setMaxSpeed(stepperMaxSpeed);
   stepper2.setSpeed(stepperSpeed);
-  stepper2.setAcceleration(1000);
+  stepper2.setAcceleration(motor_acceleration);
 
   stepper3.setMinPulseWidth(pulse_width);
   stepper3.setMaxSpeed(stepperMaxSpeed);
   stepper3.setSpeed(stepperSpeed);
-  stepper3.setAcceleration(1000);
+  stepper3.setAcceleration(motor_acceleration);
 
   stepper4.setMinPulseWidth(pulse_width);
   stepper4.setMaxSpeed(stepperMaxSpeed);
   stepper4.setSpeed(stepperSpeed);
-  stepper4.setAcceleration(1000);
+  stepper4.setAcceleration(motor_acceleration);
 }
 
 
 void catcherReturnHomeCb( const std_msgs::Bool & data) {
-  returnHome();
+  if (!data.data) {
+    returnHome();
+  }
+  else if (data.data) {
+    stepper1.setCurrentPosition(0);
+    stepper2.setCurrentPosition(0);
+    stepper3.setCurrentPosition(0);
+    stepper4.setCurrentPosition(0);
+  }
 }
 
 void returnHome(void) {
