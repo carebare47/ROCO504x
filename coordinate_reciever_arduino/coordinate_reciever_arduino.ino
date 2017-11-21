@@ -5,7 +5,6 @@
 #include <geometry_msgs/Point.h>
 #include <ros/time.h>
 #include <geometry_msgs/Quaternion.h>
-#include <geometry_msgs/Twist.h>
 #include <std_msgs/Int16.h>
 #include <std_msgs/Bool.h>
 
@@ -156,11 +155,9 @@ ros::Subscriber<std_msgs::Bool> catcher_return_home("/catcher_return_home", &cat
 
 #ifdef ros_everything
 
-void twistMessageCb( const geometry_msgs::Twist& data);
 void speedSetCb( const geometry_msgs::Point& data);
 
 //Create ROS subscribers
-ros::Subscriber<geometry_msgs::Twist> twist_subscriber("/cmd_vel_mux/input/teleop", &twistMessageCb);
 ros::Subscriber<geometry_msgs::Point> motor_speed_subscriber("/motor_speed_set", &speedSetCb);
 #endif
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -176,7 +173,6 @@ void setup () {
   nh.subscribe(catcher_return_home);
 
 #ifdef ros_everything
-  nh.subscribe(twist_subscriber);
   nh.subscribe(motor_speed_subscriber);
   nh.advertise(step_counts);
   nh.advertise(lengths_pub);
@@ -512,54 +508,6 @@ void messageCb( const geometry_msgs::Point& data) {
     stepper3.moveTo(steper_counts_3);
     stepper4.moveTo(steper_counts_4);
   }
-}
-
-void twistMessageCb( const geometry_msgs::Twist & data) {
-  float velocity = data.linear.x * 100;
-  float theta = data.angular.z * 10;
-
-  float x_dir = (velocity * cos(theta)) + 160;
-  float y_dir = (velocity * sin(theta)) + 120;
-
-  camX = maxX * (x_dir - 160) / 320;
-  camY = maxY * (y_dir - 120) / 240;
-
-
-  //scale (x,y) co-ordinates
-  X = camX;
-  Y = camY;
-
-  //find new lengths
-  lengthCal(X, Y);
-
-  //find step counts
-  steper_counts_1 = length2Step(change_in_length_1);
-  steper_counts_2 = length2Step(change_in_length_2);
-  steper_counts_3 = length2Step(change_in_length_3);
-  steper_counts_4 = length2Step(change_in_length_4);
-
-  //set speed
-  //findMax(change_in_length_1, change_in_length_2, change_in_length_3, change_in_length_4);
-  //setSpeedMult(maxSpeed1, change_in_length_1, change_in_length_2, change_in_length_3, change_in_length_4);
-  //setSpeed1(speedMult1, speedMult2, speedMult3, speedMult4);
-
-
-  //quat_msg.x = steper_counts_1;
-  //quat_msg.y = change_in_length_1;
-
-  //quat_msg.z = current_x;
-  //quat_msg.w = current_y;
-
-  //set motor positions
-  steper_counts_1 += stepper1.currentPosition();
-  steper_counts_2 += stepper2.currentPosition();
-  steper_counts_3 += stepper3.currentPosition();
-  steper_counts_4 += stepper4.currentPosition();
-  stepper1.moveTo(steper_counts_1);
-  stepper2.moveTo(steper_counts_2);
-  stepper3.moveTo(steper_counts_3);
-  stepper4.moveTo(steper_counts_4);
-
 }
 
 int pulse_width = 200;
