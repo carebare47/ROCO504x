@@ -1,4 +1,4 @@
-
+#include <PID_v1.h>
 #include <AccelStepper.h>
 //#include <PID_v1.h>
 #include <ros.h>
@@ -7,6 +7,7 @@
 #include <geometry_msgs/Quaternion.h>
 #include <std_msgs/Int16.h>
 #include <std_msgs/Bool.h>
+#include <geometry_msgs/Pose.h>
 
 //Create accelstepper objects
 int motor1_step = 3;
@@ -126,6 +127,35 @@ int step_last_4 = 0;
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////// PID///////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+float xKp = 1.4;
+float xKi = 0.14;
+float xKd = 0.01;//.5;
+
+float yKp = 1.4;
+float yKi = 0.14;
+float yKd = 0.01;//.5;
+
+
+double ySetpoint, yInput, yOutput;
+double xSetpoint, xInput, xOutput;
+double xout, zout, VL, VR;
+double lError;
+
+PID xPID(&xInput, &xOutput, &xSetpoint, xKp, xKi, xKd, DIRECT);
+PID yPID(&yInput, &yOutput, &ySetpoint, yKp, yKi, yKd, DIRECT);
+
+boolean PIDen = false;
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////// END OF PID ///////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+
 ////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////// ROS PUBS & SUBS //////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -159,10 +189,12 @@ ros::Subscriber<geometry_msgs::Point> coordinate_subscriber("coordinate_send_top
 void catcherReturnHomeCb( const std_msgs::Bool& data);
 ros::Subscriber<std_msgs::Bool> catcher_return_home("/catcher_return_home", &catcherReturnHomeCb);
 
-
+geometry_msgs::Pose pid_all;
+void pid_all_cb(const geometry_msgs::Pose& pid_all);
 void speedSetCb( const geometry_msgs::Point& data);
 
 //Create ROS subscribers
+ros::Subscriber<geometry_msgs::Pose> PID_tune_sub("PID_tuneAll", pid_all_cb);
 ros::Subscriber<geometry_msgs::Point> motor_speed_subscriber("/motor_speed_set", &speedSetCb);
 ////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////// END OF ROS PUBS & SUBS ///////////////////////////////////////
@@ -175,6 +207,7 @@ void setup () {
   //Initialize subscribers & publishers
   nh.subscribe(coordinate_subscriber);
   nh.subscribe(catcher_return_home);
+  nh.subscribe(PID_tune_sub);
 
   nh.subscribe(motor_speed_subscriber);
   nh.advertise(step_counts);
@@ -186,6 +219,12 @@ void setup () {
   nh.advertise(motor_speed_publisher);
 
   motorSetup();
+
+  xPID.SetMode(AUTOMATIC);
+  yPID.SetMode(AUTOMATIC);
+
+  xPID.SetOutputLimits(0, 1300);
+  yPID.SetOutputLimits(0, 1300);
 
   //messageCb( const geometry_msgs::Point& data)
   point_msg.x = 0;
@@ -241,9 +280,11 @@ void loop() {
 
   }
 
-
+quat_msg.x = xInput;
+quat_msg.
   perform_calculations();
-
+  xPID.Compute();
+  yPID.Compute();
 
   if ((ball_detected == 0)) {
     //step steppers once per main loop (can this be threaded?)
@@ -276,9 +317,9 @@ void recalculate_gripper_position(void) {
 
 
 void calculate_lengths(float &dX, float &dY) {
-  
+
   recalculate_gripper_position();
-  
+
   //get new lengths
   length_1 = sqrt(sq(maxX - (current_x + dX)) + sq(maxY - (current_y + dY)));
   length_2 = sqrt(sq(      current_x + dX)  + sq(maxY - (current_y + dY)));
@@ -309,8 +350,18 @@ void perform_calculations(void) {
   //scale (x,y) co-ordinates
   if ((ball_detected == 0)) {
 
+    float xOut = xOutput;
+    float yOut = yOutput;
+
+    if (PIDen){
+         //find new lengths
+    calculate_lengths(xOut, yOut);
+    } else {
     //find new lengths
-    calculate_lengths(camX, camY);
+    calculate_lengths(camX, camY);     
+    }
+
+ 
 
     //calculate speeds and set them
     calculate_speeds(change_in_length_1, change_in_length_2, change_in_length_3, change_in_length_4);
@@ -467,13 +518,32 @@ void calculate_speeds(float d1, float d2, float d3, float d4) {
 }
 
 void set_speeds(void) {
-  stepper1.setSpeed(speed1);
-  stepper1.setMaxSpeed(speed1);
-  stepper2.setSpeed(speed2);
-  stepper2.setMaxSpeed(speed2);
-  stepper3.setSpeed(speed3);
-  stepper3.setMaxSpeed(speed3);
-  stepper4.setSpeed(speed4);
-  stepper4.setMaxSpeed(speed4);
+
+    stepper1.setSpeed(speed1);
+    stepper1.setMaxSpeed(speed1);
+    stepper2.setSpeed(speed2);
+    stepper2.setMaxSpeed(speed2);
+    stepper3.setSpeed(speed3);
+    stepper3.setMaxSpeed(speed3);
+    stepper4.setSpeed(speed4);
+    stepper4.setMaxSpeed(speed4);
+ 
+}
+
+
+
+void pid_all_cb(const geometry_msgs::Pose& pid_all) {
+  xKp = pid_all.position.x;
+  xKi = pid_all.position.y;
+  xKd = pid_all.position.z;
+
+  yKp = pid_all.orientation.x;
+  yKi = pid_all.orientation.y;
+  yKd = pid_all.orientation.z;
+
+  PIDen = boolean(pid_all.orientation.w);
+
+  xPID.SetTunings(xKp, xKi, xKd);
+  yPID.SetTunings(yKp, yKi, yKd);
 }
 
