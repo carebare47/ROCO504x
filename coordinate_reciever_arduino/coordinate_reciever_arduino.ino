@@ -244,7 +244,7 @@ void loop() {
     motor_speed_publisher.publish(&quat_msg);
 
   }
-perform_calculations();
+
 #endif
 
 perform_calculations();
@@ -400,13 +400,7 @@ bool lFlag, rFlag, tFlag, bFlag;
 //Message callback to populate x, y and z whenever a message is recieved on the coordinate_sender topic
 float dataX = 160;
 float dataY = 120;
-<<<<<<< Updated upstream
-
 void perform_calculations(void){
-
-=======
-void perform_calculations(void){
->>>>>>> Stashed changes
    /*
     stepper1.stop();
     stepper2.stop();
@@ -444,10 +438,6 @@ void perform_calculations(void){
   //? camY = -0.5 : camY = maxY * (120 - data.y) / 240;
   //camY = maxY * (120 - data.y) / 240;
   ball_detected = 0;
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 
   //scale (x,y) co-ordinates
   if ((ball_detected == 0)) { // && (!endStop)) {
@@ -492,11 +482,8 @@ void perform_calculations(void){
     steper_counts_3 > step_last_3 ? direction_tracker_3 = 1 : direction_tracker_3 = 0;
     steper_counts_4 > step_last_4 ? direction_tracker_4 = 1 : direction_tracker_4 = 0;
 
-<<<<<<< Updated upstream
-=======
     //  steper_counts_1 > step_last_1 ? digitalWrite(motor1_direction, HIGH) : digitalWrite(motor1_direction, LOW);
 
->>>>>>> Stashed changes
     step_last_1 = steper_counts_1;
     step_last_2 = steper_counts_2;
     step_last_3 = steper_counts_3;
@@ -507,15 +494,6 @@ void perform_calculations(void){
     stepper3.moveTo(steper_counts_3);
     stepper4.moveTo(steper_counts_4);
   }
-  
-}
-//point comes in here
-void messageCb( const geometry_msgs::Point& data) {
-  dataX = data.z;
-  dataY = data.y;
-
-  perform_calculations();
- 
 }
 
 
