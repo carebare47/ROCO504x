@@ -247,7 +247,8 @@ void loop() {
 
 #endif
 
-perform_calculations();
+  perform_calculations();
+
 
   endStopCal();
   endStopCheck2();
@@ -284,8 +285,24 @@ perform_calculations();
     // openDrain();
 
 
+  }
 
-
+  if (returnHomeFlag) {
+    restore_default_speeds();
+    motorSetup();
+    stepper1.moveTo(0);
+    stepper2.moveTo(0);
+    stepper3.moveTo(0);
+    stepper4.moveTo(0);
+    //while (((stepper1.currentPosition() != 0) && (stepper2.currentPosition() != 0) && (stepper3.currentPosition() != 0) && (stepper4.currentPosition() != 0) )) {
+    while (!((stepper1.currentPosition() == 0) && (stepper2.currentPosition() == 0) && (stepper3.currentPosition() == 0) && (stepper4.currentPosition() == 0) )) {
+      stepper1.runSpeedToPosition();
+      stepper2.runSpeedToPosition();
+      stepper3.runSpeedToPosition();
+      stepper4.runSpeedToPosition();
+      nh.spinOnce();
+    }
+    returnHomeFlag = false;
   }
   //Do ROS stuff once per main loop
   nh.spinOnce();
@@ -400,8 +417,8 @@ bool lFlag, rFlag, tFlag, bFlag;
 //Message callback to populate x, y and z whenever a message is recieved on the coordinate_sender topic
 float dataX = 160;
 float dataY = 120;
-void perform_calculations(void){
-   /*
+void perform_calculations(void) {
+  /*
     stepper1.stop();
     stepper2.stop();
     stepper3.stop();
@@ -409,24 +426,24 @@ void perform_calculations(void){
   */
   //ENdstops are checked, if they're triggered then stop that axis from moving in that direction
   //Check whether the X or Y endstops have been hit. If they have, halt that axis
- /* if ((data.z > 160) && (current_x >= (maxX - (xBorder / 2)))) {
-    camX = 0;
-  } else if ((data.z < 160) && (current_x <= (minX + (xBorder / 2)))) {
-    camX = 0;
-  } else {*/
-    //if endstop isn't triggered, then populate camX with a scaled (and zeroed) version of the point data
-    camX = maxX * (dataX - 160) / 32;
+  /* if ((data.z > 160) && (current_x >= (maxX - (xBorder / 2)))) {
+     camX = 0;
+    } else if ((data.z < 160) && (current_x <= (minX + (xBorder / 2)))) {
+     camX = 0;
+    } else {*/
+  //if endstop isn't triggered, then populate camX with a scaled (and zeroed) version of the point data
+  camX = maxX * (dataX - 160) / 32;
   //}
   //) ? camX = 0.5  : camX = maxX * (data.z - 160) / 320;
 
-/*
-  if ((data.y < 120) && (current_y <= (minY + (yBorder / 2)))) {
-    camY = 0;
-  }
-  else if ((data.y > 120) && (current_y >= (maxY - (yBorder / 2)))) {
-    camY = 0;
-  } else {*/
-    camY = maxY * (120 - dataY) / 24;
+  /*
+    if ((data.y < 120) && (current_y <= (minY + (yBorder / 2)))) {
+      camY = 0;
+    }
+    else if ((data.y > 120) && (current_y >= (maxY - (yBorder / 2)))) {
+      camY = 0;
+    } else {*/
+  camY = maxY * (120 - dataY) / 24;
   //}
 
 
@@ -502,7 +519,7 @@ void messageCb( const geometry_msgs::Point& data) {
   dataX = data.z;
   dataY = data.y;
   perform_calculations();
- 
+
 }
 
 void twistMessageCb( const geometry_msgs::Twist & data) {
@@ -559,6 +576,16 @@ int motor_acceleration = 2000;
 //stepper speed variables
 int stepperMaxSpeed = 600;
 float stepperSpeed = 600;
+
+void restore_default_speeds(void) {
+  pulse_width = 200;
+  motor_acceleration = 2000;
+
+  //stepper speed variables
+  stepperMaxSpeed = 600;
+  stepperSpeed = 600;
+
+}
 
 
 void speedSetCb( const geometry_msgs::Point & data) {
@@ -628,10 +655,9 @@ void motorSetup() {
   stepper4.setAcceleration(motor_acceleration);
 }
 
-
 void catcherReturnHomeCb( const std_msgs::Bool & data) {
   if (!data.data) {
-    returnHome();
+    returnHomeFlag = true;
   }
   else if (data.data) {
     stepper1.setCurrentPosition(0);
@@ -647,23 +673,23 @@ void returnHome(void) {
   stepper3.moveTo(0);
   stepper4.moveTo(0);
 
-  while (!((stepper1.currentPosition() == 0) && (stepper2.currentPosition() == 0) && (stepper3.currentPosition() == 0) && (stepper4.currentPosition() == 0) )){
-      stepper1.moveTo(0);
-  stepper2.moveTo(0);
-  stepper3.moveTo(0);
-  stepper4.moveTo(0);
+  while (!((stepper1.currentPosition() == 0) && (stepper2.currentPosition() == 0) && (stepper3.currentPosition() == 0) && (stepper4.currentPosition() == 0) )) {
+    stepper1.moveTo(0);
+    stepper2.moveTo(0);
+    stepper3.moveTo(0);
+    stepper4.moveTo(0);
     stepper1.run();
     stepper2.run();
     stepper3.run();
     stepper4.run();
     stepper1.runSpeedToPosition();
-      // openDrain();
-      stepper2.runSpeedToPosition();
-      // openDrain();
-      stepper3.runSpeedToPosition();
-      // openDrain();
-      stepper4.runSpeedToPosition ();
-      // openDrain();
+    // openDrain();
+    stepper2.runSpeedToPosition();
+    // openDrain();
+    stepper3.runSpeedToPosition();
+    // openDrain();
+    stepper4.runSpeedToPosition ();
+    // openDrain();
   }
 }
 
