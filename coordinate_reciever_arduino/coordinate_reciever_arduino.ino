@@ -167,8 +167,9 @@ ros::NodeHandle nh;
 //Subscribers
 //Create Point and Quaternion messages (Point used to get ball location from host, quaternion used to publish motor/length data back to host)
 geometry_msgs::Quaternion quat_msg;
-
 geometry_msgs::Point point_msg;
+geometry_msgs::Pose pid_all;
+
 
 //Create publishers
 ros::Publisher step_counts("step_counts", &quat_msg);
@@ -177,7 +178,7 @@ ros::Publisher endstop_publisher("endstop_publisher", &quat_msg);
 ros::Publisher direction_tracker("direction_tracker", &quat_msg);
 ros::Publisher cam_x_cam_y_current_x_current_y_pub("cam_x_cam_y_current_x_current_y_pub", &quat_msg);
 ros::Publisher motor_speed_publisher("motor_speed_publisher", &quat_msg);
-
+ros::Publisher pid_publisher("pid_publisher", &pid_all);
 //Create publisher to return gripper positions to hostPC. Create point_msg structure to contain this data
 ros::Publisher current_pos("current_pos", &point_msg);
 //Publishers
@@ -189,7 +190,6 @@ ros::Subscriber<geometry_msgs::Point> coordinate_subscriber("coordinate_send_top
 void catcherReturnHomeCb( const std_msgs::Bool& data);
 ros::Subscriber<std_msgs::Bool> catcher_return_home("/catcher_return_home", &catcherReturnHomeCb);
 
-geometry_msgs::Pose pid_all;
 void pid_all_cb(const geometry_msgs::Pose& pid_all);
 void speedSetCb( const geometry_msgs::Point& data);
 
@@ -217,6 +217,7 @@ void setup () {
   nh.advertise(direction_tracker);
   nh.advertise(cam_x_cam_y_current_x_current_y_pub);
   nh.advertise(motor_speed_publisher);
+  nh.advertise(pid_publisher);
 
   motorSetup();
 
@@ -277,14 +278,12 @@ void loop() {
     quat_msg.w = speed4;
 
     motor_speed_publisher.publish(&quat_msg);
+    pid_publisher.publish(&pid_all);
 
   }
 
-quat_msg.x = xInput;
-quat_msg.
   perform_calculations();
-  xPID.Compute();
-  yPID.Compute();
+
 
   if ((ball_detected == 0)) {
     //step steppers once per main loop (can this be threaded?)
@@ -316,7 +315,7 @@ void recalculate_gripper_position(void) {
 
 
 
-void calculate_lengths(float &dX, float &dY) {
+void calculate_lengths(float & dX, float & dY) {
 
   recalculate_gripper_position();
 
@@ -337,31 +336,78 @@ void calculate_lengths(float &dX, float &dY) {
   change_in_length_4 = length_4 - curent_length_4;
 }
 
+float newposition, v_x, oldposition;
+int newtime, oldtime;
 
+float x_velocity_calculate(void) {
+  // old_v_x = v_x;
+  recalculate_gripper_position();
+  newposition = current_x;
+  newtime = millis();
+  v_x = (newposition - oldposition) / (newtime - oldtime);
+  oldposition = newposition;
+  oldtime = newtime;
+  return v_x;
+  //    v_left = (v_left + old_v_left)/2;
+}
 
+float newposition_y, v_y, oldposition_y;
+int newtime_y, oldtime_y;
 
+float y_velocity_calculate(void) {
+  // old_v_x = v_x;
+  recalculate_gripper_position();
+  newposition_y = current_y;
+  newtime_y = millis();
+  v_x = (newposition_y - oldposition_y) / (newtime_y - oldtime_y);
+  oldposition_y = newposition_y;
+  oldtime_y = newtime_y;
+  return v_y;
+  //    v_left = (v_left + old_v_left)/2;
+}
+//float32_msg.data = v_left;
+//v_left_pub.publish( &float32_msg);
 
 void perform_calculations(void) {
   camX = maxX * (dataX - 160) / 32;
   camY = maxY * (120 - dataY) / 24;
 
+  xInput = x_velocity_calculate();
+  xSetpoint = (dataX - 160);
+  yInput = y_velocity_calculate();;
+  ySetpoint = camY;
   ball_detected = 0;
+
+  pid_all.position.x = xInput;
+  pid_all.position.y = xSetpoint;
+
+  pid_all.orientation.x = yInput;
+  pid_all.orientation.y = ySetpoint;
+
+  xPID.Compute();
+  yPID.Compute();
+
+  pid_all.position.z = xOutput;
+  pid_all.orientation.x = yOutput;
+
+
+
+
 
   //scale (x,y) co-ordinates
   if ((ball_detected == 0)) {
 
-    float xOut = xOutput;
-    float yOut = yOutput;
-
-    if (PIDen){
-         //find new lengths
-    calculate_lengths(xOut, yOut);
+    if (PIDen) {
+      //find new lengths
+      float xOut = xOutput;
+      float yOut = yOutput;
+      calculate_lengths(xOut, yOut);
     } else {
-    //find new lengths
-    calculate_lengths(camX, camY);     
+      //find new lengths
+      calculate_lengths(camX, camY);
     }
 
- 
+
 
     //calculate speeds and set them
     calculate_speeds(change_in_length_1, change_in_length_2, change_in_length_3, change_in_length_4);
@@ -374,7 +420,7 @@ void perform_calculations(void) {
 
 //point comes in here
 //Message callback to populate x, y and z whenever a message is recieved on the coordinate_sender topic
-void messageCb( const geometry_msgs::Point& data) {
+void messageCb( const geometry_msgs::Point & data) {
   dataX = data.z;
   dataY = data.y;
   perform_calculations();
@@ -519,20 +565,20 @@ void calculate_speeds(float d1, float d2, float d3, float d4) {
 
 void set_speeds(void) {
 
-    stepper1.setSpeed(speed1);
-    stepper1.setMaxSpeed(speed1);
-    stepper2.setSpeed(speed2);
-    stepper2.setMaxSpeed(speed2);
-    stepper3.setSpeed(speed3);
-    stepper3.setMaxSpeed(speed3);
-    stepper4.setSpeed(speed4);
-    stepper4.setMaxSpeed(speed4);
- 
+  stepper1.setSpeed(speed1);
+  stepper1.setMaxSpeed(speed1);
+  stepper2.setSpeed(speed2);
+  stepper2.setMaxSpeed(speed2);
+  stepper3.setSpeed(speed3);
+  stepper3.setMaxSpeed(speed3);
+  stepper4.setSpeed(speed4);
+  stepper4.setMaxSpeed(speed4);
+
 }
 
 
 
-void pid_all_cb(const geometry_msgs::Pose& pid_all) {
+void pid_all_cb(const geometry_msgs::Pose & pid_all) {
   xKp = pid_all.position.x;
   xKi = pid_all.position.y;
   xKd = pid_all.position.z;
