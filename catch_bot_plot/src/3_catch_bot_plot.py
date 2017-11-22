@@ -40,5 +40,5 @@ if __name__ == '__main__':
     axes.set_ylim([0,240])
     plt.draw()
     plt.pause(0.00000000001)   
-    time.sleep(3)
+    time.sleep(1)
     plt.show()
