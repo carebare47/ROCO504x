@@ -247,6 +247,8 @@ void loop() {
 perform_calculations();
 #endif
 
+perform_calculations();
+
   endStopCal();
   endStopCheck2();
   if ((ball_detected == 0)) {
@@ -326,10 +328,10 @@ void moveSteppers(int x, int y) {
 
 void lengthCal(float &dX, float &dY) {
   //get current lengths
-  curent_length_1 = (stepper1.currentPosition() * stepScale) + starting_length_1;
-  curent_length_2 = (stepper2.currentPosition() * stepScale) + starting_length_2;
-  curent_length_3 = (stepper3.currentPosition() * stepScale) + starting_length_3;
-  curent_length_4 = (stepper4.currentPosition() * stepScale) + starting_length_4;
+  curent_length_1 = round((stepper1.currentPosition() * stepScale) + starting_length_1);
+  curent_length_2 = round((stepper2.currentPosition() * stepScale) + starting_length_2);
+  curent_length_3 = round((stepper3.currentPosition() * stepScale) + starting_length_3);
+  curent_length_4 = round((stepper4.currentPosition() * stepScale) + starting_length_4);
 
   //get current (x,y) from lengths
   current_x = maxX / 2 + (sq(curent_length_3) - sq(curent_length_4)) / (2 * maxX);
@@ -398,9 +400,13 @@ bool lFlag, rFlag, tFlag, bFlag;
 //Message callback to populate x, y and z whenever a message is recieved on the coordinate_sender topic
 float dataX = 160;
 float dataY = 120;
+<<<<<<< Updated upstream
 
 void perform_calculations(void){
 
+=======
+void perform_calculations(void){
+>>>>>>> Stashed changes
    /*
     stepper1.stop();
     stepper2.stop();
@@ -438,7 +444,10 @@ void perform_calculations(void){
   //? camY = -0.5 : camY = maxY * (120 - data.y) / 240;
   //camY = maxY * (120 - data.y) / 240;
   ball_detected = 0;
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 
   //scale (x,y) co-ordinates
   if ((ball_detected == 0)) { // && (!endStop)) {
@@ -483,6 +492,11 @@ void perform_calculations(void){
     steper_counts_3 > step_last_3 ? direction_tracker_3 = 1 : direction_tracker_3 = 0;
     steper_counts_4 > step_last_4 ? direction_tracker_4 = 1 : direction_tracker_4 = 0;
 
+<<<<<<< Updated upstream
+=======
+    //  steper_counts_1 > step_last_1 ? digitalWrite(motor1_direction, HIGH) : digitalWrite(motor1_direction, LOW);
+
+>>>>>>> Stashed changes
     step_last_1 = steper_counts_1;
     step_last_2 = steper_counts_2;
     step_last_3 = steper_counts_3;
@@ -500,6 +514,15 @@ void messageCb( const geometry_msgs::Point& data) {
   dataX = data.z;
   dataY = data.y;
 
+  perform_calculations();
+ 
+}
+
+
+//point comes in here
+void messageCb( const geometry_msgs::Point& data) {
+  dataX = data.z;
+  dataY = data.y;
   perform_calculations();
  
 }
