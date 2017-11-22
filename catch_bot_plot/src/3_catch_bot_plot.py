@@ -10,9 +10,9 @@ def callback(data):
     if data.z == 0:
         plt.cla() 
     plt.plot(data.x, data.y, '*')
-    plt.axis("equal")
-    axes.set_xlim([0,320])
-    axes.set_ylim([0,240])
+   # plt.axis("equal")
+    axes.set_xlim([-10,86])
+    axes.set_ylim([-10,110])
     plt.draw()
     plt.pause(0.00000000001)   
     plt.show()
@@ -33,8 +33,8 @@ def listener():
 
 if __name__ == '__main__':
     listener()
-    plt.plot(160, 120, 'h')
-    plt.axis("equal")
+    plt.plot(35.75, 44.75, 'h')
+    #plt.axis("equal")
     axes = plt.gca()
     axes.set_xlim([0,320])
     axes.set_ylim([0,240])
