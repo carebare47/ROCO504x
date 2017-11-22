@@ -100,6 +100,8 @@ float speedMult1, speedMult2, speedMult3, speedMult4;
 
 //Endstop variables
 bool endStop = false;
+bool endStopY = false;
+bool endStopX = false;
 //Used to send endstop status back to host (floats are wasted here, convert to bool messages ASAP!!)
 bool endstop1 = false;
 bool endstop2 = false;
@@ -133,13 +135,11 @@ int step_last_4 = 0;
 ros::NodeHandle nh;
 
 //Subscribers
-#ifdef ros_everything
 //Create Point and Quaternion messages (Point used to get ball location from host, quaternion used to publish motor/length data back to host)
 geometry_msgs::Quaternion quat_msg;
-#endif
+
 geometry_msgs::Point point_msg;
 
-#ifdef ros_everything
 //Create publishers
 ros::Publisher step_counts("step_counts", &quat_msg);
 ros::Publisher lengths_pub("lengths_pub", &quat_msg);
@@ -150,7 +150,6 @@ ros::Publisher motor_speed_publisher("motor_speed_publisher", &quat_msg);
 
 //Create publisher to return gripper positions to hostPC. Create point_msg structure to contain this data
 ros::Publisher current_pos("current_pos", &point_msg);
-#endif
 //Publishers
 //ROS subscriber callback function prototypes
 void messageCb( const geometry_msgs::Point& data);
@@ -160,13 +159,11 @@ ros::Subscriber<geometry_msgs::Point> coordinate_subscriber("coordinate_send_top
 void catcherReturnHomeCb( const std_msgs::Bool& data);
 ros::Subscriber<std_msgs::Bool> catcher_return_home("/catcher_return_home", &catcherReturnHomeCb);
 
-#ifdef ros_everything
 
 void speedSetCb( const geometry_msgs::Point& data);
 
 //Create ROS subscribers
 ros::Subscriber<geometry_msgs::Point> motor_speed_subscriber("/motor_speed_set", &speedSetCb);
-#endif
 ////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////// END OF ROS PUBS & SUBS ///////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -179,7 +176,6 @@ void setup () {
   nh.subscribe(coordinate_subscriber);
   nh.subscribe(catcher_return_home);
 
-#ifdef ros_everything
   nh.subscribe(motor_speed_subscriber);
   nh.advertise(step_counts);
   nh.advertise(lengths_pub);
@@ -188,7 +184,7 @@ void setup () {
   nh.advertise(direction_tracker);
   nh.advertise(cam_x_cam_y_current_x_current_y_pub);
   nh.advertise(motor_speed_publisher);
-#endif
+
   motorSetup();
 
   //messageCb( const geometry_msgs::Point& data)
@@ -200,7 +196,6 @@ void setup () {
 
 
 void loop() {
-#ifdef ros_everything
 
   //Publish data back to ROS every lInterval milliseconds
   unsigned long currentMillis = millis();
@@ -246,11 +241,10 @@ void loop() {
 
   }
 
-#endif
 
   perform_calculations();
 
-  endStopCal();
+  recalculate_gripper_position();
   endStopCheck2();
 
   if ((ball_detected == 0)) {
@@ -298,7 +292,6 @@ void lengthCal(float &dX, float &dY) {
 
 
 int length2Step(float &dL) {
-
   float revs = dL / (PI * spoolD);
   int Step = round(revs * 200);
 
@@ -306,29 +299,8 @@ int length2Step(float &dL) {
 }
 
 
-void endStopCal(void) {
-
-  curent_length_1 = ((stepper1.currentPosition()) * stepScale) + starting_length_1;
-  curent_length_2 = ((stepper2.currentPosition()) * stepScale) + starting_length_2;
-  curent_length_3 = ((stepper3.currentPosition()) * stepScale) + starting_length_3;
-  curent_length_4 = ((stepper4.currentPosition()) * stepScale) + starting_length_4;
-  //get current (x,y) from lengths
-  current_x = maxX / 2 + (sq(curent_length_3) - sq(curent_length_4)) / (2 * maxX);
-  current_y = maxY / 2 + (sq(curent_length_4) - sq(curent_length_1)) / (2 * maxY);
-
-  if (((camX < 0) && (current_x <= minX)) || ((camX > 0) && (current_x >= maxX)) || ((camY < 0) && (current_y <= (minY + (yBorder / 2))  )) || ((camY > 0) && (current_y >= (maxY - (yBorder / 2))))) {
-    endStop = true;
-    /*stepper1.moveTo(stepper1.currentPosition());
-      stepper2.moveTo(stepper2.currentPosition());
-      stepper3.moveTo(stepper3.currentPosition());
-      stepper4.moveTo(stepper4.currentPosition());*/
-  }
-  else
-    endStop = false;
-}
 
 void perform_calculations(void) {
-
   camX = maxX * (dataX - 160) / 32;
   camY = maxY * (120 - dataY) / 24;
 
@@ -340,31 +312,11 @@ void perform_calculations(void) {
     //find new lengths
     lengthCal(camX, camY);
 
+    //calculate speeds and set them
     calculate_speeds(change_in_length_1, change_in_length_2, change_in_length_3, change_in_length_4);
     set_speeds();
 
-
-
     endStopCheck2();
-
-    //find step counts
-    steper_counts_1 = length2Step(change_in_length_1);
-    steper_counts_2 = length2Step(change_in_length_2);
-    steper_counts_3 = length2Step(change_in_length_3);
-    steper_counts_4 = length2Step(change_in_length_4);
-
-
-    //set motor positions
-    steper_counts_1 += stepper1.currentPosition();
-    steper_counts_2 += stepper2.currentPosition();
-    steper_counts_3 += stepper3.currentPosition();
-    steper_counts_4 += stepper4.currentPosition();
-
-
-    stepper1.moveTo(steper_counts_1);
-    stepper2.moveTo(steper_counts_2);
-    stepper3.moveTo(steper_counts_3);
-    stepper4.moveTo(steper_counts_4);
   }
 }
 
@@ -435,6 +387,18 @@ void catcherReturnHomeCb( const std_msgs::Bool & data) {
 }
 
 
+void recalculate_gripper_position(void) {
+
+  curent_length_1 = ((stepper1.currentPosition()) * stepScale) + starting_length_1;
+  curent_length_2 = ((stepper2.currentPosition()) * stepScale) + starting_length_2;
+  curent_length_3 = ((stepper3.currentPosition()) * stepScale) + starting_length_3;
+  curent_length_4 = ((stepper4.currentPosition()) * stepScale) + starting_length_4;
+  //get current (x,y) from lengths
+  current_x = maxX / 2 + (sq(curent_length_3) - sq(curent_length_4)) / (2 * maxX);
+  current_y = maxY / 2 + (sq(curent_length_4) - sq(curent_length_1)) / (2 * maxY);
+
+}
+
 
 void endStopCheck(void) {
   ((dataX < 160) && (current_x <= minX)) ? endstop1 = true : endstop1 = false;
@@ -443,28 +407,38 @@ void endStopCheck(void) {
   ((dataY < 120) && (current_y >= maxY)) ? endstop4 = true : endstop4 = false;
 }
 
-void endStopCheck2(void) {
+bool endStopCheck2(void) {
+  recalculate_gripper_position();
+
   if ((dataX > 160) && (current_x >= (maxX - (xBorder / 2)))) {
-    endStop = true;
+    endStopX = true;
     speedStop();
   } else if ((dataX < 160) && (current_x <= (minX + (xBorder / 2)))) {
     speedStop();
-    endStop = true;
+    endStopX = true;
   } else {
-    endStop = false;
+    endStopX = false;
   }
 
 
   if ((dataY < 120) && (current_y >= (maxY - (yBorder / 2)))) {
     speedStop();
-    endStop = true;
+    endStopY = true;
   }
   else if ((dataY > 120) && (current_y <= (minY + (yBorder / 2)))) {
     speedStop();
+    endStopY = true;
+  } else {
+    endStopY = false;
+  }
+
+  if (endStopX || endStopY) {
     endStop = true;
   } else {
     endStop = false;
   }
+
+  return endStop;
 
 }
 
