@@ -244,8 +244,6 @@ void loop() {
 
   perform_calculations();
 
-  recalculate_gripper_position();
-  endStopCheck2();
 
   if ((ball_detected == 0)) {
     //step steppers once per main loop (can this be threaded?)
@@ -261,8 +259,8 @@ void loop() {
 
 
 
+void recalculate_gripper_position(void) {
 
-void lengthCal(float &dX, float &dY) {
   //get current lengths
   curent_length_1 = round((stepper1.currentPosition() * stepScale) + starting_length_1);
   curent_length_2 = round((stepper2.currentPosition() * stepScale) + starting_length_2);
@@ -273,6 +271,14 @@ void lengthCal(float &dX, float &dY) {
   current_x = maxX / 2 + (sq(curent_length_3) - sq(curent_length_4)) / (2 * maxX);
   current_y = maxY / 2 + (sq(curent_length_4) - sq(curent_length_1)) / (2 * maxY);
 
+}
+
+
+
+void calculate_lengths(float &dX, float &dY) {
+  
+  recalculate_gripper_position();
+  
   //get new lengths
   length_1 = sqrt(sq(maxX - (current_x + dX)) + sq(maxY - (current_y + dY)));
   length_2 = sqrt(sq(      current_x + dX)  + sq(maxY - (current_y + dY)));
@@ -291,12 +297,6 @@ void lengthCal(float &dX, float &dY) {
 }
 
 
-int length2Step(float &dL) {
-  float revs = dL / (PI * spoolD);
-  int Step = round(revs * 200);
-
-  return Step;
-}
 
 
 
@@ -307,10 +307,10 @@ void perform_calculations(void) {
   ball_detected = 0;
 
   //scale (x,y) co-ordinates
-  if ((ball_detected == 0)) { // && (!endStop)) {
+  if ((ball_detected == 0)) {
 
     //find new lengths
-    lengthCal(camX, camY);
+    calculate_lengths(camX, camY);
 
     //calculate speeds and set them
     calculate_speeds(change_in_length_1, change_in_length_2, change_in_length_3, change_in_length_4);
@@ -387,17 +387,6 @@ void catcherReturnHomeCb( const std_msgs::Bool & data) {
 }
 
 
-void recalculate_gripper_position(void) {
-
-  curent_length_1 = ((stepper1.currentPosition()) * stepScale) + starting_length_1;
-  curent_length_2 = ((stepper2.currentPosition()) * stepScale) + starting_length_2;
-  curent_length_3 = ((stepper3.currentPosition()) * stepScale) + starting_length_3;
-  curent_length_4 = ((stepper4.currentPosition()) * stepScale) + starting_length_4;
-  //get current (x,y) from lengths
-  current_x = maxX / 2 + (sq(curent_length_3) - sq(curent_length_4)) / (2 * maxX);
-  current_y = maxY / 2 + (sq(curent_length_4) - sq(curent_length_1)) / (2 * maxY);
-
-}
 
 
 void endStopCheck(void) {
