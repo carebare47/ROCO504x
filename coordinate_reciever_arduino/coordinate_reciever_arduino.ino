@@ -45,8 +45,8 @@ int pulse_width = 200;
 int motor_acceleration = 2000;
 
 //stepper speed variables
-int stepperMaxSpeed = 600;
-float stepperSpeed = 600;
+int stepperMaxSpeed = 400;
+float stepperSpeed = 400;
 
 //ROS publish timer stuff
 unsigned long previousMillis = 0;  // last time update
@@ -276,9 +276,9 @@ void recalculate_gripper_position(void) {
 
 
 void calculate_lengths(float &dX, float &dY) {
-  
+
   recalculate_gripper_position();
-  
+
   //get new lengths
   length_1 = sqrt(sq(maxX - (current_x + dX)) + sq(maxY - (current_y + dY)));
   length_2 = sqrt(sq(      current_x + dX)  + sq(maxY - (current_y + dY)));
@@ -332,11 +332,23 @@ void messageCb( const geometry_msgs::Point& data) {
 
 
 void speedSetCb( const geometry_msgs::Point & data) {
-  pulse_width = data.x;
-  stepperMaxSpeed = data.y;
-  stepperSpeed = stepperMaxSpeed;
-  motor_acceleration = data.z;
-  motorSetup();
+  if (data.x != 0) {
+    pulse_width = data.x;
+  }
+  if (data.y != 0) {
+    stepperMaxSpeed = data.y;
+    stepperSpeed = stepperMaxSpeed;
+  }
+  if (data.z != 0) {
+    motor_acceleration = data.z;
+    stepper1.setAcceleration(motor_acceleration);
+    stepper2.setAcceleration(motor_acceleration);
+    stepper3.setAcceleration(motor_acceleration);
+    stepper4.setAcceleration(motor_acceleration);
+
+  }
+  calculate_speeds(change_in_length_1, change_in_length_2, change_in_length_3, change_in_length_4);
+  set_speeds();
 }
 
 
@@ -379,6 +391,10 @@ void catcherReturnHomeCb( const std_msgs::Bool & data) {
     returnHomeFlag = true;
   }
   else if (data.data) {
+    dataX = 160;
+    dataY = 120;
+    camX = 0;
+    camY = 0;
     stepper1.setCurrentPosition(0);
     stepper2.setCurrentPosition(0);
     stepper3.setCurrentPosition(0);
