@@ -39,6 +39,8 @@ AccelStepper stepper4(1, motor4_step, motor4_direction);
 float dataX = 160;
 float dataY = 120;
 
+float gripper_length = 18.75;
+
 
 //speeds
 int pulse_width = 200;
@@ -72,7 +74,7 @@ float current_x = maxX / 2;
 float current_y = maxY / 2;
 
 float length_1, length_2, length_3, length_4;
-float curent_length_1, curent_length_2, curent_length_3, curent_length_4;
+float current_length_1, current_length_2, current_length_3, current_length_4;
 float change_in_length_1, change_in_length_2, change_in_length_3, change_in_length_4;
 
 //float scaleX = 70 / 320;
@@ -262,23 +264,54 @@ void loop() {
 void recalculate_gripper_position(void) {
 
   //get current lengths
-  curent_length_1 = round((stepper1.currentPosition() * stepScale) + starting_length_1);
-  curent_length_2 = round((stepper2.currentPosition() * stepScale) + starting_length_2);
-  curent_length_3 = round((stepper3.currentPosition() * stepScale) + starting_length_3);
-  curent_length_4 = round((stepper4.currentPosition() * stepScale) + starting_length_4);
+  current_length_1 = round((stepper1.currentPosition() * stepScale) + starting_length_1);
+  current_length_2 = round((stepper2.currentPosition() * stepScale) + starting_length_2);
+  current_length_3 = round((stepper3.currentPosition() * stepScale) + starting_length_3);
+  current_length_4 = round((stepper4.currentPosition() * stepScale) + starting_length_4);
 
   //get current (x,y) from lengths
-  current_x = maxX / 2 + (sq(curent_length_3) - sq(curent_length_4)) / (2 * maxX);
-  current_y = maxY / 2 + (sq(curent_length_4) - sq(curent_length_1)) / (2 * maxY);
+  current_x = maxX / 2 + (sq(current_length_3) - sq(current_length_4)) / (2 * maxX);
+  current_y = maxY / 2 + (sq(current_length_4) - sq(current_length_1)) / (2 * maxY);
 
 }
 
+void recalculate_gripper_position_updated(void) {
+  //get current lengths
+  current_length_1 = round((stepper1.currentPosition() * stepScale) + starting_length_1);
+  current_length_2 = round((stepper2.currentPosition() * stepScale) + starting_length_2);
+  current_length_3 = round((stepper3.currentPosition() * stepScale) + starting_length_3);
+  current_length_4 = round((stepper4.currentPosition() * stepScale) + starting_length_4);
 
+  current_x = maxX / 2 + (sq(current_length_3) - sq(current_length_4)) / (2 * (maxX - gripper_length));
+  current_y = maxY / 2 + (sq(current_length_4) - sq(current_length_1)) / (2 * (maxY - gripper_length));
+}
+
+void calculate_lengths_updated(float &dX, float &dY) {
+
+  recalculate_gripper_position_updated();
+
+  length_2 = sqrt(sq(maxX - (current_x + dX - (gripper_length / 2))) + sq(maxY - (current_y + dY - (gripper_length / 2))));
+  length_1 = sqrt(sq(current_x     + dX    - (gripper_length / 2)) + sq(maxY  - ( current_y + dY - (gripper_length / 2))));
+  length_4 = sqrt(sq(current_x     + dX    - (gripper_length / 2)) + sq(current_y     + dY    - (gripper_length / 2)));
+  length_3 = sqrt(sq(maxX - ( current_x + dX - (gripper_length / 2))) + sq(current_y     + dY    - (gripper_length / 2)));
+
+  length_1 = round(length_1);
+  length_2 = round(length_2);
+  length_3 = round(length_3);
+  length_4 = round(length_4);
+
+  //get dL(change in lengths)
+  change_in_length_1 = length_1 - current_length_1;
+  change_in_length_2 = length_2 - current_length_2;
+  change_in_length_3 = length_3 - current_length_3;
+  change_in_length_4 = length_4 - current_length_4;
+
+}
 
 void calculate_lengths(float &dX, float &dY) {
-  
+
   recalculate_gripper_position();
-  
+
   //get new lengths
   length_1 = sqrt(sq(maxX - (current_x + dX)) + sq(maxY - (current_y + dY)));
   length_2 = sqrt(sq(      current_x + dX)  + sq(maxY - (current_y + dY)));
@@ -290,10 +323,10 @@ void calculate_lengths(float &dX, float &dY) {
   length_4 = round(length_4);
 
   //get dL(change in lengths)
-  change_in_length_1 = length_1 - curent_length_1;
-  change_in_length_2 = length_2 - curent_length_2;
-  change_in_length_3 = length_3 - curent_length_3;
-  change_in_length_4 = length_4 - curent_length_4;
+  change_in_length_1 = length_1 - current_length_1;
+  change_in_length_2 = length_2 - current_length_2;
+  change_in_length_3 = length_3 - current_length_3;
+  change_in_length_4 = length_4 - current_length_4;
 }
 
 
@@ -310,8 +343,8 @@ void perform_calculations(void) {
   if ((ball_detected == 0)) {
 
     //find new lengths
-    calculate_lengths(camX, camY);
-
+    //calculate_lengths_updated(camX, camY);
+    calculate_lengths_updated(camX, camY);
     //calculate speeds and set them
     calculate_speeds(change_in_length_1, change_in_length_2, change_in_length_3, change_in_length_4);
     set_speeds();
