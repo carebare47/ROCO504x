@@ -168,6 +168,7 @@ ros::NodeHandle nh;
 //Create Point and Quaternion messages (Point used to get ball location from host, quaternion used to publish motor/length data back to host)
 geometry_msgs::Quaternion quat_msg;
 geometry_msgs::Point point_msg;
+geometry_msgs::Quaternion quat_msg_vel;
 geometry_msgs::Pose pid_all;
 
 
@@ -179,6 +180,8 @@ ros::Publisher direction_tracker("direction_tracker", &quat_msg);
 ros::Publisher cam_x_cam_y_current_x_current_y_pub("cam_x_cam_y_current_x_current_y_pub", &quat_msg);
 ros::Publisher motor_speed_publisher("motor_speed_publisher", &quat_msg);
 ros::Publisher pid_publisher("pid_publisher", &pid_all);
+ros::Publisher velocity_publisher("velocity_publisher", &point_msg);
+ros::Publisher velocity_other_pubs("velocity_other_pubs", &quat_msg_vel);
 //Create publisher to return gripper positions to hostPC. Create point_msg structure to contain this data
 ros::Publisher current_pos("current_pos", &point_msg);
 //Publishers
@@ -218,14 +221,16 @@ void setup () {
   nh.advertise(cam_x_cam_y_current_x_current_y_pub);
   nh.advertise(motor_speed_publisher);
   nh.advertise(pid_publisher);
+  nh.advertise(velocity_publisher);
+  nh.advertise(velocity_other_pubs);
 
   motorSetup();
 
   xPID.SetMode(AUTOMATIC);
   yPID.SetMode(AUTOMATIC);
 
-  xPID.SetOutputLimits(0, 1300);
-  yPID.SetOutputLimits(0, 1300);
+  xPID.SetOutputLimits(-100, 100);
+  yPID.SetOutputLimits(-100, 100);
 
   //messageCb( const geometry_msgs::Point& data)
   point_msg.x = 0;
@@ -279,6 +284,11 @@ void loop() {
 
     motor_speed_publisher.publish(&quat_msg);
     pid_publisher.publish(&pid_all);
+
+    point_msg.x = x_velocity_calculate();
+    //  point_msg.y = y_velocity_calculate();
+    velocity_publisher.publish(&point_msg);
+    velocity_other_pubs.publish(&quat_msg_vel);
 
   }
 
@@ -341,12 +351,32 @@ int newtime, oldtime;
 
 float x_velocity_calculate(void) {
   // old_v_x = v_x;
+  //PRINT TIMES
+  //PRINT TIMES
+  //PRINT TIMES
+
+  quat_msg_vel.x = current_x;
+  quat_msg_vel.y = newposition;
+
+
+
   recalculate_gripper_position();
   newposition = current_x;
-  newtime = millis();
+  newtime = micros();
+  quat_msg_vel.z = newtime;
+
   v_x = (newposition - oldposition) / (newtime - oldtime);
+  quat_msg_vel.z = newtime;
+  quat_msg_vel.w = oldtime;
+
   oldposition = newposition;
   oldtime = newtime;
+
+  quat_msg_vel.x = newposition;
+  quat_msg_vel.y = oldposition;
+
+
+
   return v_x;
   //    v_left = (v_left + old_v_left)/2;
 }
@@ -358,7 +388,7 @@ float y_velocity_calculate(void) {
   // old_v_x = v_x;
   recalculate_gripper_position();
   newposition_y = current_y;
-  newtime_y = millis();
+  newtime_y = micros();
   v_x = (newposition_y - oldposition_y) / (newtime_y - oldtime_y);
   oldposition_y = newposition_y;
   oldtime_y = newtime_y;
@@ -400,7 +430,7 @@ void perform_calculations(void) {
     if (PIDen) {
       //find new lengths
       float xOut = xOutput;
-      float yOut = yOutput;
+      float yOut = -yOutput;
       calculate_lengths(xOut, yOut);
     } else {
       //find new lengths
@@ -496,26 +526,56 @@ void endStopCheck(void) {
 bool endStopCheck2(void) {
   recalculate_gripper_position();
 
-  if ((dataX > 160) && (current_x >= (maxX - (xBorder / 2)))) {
-    endStopX = true;
-    speedStop();
-  } else if ((dataX < 160) && (current_x <= (minX + (xBorder / 2)))) {
-    speedStop();
-    endStopX = true;
-  } else {
-    endStopX = false;
-  }
+  if (!PIDen) {
+    if ((dataX > 160) && (current_x >= (maxX - (xBorder / 2)))) {
+      endStopX = true;
+      speedStop();
+    } else if ((dataX < 160) && (current_x <= (minX + (xBorder / 2)))) {
+      speedStop();
+      endStopX = true;
+    } else {
+      endStopX = false;
+    }
 
 
-  if ((dataY < 120) && (current_y >= (maxY - (yBorder / 2)))) {
-    speedStop();
-    endStopY = true;
-  }
-  else if ((dataY > 120) && (current_y <= (minY + (yBorder / 2)))) {
-    speedStop();
-    endStopY = true;
-  } else {
-    endStopY = false;
+    if ((dataY < 120) && (current_y >= (maxY - (yBorder / 2)))) {
+      speedStop();
+      endStopY = true;
+    }
+    else if ((dataY > 120) && (current_y <= (minY + (yBorder / 2)))) {
+      speedStop();
+      endStopY = true;
+    } else {
+      endStopY = false;
+    }
+
+
+  } else if (PIDen) {
+
+    float xOut = xOutput;
+    float yOut = -yOutput;
+
+    if ((xOut > 0) && (current_x >= (maxX - (xBorder / 2)))) {
+      endStopX = true;
+      speedStop();
+    } else if ((xOut < 0) && (current_x <= (minX + (xBorder / 2)))) {
+      speedStop();
+      endStopX = true;
+    } else {
+      endStopX = false;
+    }
+
+    if ((yOut < 0) && (current_y >= (maxY - (yBorder / 2)))) {
+      speedStop();
+      endStopY = true;
+    }
+    else if ((yOut > 0) && (current_y <= (minY + (yBorder / 2)))) {
+      speedStop();
+      endStopY = true;
+    } else {
+      endStopY = false;
+    }
+
   }
 
   if (endStopX || endStopY) {
