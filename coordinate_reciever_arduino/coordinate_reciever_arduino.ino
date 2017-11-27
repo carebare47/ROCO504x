@@ -442,7 +442,32 @@ float length2Step(float &dL) {
 
   return Step;
 }
+int hyst = 2;
+int tolerance = 5;
+void check_boundaries(void) {
+  camX = checkAxisBounds(camX, current_x, (minX+10), (maxX-10));
+  camY = checkAxisBounds(camY, current_y, (minY+10), (maxY-10));
+  camX = checkAxisDeadBand(camX, tolerance);
+  camY = checkAxisDeadBand(camY, tolerance);
+}
 
+float checkAxisBounds(float cam, float current, float minimum, float maximum) {
+  if (current <= minimum) {
+    return (minimum - current - hyst);
+  } else if (current >= maximum) {
+    return (maximum - current + hyst);
+  } else {
+    return cam;
+  }
+}
+
+float checkAxisDeadBand(float location, int iTolerance) {
+  if ((location < tolerance) && (location > (tolerance * (-1)))) {
+    return 0;
+  } else {
+    return location;
+  }
+}
 
 void endStopCal(void) {
 
@@ -472,43 +497,12 @@ float dataX = 160;
 float dataY = 120;
 void perform_calculations(void) {
 
-  calculation_flag = true;
-  /*
-    stepper1.stop();
-    stepper2.stop();
-    stepper3.stop();
-    stepper4.stop();
-  */
-  //ENdstops are checked, if they're triggered then stop that axis from moving in that direction
-  //Check whether the X or Y endstops have been hit. If they have, halt that axis
-  /* if ((data.z > 160) && (current_x >= (maxX - (xBorder / 2)))) {
-     camX = 0;
-    } else if ((data.z < 160) && (current_x <= (minX + (xBorder / 2)))) {
-     camX = 0;
-    } else {*/
-  //if endstop isn't triggered, then populate camX with a scaled (and zeroed) version of the point data
   camX = (dataX - 160);
-  //}
-  //) ? camX = 0.5  : camX = maxX * (data.z - 160) / 320;
-
-  /*
-    if ((data.y < 120) && (current_y <= (minY + (yBorder / 2)))) {
-      camY = 0;
-    }
-    else if ((data.y > 120) && (current_y >= (maxY - (yBorder / 2)))) {
-      camY = 0;
-    } else {*/
   camY = (dataY - 120);
-  //}
-  endStopCheck2();
 
+recalculate_gripper_position();
+check_boundaries();
 
-  // camY = maxY * (120 - data.y) / 2400;
-  // camX = maxX * (data.z - 160) / 3200;
-
-
-  //? camY = -0.5 : camY = maxY * (120 - data.y) / 240;
-  //camY = maxY * (120 - data.y) / 240;
   ball_detected = 0;
 
   //scale (x,y) co-ordinates
@@ -598,7 +592,7 @@ void messageCb( const geometry_msgs::Point& data) {
   dataX = data.z;
   dataY = data.y;
   // perform_calculations();
-    perform_calculations();
+  perform_calculations();
 
 
 }
