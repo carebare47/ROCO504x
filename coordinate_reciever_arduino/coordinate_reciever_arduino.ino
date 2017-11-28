@@ -179,9 +179,11 @@ ros::Subscriber<std_msgs::Bool> catcher_return_home("/catcher_return_home", &cat
 
 #ifdef ros_everything
 
+void twistMessageCb( const geometry_msgs::Twist& data);
 void speedSetCb( const geometry_msgs::Point& data);
 
 //Create ROS subscribers
+ros::Subscriber<geometry_msgs::Twist> twist_subscriber("/cmd_vel_mux/input/teleop", &twistMessageCb);
 ros::Subscriber<geometry_msgs::Point> motor_speed_subscriber("/motor_speed_set", &speedSetCb);
 #endif
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -198,6 +200,7 @@ void setup () {
   nh.subscribe(catcher_return_home);
 
 #ifdef ros_everything
+  nh.subscribe(twist_subscriber);
   nh.subscribe(motor_speed_subscriber);
   nh.advertise(step_counts);
   nh.advertise(lengths_pub);
@@ -242,8 +245,8 @@ void loop() {
     point_msg.y = current_y_2;
     other_current_pos.publish(&point_msg);
 
-    //  quat_msg.x = camX;
-    //quat_msg.y = camY;
+  //  quat_msg.x = camX;
+//quat_msg.y = camY;
     cam_x_cam_y_current_x_current_y_pub.publish(&quat_msg2);
     //current stepper positions
     quat_msg.x = stepper1.currentPosition();
@@ -387,7 +390,7 @@ void recalculate_gripper_position(void) {
 }
 
 
-void calculate_lengths(float &dX, float &dY) {
+void lengthCal(float &dX, float &dY) {
   recalculate_gripper_position();
 
   //get new lengths
@@ -430,10 +433,10 @@ void check_boundaries(void) {
 }
 
 float checkAxisBounds(float cam, float current, float minimum, float maximum) {
-  if ((current <= minimum) && (cam < 0)) {
+  if ((current <= minimum)&&(cam < 0)) {
     boundFlag = true;
     return (minimum - current - hyst);
-  } else if ((current >= maximum) && (cam > 0)) {
+  } else if ((current >= maximum)&&(cam > 0)) {
     boundFlag = true;
     return (maximum - current + hyst);
   } else {
@@ -474,6 +477,8 @@ void endStopCal(void) {
   else
     endStop = false;
 }
+bool lFlag, rFlag, tFlag, bFlag;
+//Message callback to populate x, y and z whenever a message is recieved on the coordinate_sender topic
 float dataX = 160;
 float dataY = 120;
 void perform_calculations(void) {
@@ -491,10 +496,22 @@ void perform_calculations(void) {
 
 
     //find new lengths
-    calculate_lengths(camX, camY);
-    calculate_speeds(change_in_length_1, change_in_length_2, change_in_length_3, change_in_length_4);
-    setSpeeds();
+    lengthCal(camX, camY);
 
+    findMax(change_in_length_1, change_in_length_2, change_in_length_3, change_in_length_4);
+    setSpeedMult(maxSpeed1, change_in_length_1, change_in_length_2, change_in_length_3, change_in_length_4);
+    setSpeed1(speedMult1, speedMult2, speedMult3, speedMult4);
+    //  motorSetup();
+
+
+    //endStopCheck2();
+    /*
+        //find step counts
+        steper_counts_1 = length2Step(change_in_length_1);
+        steper_counts_2 = length2Step(change_in_length_2);
+        steper_counts_3 = length2Step(change_in_length_3);
+        steper_counts_4 = length2Step(change_in_length_4);
+    */
     //find step counts
     stepError1 = length2Step(change_in_length_1);
     stepError2 = length2Step(change_in_length_2);
@@ -511,7 +528,18 @@ void perform_calculations(void) {
     errorAccumulator2 += stepError2;
     errorAccumulator3 += stepError3;
     errorAccumulator4 += stepError4;
+    /*
+        stepError1-= steper_counts_1;
+        stepError2-= steper_counts_2;
+        stepError3-= steper_counts_3;
+        stepError4-= steper_counts_4;
+    */
+    //set speed
+    //findMax(change_in_length_1, change_in_length_2, change_in_length_3, change_in_length_4);
+    //setSpeedMult(maxSpeed1, change_in_length_1, change_in_length_2, change_in_length_3, change_in_length_4);
+    //setSpeed1(speedMult1, speedMult2, speedMult3, speedMult4);
 
+    //
 
 
     //set motor positions
@@ -521,22 +549,85 @@ void perform_calculations(void) {
     steper_counts_4 += stepper4.currentPosition();
 
 
+
+    steper_counts_1 > step_last_1 ? direction_tracker_1 = 1 : direction_tracker_1 = 0;
+    steper_counts_2 > step_last_2 ? direction_tracker_2 = 1 : direction_tracker_2 = 0;
+    steper_counts_3 > step_last_3 ? direction_tracker_3 = 1 : direction_tracker_3 = 0;
+    steper_counts_4 > step_last_4 ? direction_tracker_4 = 1 : direction_tracker_4 = 0;
+
+    //  steper_counts_1 > step_last_1 ? digitalWrite(motor1_direction, HIGH) : digitalWrite(motor1_direction, LOW);
+
+    step_last_1 = steper_counts_1;
+    step_last_2 = steper_counts_2;
+    step_last_3 = steper_counts_3;
+    step_last_4 = steper_counts_4;
+
     stepper1.moveTo(steper_counts_1);
     stepper2.moveTo(steper_counts_2);
     stepper3.moveTo(steper_counts_3);
     stepper4.moveTo(steper_counts_4);
     endStopCheck2();
+    calculation_flag = false;
 
   }
 }
 
 
 //point comes in here
-//Message callback to populate x, y and z whenever a message is recieved on the coordinate_sender topic
 void messageCb( const geometry_msgs::Point& data) {
   dataX = data.z;
   dataY = data.y;
+  // perform_calculations();
   perform_calculations();
+
+
+}
+
+void twistMessageCb( const geometry_msgs::Twist & data) {
+  float velocity = data.linear.x * 100;
+  float theta = data.angular.z * 10;
+
+  float x_dir = (velocity * cos(theta)) + 160;
+  float y_dir = (velocity * sin(theta)) + 120;
+
+  camX = maxX * (x_dir - 160) / 320;
+  camY = maxY * (y_dir - 120) / 240;
+
+
+  //scale (x,y) co-ordinates
+  X = camX;
+  Y = camY;
+
+  //find new lengths
+  lengthCal(X, Y);
+
+  //find step counts
+  steper_counts_1 = length2Step(change_in_length_1);
+  steper_counts_2 = length2Step(change_in_length_2);
+  steper_counts_3 = length2Step(change_in_length_3);
+  steper_counts_4 = length2Step(change_in_length_4);
+
+  //set speed
+  //findMax(change_in_length_1, change_in_length_2, change_in_length_3, change_in_length_4);
+  //setSpeedMult(maxSpeed1, change_in_length_1, change_in_length_2, change_in_length_3, change_in_length_4);
+  //setSpeed1(speedMult1, speedMult2, speedMult3, speedMult4);
+
+
+  //quat_msg.x = steper_counts_1;
+  //quat_msg.y = change_in_length_1;
+
+  //quat_msg.z = current_x;
+  //quat_msg.w = current_y;
+
+  //set motor positions
+  steper_counts_1 += stepper1.currentPosition();
+  steper_counts_2 += stepper2.currentPosition();
+  steper_counts_3 += stepper3.currentPosition();
+  steper_counts_4 += stepper4.currentPosition();
+  stepper1.moveTo(steper_counts_1);
+  stepper2.moveTo(steper_counts_2);
+  stepper3.moveTo(steper_counts_3);
+  stepper4.moveTo(steper_counts_4);
 
 }
 
@@ -594,6 +685,16 @@ void motorSetup() {
   pinMode(8, OUTPUT);
   pinMode(9, OUTPUT);
 
+
+  /*  CORE_PIN2_CONFIG = PORT_PCR_ODE | PORT_PCR_MUX(1) | PORT_PCR_SRE | PORT_PCR_DSE ;
+    CORE_PIN3_CONFIG = PORT_PCR_ODE | PORT_PCR_MUX(1) | PORT_PCR_SRE | PORT_PCR_DSE ;
+    CORE_PIN4_CONFIG = PORT_PCR_ODE | PORT_PCR_MUX(1) | PORT_PCR_SRE | PORT_PCR_DSE ;
+    CORE_PIN5_CONFIG = PORT_PCR_ODE | PORT_PCR_MUX(1) | PORT_PCR_SRE | PORT_PCR_DSE ;
+    CORE_PIN6_CONFIG = PORT_PCR_ODE | PORT_PCR_MUX(1) | PORT_PCR_SRE | PORT_PCR_DSE ;
+    CORE_PIN7_CONFIG = PORT_PCR_ODE | PORT_PCR_MUX(1) | PORT_PCR_SRE | PORT_PCR_DSE ;
+    CORE_PIN8_CONFIG = PORT_PCR_ODE | PORT_PCR_MUX(1) | PORT_PCR_SRE | PORT_PCR_DSE ;
+    CORE_PIN9_CONFIG = PORT_PCR_ODE | PORT_PCR_MUX(1) | PORT_PCR_SRE | PORT_PCR_DSE ;
+  */
   stepper1.setMinPulseWidth(pulse_width);
   stepper1.setMaxSpeed(stepperMaxSpeed);
   stepper1.setSpeed(stepperSpeed);
@@ -627,6 +728,31 @@ void catcherReturnHomeCb( const std_msgs::Bool & data) {
   }
 }
 
+void returnHome(void) {
+  stepper1.moveTo(0);
+  stepper2.moveTo(0);
+  stepper3.moveTo(0);
+  stepper4.moveTo(0);
+
+  while (!((stepper1.currentPosition() == 0) && (stepper2.currentPosition() == 0) && (stepper3.currentPosition() == 0) && (stepper4.currentPosition() == 0) )) {
+    stepper1.moveTo(0);
+    stepper2.moveTo(0);
+    stepper3.moveTo(0);
+    stepper4.moveTo(0);
+    stepper1.run();
+    stepper2.run();
+    stepper3.run();
+    stepper4.run();
+    stepper1.runSpeedToPosition();
+    // openDrain();
+    stepper2.runSpeedToPosition();
+    // openDrain();
+    stepper3.runSpeedToPosition();
+    // openDrain();
+    stepper4.runSpeedToPosition ();
+    // openDrain();
+  }
+}
 
 
 void endStopCheck(void) {
@@ -689,18 +815,9 @@ void speedStop(void) {
   */
 }
 
-float maxSpeedRamp = 0;
-float beta = 0.99;
-void acceleration_scale(void) {
-  if ((camX == 0) && (camY == 0)) {
-    maxSpeedRamp = 0;
-  } else {
-    maxSpeedRamp = beta * maxSpeedRamp + (1 - beta) * stepperSpeed;
-    quat_msg2.w = maxSpeedRamp;
-  }
-}
 
-void calculate_speeds(float d1, float d2, float d3, float d4) {
+
+void findMax(float d1, float d2, float d3, float d4) {
   d1 = abs(d1);
   d2 = abs(d2);
   d3 = abs(d3);
@@ -708,22 +825,32 @@ void calculate_speeds(float d1, float d2, float d3, float d4) {
   maxSpeed1 = max(d1, d2);
   maxSpeed1 = max(maxSpeed1, d3);
   maxSpeed1 = max(maxSpeed1, d4);
-  speedMult1 = d1 / maxSpeed1;
-  speedMult2 = d2 / maxSpeed1;
-  speedMult3 = d3 / maxSpeed1;
-  speedMult4 = d4 / maxSpeed1;
-
-  acceleration_scale();
-
-  speed1 = round(maxSpeedRamp * speedMult1);
-  speed2 = round(maxSpeedRamp * speedMult2);
-  speed3 = round(maxSpeedRamp * speedMult3);
-  speed4 = round(maxSpeedRamp * speedMult4);
-
 }
 
+void setSpeedMult(float maxSpeed, float d1, float d2, float d3, float d4) {
+  speedMult1 = d1 / maxSpeed;
+  speedMult2 = d2 / maxSpeed;
+  speedMult3 = d3 / maxSpeed;
+  speedMult4 = d4 / maxSpeed;
+}
+float maxSpeedRamp = 0;
+float beta = 0.99;
+void acceleration_scale(void){
+  if ((camX == 0) && (camY == 0)){
+    maxSpeedRamp = 0;
+  } else {
+    maxSpeedRamp = beta*maxSpeedRamp + (1-beta)*stepperSpeed;
+    quat_msg2.w = maxSpeedRamp;
+  }
+}
 
-void setSpeeds(void) {
+void setSpeed1(float speedM1, float speedM2, float speedM3, float speedM4) {
+  acceleration_scale();
+  speed1 = round(maxSpeedRamp * speedM1);
+  speed2 = round(maxSpeedRamp * speedM2);
+  speed3 = round(maxSpeedRamp * speedM3);
+  speed4 = round(maxSpeedRamp * speedM4);
+
   stepper1.setSpeed(speed1);
   stepper1.setMaxSpeed(speed1);
   stepper2.setSpeed(speed2);
