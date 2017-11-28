@@ -5,7 +5,6 @@
 #include <geometry_msgs/Point.h>
 #include <ros/time.h>
 #include <geometry_msgs/Quaternion.h>
-#include <geometry_msgs/Twist.h>
 #include <std_msgs/Int16.h>
 #include <std_msgs/Bool.h>
 #include <math.h>
@@ -83,7 +82,7 @@ float current_y_2 = maxY / 2;
 float X, Y;
 
 float length_1, length_2, length_3, length_4;
-float curent_length_1, curent_length_2, curent_length_3, curent_length_4;
+float current_length_1, current_length_2, current_length_3, current_length_4;
 float change_in_length_1, change_in_length_2, change_in_length_3, change_in_length_4;
 
 //float scaleX = 70 / 320;
@@ -179,11 +178,9 @@ ros::Subscriber<std_msgs::Bool> catcher_return_home("/catcher_return_home", &cat
 
 #ifdef ros_everything
 
-void twistMessageCb( const geometry_msgs::Twist& data);
 void speedSetCb( const geometry_msgs::Point& data);
 
 //Create ROS subscribers
-ros::Subscriber<geometry_msgs::Twist> twist_subscriber("/cmd_vel_mux/input/teleop", &twistMessageCb);
 ros::Subscriber<geometry_msgs::Point> motor_speed_subscriber("/motor_speed_set", &speedSetCb);
 #endif
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -200,7 +197,6 @@ void setup () {
   nh.subscribe(catcher_return_home);
 
 #ifdef ros_everything
-  nh.subscribe(twist_subscriber);
   nh.subscribe(motor_speed_subscriber);
   nh.advertise(step_counts);
   nh.advertise(lengths_pub);
@@ -300,7 +296,7 @@ void loop() {
   //int loop_timer = micros();
 
 
-  // perform_calculations();
+   perform_calculations();
 
   endStopCheck2();
 
@@ -375,22 +371,22 @@ void loop() {
 
 void recalculate_gripper_position(void) {
   //get current lengths
-  curent_length_1 = ((stepper1.currentPosition() * stepScale) + starting_length_1);
-  curent_length_2 = ((stepper2.currentPosition() * stepScale) + starting_length_2);
-  curent_length_3 = ((stepper3.currentPosition() * stepScale) + starting_length_3);
-  curent_length_4 = ((stepper4.currentPosition() * stepScale) + starting_length_4);
+  current_length_1 = ((stepper1.currentPosition() * stepScale) + starting_length_1);
+  current_length_2 = ((stepper2.currentPosition() * stepScale) + starting_length_2);
+  current_length_3 = ((stepper3.currentPosition() * stepScale) + starting_length_3);
+  current_length_4 = ((stepper4.currentPosition() * stepScale) + starting_length_4);
 
   //get current (x,y) from lengths
-  current_x = maxX / 2 + (sq(curent_length_3) - sq(curent_length_4)) / (2 * maxX);
-  current_y = maxY / 2 + (sq(curent_length_4) - sq(curent_length_2)) / (2 * maxY);
+  current_x = maxX / 2 + (sq(current_length_3) - sq(current_length_4)) / (2 * maxX);
+  current_y = maxY / 2 + (sq(current_length_4) - sq(current_length_2)) / (2 * maxY);
 
 
-  current_x_2 = maxX / 2 + (sq(curent_length_1) - sq(curent_length_2)) / (2 * maxX);
-  current_y_2 = maxY / 2 + (sq(curent_length_3) - sq(curent_length_1)) / (2 * maxY);
+  current_x_2 = maxX / 2 + (sq(current_length_1) - sq(current_length_2)) / (2 * maxX);
+  current_y_2 = maxY / 2 + (sq(current_length_3) - sq(current_length_1)) / (2 * maxY);
 }
 
 
-void lengthCal(float &dX, float &dY) {
+void calculate_lengths(float &dX, float &dY) {
   recalculate_gripper_position();
 
   //get new lengths
@@ -404,10 +400,10 @@ void lengthCal(float &dX, float &dY) {
   length_4 = round(length_4);
 
   //get dL(change in lengths)
-  change_in_length_1 = length_1 - curent_length_1;
-  change_in_length_2 = length_2 - curent_length_2;
-  change_in_length_3 = length_3 - curent_length_3;
-  change_in_length_4 = length_4 - curent_length_4;
+  change_in_length_1 = length_1 - current_length_1;
+  change_in_length_2 = length_2 - current_length_2;
+  change_in_length_3 = length_3 - current_length_3;
+  change_in_length_4 = length_4 - current_length_4;
 }
 
 
@@ -457,13 +453,13 @@ float checkAxisDeadBand(float location, int iTolerance) {
 
 void endStopCal(void) {
 
-  curent_length_1 = ((stepper1.currentPosition()) * stepScale) + starting_length_1;
-  curent_length_2 = ((stepper2.currentPosition()) * stepScale) + starting_length_2;
-  curent_length_3 = ((stepper3.currentPosition()) * stepScale) + starting_length_3;
-  curent_length_4 = ((stepper4.currentPosition()) * stepScale) + starting_length_4;
+  current_length_1 = ((stepper1.currentPosition()) * stepScale) + starting_length_1;
+  current_length_2 = ((stepper2.currentPosition()) * stepScale) + starting_length_2;
+  current_length_3 = ((stepper3.currentPosition()) * stepScale) + starting_length_3;
+  current_length_4 = ((stepper4.currentPosition()) * stepScale) + starting_length_4;
   //get current (x,y) from lengths
-  current_x = maxX / 2 + (sq(curent_length_3) - sq(curent_length_4)) / (2 * maxX);
-  current_y = maxY / 2 + (sq(curent_length_4) - sq(curent_length_2)) / (2 * maxY);
+  current_x = maxX / 2 + (sq(current_length_3) - sq(current_length_4)) / (2 * maxX);
+  current_y = maxY / 2 + (sq(current_length_4) - sq(current_length_2)) / (2 * maxY);
 
 
   if (((camX < 0) && (current_x <= (minX + 15))) || ((camX > 0) && (current_x >= (maxX - 15)))
@@ -496,21 +492,11 @@ void perform_calculations(void) {
 
 
     //find new lengths
-    lengthCal(camX, camY);
+    calculate_lengths(camX, camY);
 
     calculate_speeds(change_in_length_1, change_in_length_2, change_in_length_3, change_in_length_4);
     set_speeds();
-    //  motorSetup();
 
-
-    //endStopCheck2();
-    /*
-        //find step counts
-        steper_counts_1 = length2Step(change_in_length_1);
-        steper_counts_2 = length2Step(change_in_length_2);
-        steper_counts_3 = length2Step(change_in_length_3);
-        steper_counts_4 = length2Step(change_in_length_4);
-    */
     //find step counts
     stepError1 = length2Step(change_in_length_1);
     stepError2 = length2Step(change_in_length_2);
@@ -527,19 +513,6 @@ void perform_calculations(void) {
     errorAccumulator2 += stepError2;
     errorAccumulator3 += stepError3;
     errorAccumulator4 += stepError4;
-    /*
-        stepError1-= steper_counts_1;
-        stepError2-= steper_counts_2;
-        stepError3-= steper_counts_3;
-        stepError4-= steper_counts_4;
-    */
-    //set speed
-    //findMax(change_in_length_1, change_in_length_2, change_in_length_3, change_in_length_4);
-    //setSpeedMult(maxSpeed1, change_in_length_1, change_in_length_2, change_in_length_3, change_in_length_4);
-    //setSpeed1(speedMult1, speedMult2, speedMult3, speedMult4);
-
-    //
-
 
     //set motor positions
     steper_counts_1 += stepper1.currentPosition();
@@ -547,19 +520,6 @@ void perform_calculations(void) {
     steper_counts_3 += stepper3.currentPosition();
     steper_counts_4 += stepper4.currentPosition();
 
-
-
-    steper_counts_1 > step_last_1 ? direction_tracker_1 = 1 : direction_tracker_1 = 0;
-    steper_counts_2 > step_last_2 ? direction_tracker_2 = 1 : direction_tracker_2 = 0;
-    steper_counts_3 > step_last_3 ? direction_tracker_3 = 1 : direction_tracker_3 = 0;
-    steper_counts_4 > step_last_4 ? direction_tracker_4 = 1 : direction_tracker_4 = 0;
-
-    //  steper_counts_1 > step_last_1 ? digitalWrite(motor1_direction, HIGH) : digitalWrite(motor1_direction, LOW);
-
-    step_last_1 = steper_counts_1;
-    step_last_2 = steper_counts_2;
-    step_last_3 = steper_counts_3;
-    step_last_4 = steper_counts_4;
 
     stepper1.moveTo(steper_counts_1);
     stepper2.moveTo(steper_counts_2);
@@ -582,53 +542,7 @@ void messageCb( const geometry_msgs::Point& data) {
 
 }
 
-void twistMessageCb( const geometry_msgs::Twist & data) {
-  float velocity = data.linear.x * 100;
-  float theta = data.angular.z * 10;
 
-  float x_dir = (velocity * cos(theta)) + 160;
-  float y_dir = (velocity * sin(theta)) + 120;
-
-  camX = maxX * (x_dir - 160) / 320;
-  camY = maxY * (y_dir - 120) / 240;
-
-
-  //scale (x,y) co-ordinates
-  X = camX;
-  Y = camY;
-
-  //find new lengths
-  lengthCal(X, Y);
-
-  //find step counts
-  steper_counts_1 = length2Step(change_in_length_1);
-  steper_counts_2 = length2Step(change_in_length_2);
-  steper_counts_3 = length2Step(change_in_length_3);
-  steper_counts_4 = length2Step(change_in_length_4);
-
-  //set speed
-  //findMax(change_in_length_1, change_in_length_2, change_in_length_3, change_in_length_4);
-  //setSpeedMult(maxSpeed1, change_in_length_1, change_in_length_2, change_in_length_3, change_in_length_4);
-  //setSpeed1(speedMult1, speedMult2, speedMult3, speedMult4);
-
-
-  //quat_msg.x = steper_counts_1;
-  //quat_msg.y = change_in_length_1;
-
-  //quat_msg.z = current_x;
-  //quat_msg.w = current_y;
-
-  //set motor positions
-  steper_counts_1 += stepper1.currentPosition();
-  steper_counts_2 += stepper2.currentPosition();
-  steper_counts_3 += stepper3.currentPosition();
-  steper_counts_4 += stepper4.currentPosition();
-  stepper1.moveTo(steper_counts_1);
-  stepper2.moveTo(steper_counts_2);
-  stepper3.moveTo(steper_counts_3);
-  stepper4.moveTo(steper_counts_4);
-
-}
 
 int pulse_width = 200;
 int motor_acceleration = 2000;
@@ -685,15 +599,6 @@ void motorSetup() {
   pinMode(9, OUTPUT);
 
 
-  /*  CORE_PIN2_CONFIG = PORT_PCR_ODE | PORT_PCR_MUX(1) | PORT_PCR_SRE | PORT_PCR_DSE ;
-    CORE_PIN3_CONFIG = PORT_PCR_ODE | PORT_PCR_MUX(1) | PORT_PCR_SRE | PORT_PCR_DSE ;
-    CORE_PIN4_CONFIG = PORT_PCR_ODE | PORT_PCR_MUX(1) | PORT_PCR_SRE | PORT_PCR_DSE ;
-    CORE_PIN5_CONFIG = PORT_PCR_ODE | PORT_PCR_MUX(1) | PORT_PCR_SRE | PORT_PCR_DSE ;
-    CORE_PIN6_CONFIG = PORT_PCR_ODE | PORT_PCR_MUX(1) | PORT_PCR_SRE | PORT_PCR_DSE ;
-    CORE_PIN7_CONFIG = PORT_PCR_ODE | PORT_PCR_MUX(1) | PORT_PCR_SRE | PORT_PCR_DSE ;
-    CORE_PIN8_CONFIG = PORT_PCR_ODE | PORT_PCR_MUX(1) | PORT_PCR_SRE | PORT_PCR_DSE ;
-    CORE_PIN9_CONFIG = PORT_PCR_ODE | PORT_PCR_MUX(1) | PORT_PCR_SRE | PORT_PCR_DSE ;
-  */
   stepper1.setMinPulseWidth(pulse_width);
   stepper1.setMaxSpeed(stepperMaxSpeed);
   stepper1.setSpeed(stepperSpeed);
@@ -727,31 +632,6 @@ void catcherReturnHomeCb( const std_msgs::Bool & data) {
   }
 }
 
-void returnHome(void) {
-  stepper1.moveTo(0);
-  stepper2.moveTo(0);
-  stepper3.moveTo(0);
-  stepper4.moveTo(0);
-
-  while (!((stepper1.currentPosition() == 0) && (stepper2.currentPosition() == 0) && (stepper3.currentPosition() == 0) && (stepper4.currentPosition() == 0) )) {
-    stepper1.moveTo(0);
-    stepper2.moveTo(0);
-    stepper3.moveTo(0);
-    stepper4.moveTo(0);
-    stepper1.run();
-    stepper2.run();
-    stepper3.run();
-    stepper4.run();
-    stepper1.runSpeedToPosition();
-    // openDrain();
-    stepper2.runSpeedToPosition();
-    // openDrain();
-    stepper3.runSpeedToPosition();
-    // openDrain();
-    stepper4.runSpeedToPosition ();
-    // openDrain();
-  }
-}
 
 
 void endStopCheck(void) {
@@ -816,7 +696,7 @@ void speedStop(void) {
 
 
 float maxSpeedRamp = 0;
-float beta = 0.99;
+float beta = 0.9999;
 void acceleration_scale(void) {
   if ((camX == 0) && (camY == 0)) {
     maxSpeedRamp = 0;
