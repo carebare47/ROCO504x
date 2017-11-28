@@ -245,8 +245,8 @@ void loop() {
     point_msg.y = current_y_2;
     other_current_pos.publish(&point_msg);
 
-  //  quat_msg.x = camX;
-//quat_msg.y = camY;
+    //  quat_msg.x = camX;
+    //quat_msg.y = camY;
     cam_x_cam_y_current_x_current_y_pub.publish(&quat_msg2);
     //current stepper positions
     quat_msg.x = stepper1.currentPosition();
@@ -433,10 +433,10 @@ void check_boundaries(void) {
 }
 
 float checkAxisBounds(float cam, float current, float minimum, float maximum) {
-  if ((current <= minimum)&&(cam < 0)) {
+  if ((current <= minimum) && (cam < 0)) {
     boundFlag = true;
     return (minimum - current - hyst);
-  } else if ((current >= maximum)&&(cam > 0)) {
+  } else if ((current >= maximum) && (cam > 0)) {
     boundFlag = true;
     return (maximum - current + hyst);
   } else {
@@ -498,9 +498,8 @@ void perform_calculations(void) {
     //find new lengths
     lengthCal(camX, camY);
 
-    findMax(change_in_length_1, change_in_length_2, change_in_length_3, change_in_length_4);
-    setSpeedMult(maxSpeed1, change_in_length_1, change_in_length_2, change_in_length_3, change_in_length_4);
-    setSpeed1(speedMult1, speedMult2, speedMult3, speedMult4);
+    calculate_speeds(change_in_length_1, change_in_length_2, change_in_length_3, change_in_length_4);
+    set_speeds();
     //  motorSetup();
 
 
@@ -816,41 +815,43 @@ void speedStop(void) {
 }
 
 
-
-void findMax(float d1, float d2, float d3, float d4) {
-  d1 = abs(d1);
-  d2 = abs(d2);
-  d3 = abs(d3);
-  d4 = abs(d4);
-  maxSpeed1 = max(d1, d2);
-  maxSpeed1 = max(maxSpeed1, d3);
-  maxSpeed1 = max(maxSpeed1, d4);
-}
-
-void setSpeedMult(float maxSpeed, float d1, float d2, float d3, float d4) {
-  speedMult1 = d1 / maxSpeed;
-  speedMult2 = d2 / maxSpeed;
-  speedMult3 = d3 / maxSpeed;
-  speedMult4 = d4 / maxSpeed;
-}
 float maxSpeedRamp = 0;
 float beta = 0.99;
-void acceleration_scale(void){
-  if ((camX == 0) && (camY == 0)){
+void acceleration_scale(void) {
+  if ((camX == 0) && (camY == 0)) {
     maxSpeedRamp = 0;
   } else {
-    maxSpeedRamp = beta*maxSpeedRamp + (1-beta)*stepperSpeed;
+    maxSpeedRamp = beta * maxSpeedRamp + (1 - beta) * stepperSpeed;
     quat_msg2.w = maxSpeedRamp;
   }
 }
 
-void setSpeed1(float speedM1, float speedM2, float speedM3, float speedM4) {
-  acceleration_scale();
-  speed1 = round(maxSpeedRamp * speedM1);
-  speed2 = round(maxSpeedRamp * speedM2);
-  speed3 = round(maxSpeedRamp * speedM3);
-  speed4 = round(maxSpeedRamp * speedM4);
 
+void calculate_speeds(float d1, float d2, float d3, float d4) {
+
+  float diff1 = abs(d1);
+  float diff2 = abs(d2);
+  float diff3 = abs(d3);
+  float diff4 = abs(d4);
+  maxSpeed1 = max(diff1, diff2);
+  maxSpeed1 = max(maxSpeed1, diff3);
+  maxSpeed1 = max(maxSpeed1, diff4);
+  speedMult1 = d1 / maxSpeed1;
+  speedMult2 = d2 / maxSpeed1;
+  speedMult3 = d3 / maxSpeed1;
+  speedMult4 = d4 / maxSpeed1;
+
+  acceleration_scale();
+  speed1 = round(maxSpeedRamp * speedMult1);
+  speed2 = round(maxSpeedRamp * speedMult2);
+  speed3 = round(maxSpeedRamp * speedMult3);
+  speed4 = round(maxSpeedRamp * speedMult4);
+}
+
+
+
+
+void set_speeds (void) {
   stepper1.setSpeed(speed1);
   stepper1.setMaxSpeed(speed1);
   stepper2.setSpeed(speed2);
