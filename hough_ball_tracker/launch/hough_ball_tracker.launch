@@ -1,0 +1,4 @@
+<launch>
+  <node name="hough_ball_tracker"          pkg="hough_ball_tracker"  type="hough_ball_tracker" output="screen">
+  </node>
+</launch>
