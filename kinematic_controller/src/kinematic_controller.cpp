@@ -195,20 +195,6 @@ speedStruct speeds;
 
 
 
-void set_speeds (void) {
-  // stepper1.setSpeed(speed1);
-  // stepper1.setMaxSpeed(speed1);
-  // stepper2.setSpeed(speed2);
-  // stepper2.setMaxSpeed(speed2);
-  // stepper3.setSpeed(speed3);
-  // stepper3.setMaxSpeed(speed3);
-  // stepper4.setSpeed(speed4);
-  // stepper4.setMaxSpeed(speed4);
-}
-
-
-
-
 int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "kinematic_controller");
@@ -237,6 +223,7 @@ int main(int argc, char **argv)
 
       newLengths = findNewLengths(dataX, dataY);
       speedStruct motorSpeeds = calculate_speeds(newLengths);
+
 
       m1NewPos.data = m1Position + motorLengthToPosition(newLengths.l1);
       m2NewPos.data = m2Position + motorLengthToPosition(newLengths.l2);
