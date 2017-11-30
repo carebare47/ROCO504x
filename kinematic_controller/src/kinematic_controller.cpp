@@ -25,6 +25,12 @@ const float startingl2 = 57.27674048;
 const float startingl3 = 57.27674048;
 const float startingl4 = 57.27674048;
 
+const int hyst = 2;
+const int tolerance = 5;
+
+bool boundFlag = false;
+bool deadFlag = false;
+
 struct lengthStruct{
   float l1;
   float l2;
@@ -75,8 +81,45 @@ float motorLengthToPosition(float length){
   return motorPosition;
 }
 
+float checkAxisBounds(float cam, float current, float minimum, float maximum) {
+  if ((current <= minimum) && (cam < 0)) {
+    boundFlag = true;
+    return (minimum - current - hyst);
+  } else if ((current >= maximum) && (cam > 0)) {
+    boundFlag = true;
+    return (maximum - current + hyst);
+  } else {
+    boundFlag = false;
+    return cam;
+  }
+}
+
+float checkAxisDeadBand(float location, int iTolerance) {
+  if ((location < tolerance) && (location > (tolerance * (-1)))) {
+    deadFlag = true;
+    return 0;
+  } else {
+    deadFlag = false;
+    return location;
+  }
+}
+
+struct camVals{
+  float X;
+  float Y;
+};
+camVals check_boundaries(float camX, float camY, float currentX, float currentY) {
+  camVals camXY;
+  camX = checkAxisBounds(camX, currentX, (10), (maxX - 10));
+  camY = checkAxisBounds(camY, currentY, (10), (maxY - 10));
+  camXY.X = checkAxisDeadBand(camX, tolerance);
+  camXY.Y = checkAxisDeadBand(camY, tolerance);
+  return camXY;
+}
+
  lengthStruct findNewLengths(float dX, float dY){
   lengthStruct temp;
+  camVals camXY;
   float m1Length = motorPositionToLength(m1Position);
   float m2Length = motorPositionToLength(m2Position);
   float m3Length = motorPositionToLength(m3Position);
@@ -88,6 +131,10 @@ float motorLengthToPosition(float length){
 
   float currentX = maxX / 2 + (pow(currentl3,2.0) - pow(currentl4,2.0)) / (2 * maxX);
   float currentY = maxY / 2 + (pow(currentl4,2.0) - pow(currentl2,2.0)) / (2 * maxY);
+
+  camXY = check_boundaries(dX,dY,currentX,currentY);
+  dX = camXY.X;
+  dY = camXY.Y;
 
   float newL1 = sqrt(pow(      (currentX + dX),2.0)  + pow((maxY - (currentY + dY)),2.0));
   float newL2 = sqrt(pow((maxX - (currentX + dX)),2.0) + pow((maxY - (currentY + dY)),2.0));
@@ -123,6 +170,10 @@ int main(int argc, char **argv)
   ros::Publisher motor4Pub = n.advertise<std_msgs::Float64>("/motor4_controller/command", 1);
   ros::Rate loop_rate(10);
   lengthStruct newLengths;
+
+
+
+
 	while (ros::ok()){
     if (goFlag = true){
 
