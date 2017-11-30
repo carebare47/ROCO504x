@@ -37,6 +37,15 @@ struct lengthStruct{
   float l3;
   float l4;
 };
+
+struct speedStruct{
+  float s1;
+  float s2;
+  float s3;
+  float s4;
+};
+
+
 volatile bool goFlag = false;
 float m1Position,m2Position,m3Position,m4Position;
 
@@ -149,6 +158,55 @@ camVals check_boundaries(float camX, float camY, float currentX, float currentY)
 }
 
 
+float maxSpeedRamp = 0;
+int maxSpeed = 600;
+float beta = 0.9999;
+float acceleration_scale(void) {
+  if ((camX == 0) && (camY == 0)) {
+    maxSpeedRamp = 0;
+  } else {
+    maxSpeedRamp = beta * maxSpeedRamp + (1 - beta) * maxSpeed;
+    return maxSpeedRamp;  
+  }
+}
+
+
+speedStruct calculate_speeds(lengthStruct change_in_lengths) {
+speedStruct speeds;
+  float diff1 = abs(change_in_lengths.l1);
+  float diff2 = abs(change_in_lengths.l2);
+  float diff3 = abs(change_in_lengths.l3);
+  float diff4 = abs(change_in_lengths.l4);
+  float speedScaler = std::max(diff1, diff2);
+  speedScaler = std::max(speedScaler, diff3);
+  speedScaler = std::max(speedScaler, diff4);
+  float speedMult1 = change_in_lengths.l1 / speedScaler;
+  float speedMult2 = change_in_lengths.l2 / speedScaler;
+  float speedMult3 = change_in_lengths.l3 / speedScaler;
+  float speedMult4 = change_in_lengths.l4 / speedScaler;
+
+  maxSpeedRamp = acceleration_scale();
+  speeds.s1 = round(maxSpeedRamp * speedMult1);
+  speeds.s2 = round(maxSpeedRamp * speedMult2);
+  speeds.s3 = round(maxSpeedRamp * speedMult3);
+  speeds.s4 = round(maxSpeedRamp * speedMult4);
+}
+
+
+
+
+void set_speeds (void) {
+  // stepper1.setSpeed(speed1);
+  // stepper1.setMaxSpeed(speed1);
+  // stepper2.setSpeed(speed2);
+  // stepper2.setMaxSpeed(speed2);
+  // stepper3.setSpeed(speed3);
+  // stepper3.setMaxSpeed(speed3);
+  // stepper4.setSpeed(speed4);
+  // stepper4.setMaxSpeed(speed4);
+}
+
+
 
 
 int main(int argc, char **argv)
@@ -159,7 +217,7 @@ int main(int argc, char **argv)
   std_msgs::Float64 m2NewPos;
   std_msgs::Float64 m3NewPos;
   std_msgs::Float64 m4NewPos;
-	ros::Subscriber cameraSub = n.subscribe("coordinate_send_topic", 1, cameraDataCallback);
+  ros::Subscriber cameraSub = n.subscribe("coordinate_send_topic", 1, cameraDataCallback);
   ros::Subscriber motor1Sub = n.subscribe("/motor1_controller/state", 1, m1Callback);
   ros::Subscriber motor2Sub = n.subscribe("/motor2_controller/state", 1, m1Callback);
   ros::Subscriber motor3Sub = n.subscribe("/motor3_controller/state", 1, m1Callback);
@@ -178,6 +236,7 @@ int main(int argc, char **argv)
     if (goFlag = true){
 
       newLengths = findNewLengths(dataX, dataY);
+      speedStruct motorSpeeds = calculate_speeds(newLengths);
 
       m1NewPos.data = m1Position + motorLengthToPosition(newLengths.l1);
       m2NewPos.data = m2Position + motorLengthToPosition(newLengths.l2);
