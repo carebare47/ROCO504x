@@ -1,4 +1,4 @@
-motor1_controller:
+motor4_controller:
     controller:
         package: dynamixel_controllers
         module: joint_position_controller

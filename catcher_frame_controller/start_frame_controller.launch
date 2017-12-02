@@ -4,7 +4,7 @@
         <node name="controller_spawner" pkg="dynamixel_controllers" type="controller_spawner.py"
             args="--manager=dxl_manager
                 --port mx64_port
-                motor1_controller
+                motor4_controller
                 motor2_controller
                 motor3_controller
                 "
