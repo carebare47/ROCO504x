@@ -200,7 +200,10 @@ int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "kinematic_controller");
 	ros::NodeHandle n;
-	ros::ServiceClient client = n.serviceClient<dynamixel_controllers::SetSpeed>("/motor1_controller/set_speed");
+	ros::ServiceClient client1 = n.serviceClient<dynamixel_controllers::SetSpeed>("/motor1_controller/set_speed");
+	ros::ServiceClient client2 = n.serviceClient<dynamixel_controllers::SetSpeed>("/motor2_controller/set_speed");
+	ros::ServiceClient client3 = n.serviceClient<dynamixel_controllers::SetSpeed>("/motor3_controller/set_speed");
+	ros::ServiceClient client4 = n.serviceClient<dynamixel_controllers::SetSpeed>("/motor4_controller/set_speed");
 	dynamixel_controllers::SetSpeed srv;
 
 	std_msgs::Float64 m1NewPos;
@@ -243,43 +246,100 @@ int main(int argc, char **argv)
 
 		m1NewPos.data = 8.0;
 		motor1Pub.publish(m1NewPos);
+		motor2Pub.publish(m1NewPos);		
+		motor3Pub.publish(m1NewPos);
+		motor4Pub.publish(m1NewPos);
 
-		for (float n=0; n<10; n+=0.1){
+		for (float n=0; n<10; n+=0.5){
 			srv.request.speed = n;
 
-			if (client.call(srv))
+			if (client1.call(srv))
 			{
-				ROS_INFO("Success %f", n);			}
-				else
-				{
-					ROS_ERROR("Failed to call service add_two_ints");
-				}
-
-
-				ros::spinOnce();
-				loop_rate.sleep();
+				ROS_INFO("Success %f", n);			
+			} else {
+				ROS_ERROR("Failed to call service");
 			}
 
-			m1NewPos.data = -8.0;
-			motor1Pub.publish(m1NewPos);
 
-			for (float n=10; n>0; n-=0.1){
-				srv.request.speed = n;
-				if (client.call(srv))
-				{
-					ROS_INFO("Success %f", n);
-				}
-				else
-				{
-					ROS_ERROR("Failed to call service add_two_ints");
-				}
-				ros::spinOnce();
-				loop_rate.sleep();
+			if (client2.call(srv))
+			{
+				ROS_INFO("Success %f", n);			
+			} else {
+				ROS_ERROR("Failed to call service");
 			}
+
+
+			if (client3.call(srv))
+			{
+				ROS_INFO("Success %f", n);			
+			} else {
+				ROS_ERROR("Failed to call service");
+			}
+
+
+			if (client4.call(srv))
+			{
+				ROS_INFO("Success %f", n);			
+			} else {
+				ROS_ERROR("Failed to call service");
+			}
+
+
+
 
 			ros::spinOnce();
 			loop_rate.sleep();
-
 		}
-		return 0;
+
+		m1NewPos.data = -8.0;
+		motor1Pub.publish(m1NewPos);
+		motor2Pub.publish(m1NewPos);		
+		motor3Pub.publish(m1NewPos);
+		motor4Pub.publish(m1NewPos);
+
+		for (float n=10; n>0; n-=0.5){
+			srv.request.speed = n;
+
+						if (client1.call(srv))
+			{
+				ROS_INFO("Success %f", n);			
+			} else {
+				ROS_ERROR("Failed to call service");
+			}
+
+
+			if (client2.call(srv))
+			{
+				ROS_INFO("Success %f", n);			
+			} else {
+				ROS_ERROR("Failed to call service");
+			}
+
+
+			if (client3.call(srv))
+			{
+				ROS_INFO("Success %f", n);			
+			} else {
+				ROS_ERROR("Failed to call service");
+			}
+
+
+			if (client4.call(srv))
+			{
+				ROS_INFO("Success %f", n);			
+			} else {
+				ROS_ERROR("Failed to call service");
+			}
+
+
+
+			ros::spinOnce();
+			loop_rate.sleep();
+		}
+
+		ros::spinOnce();
+		loop_rate.sleep();
+
 	}
+	return 0;
+}
