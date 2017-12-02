@@ -7,9 +7,9 @@ motor1_controller:
     joint_speed: 200.0
     motor:
         id: 1
-        init: 4095
+        init: 0
         min: 0
-        max: 8190
+        max: 4095
         
 
 motor2_controller:
@@ -21,9 +21,9 @@ motor2_controller:
     joint_speed: 200.0
     motor:
         id: 2
-        init: 4095
+        init: 0
         min: 0
-        max: 8190
+        max: 4095
         
 
 motor3_controller:
@@ -35,9 +35,9 @@ motor3_controller:
     joint_speed: 200.0
     motor:
         id: 3
-        init: 4095
+        init: 0
         min: 0
-        max: 8190
+        max: 4095
         
 
 motor4_controller:
@@ -49,7 +49,7 @@ motor4_controller:
     joint_speed: 200.0
     motor:
         id: 4
-        init: 4095
+        init: 0
         min: 0
-        max: 8190
+        max: 4095
         

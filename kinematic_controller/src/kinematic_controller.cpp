@@ -9,8 +9,8 @@
 
 int camX = 320;
 int camY = 240;
-float dataX = camX;
-float dataY = camY;
+float dataX = 0;
+float dataY = 0;
 float maxX = 89.5;
 float maxY = 71.5;
 int ball_detected = 0;
@@ -118,7 +118,7 @@ float checkAxisBounds(float cam, float current, float minimum, float maximum) {
 float checkAxisDeadBand(float location, int iTolerance) {
 	if ((location < tolerance) && (location > (tolerance * (-1)))) {
 		deadFlag = true;
-		return 0;
+		return 0.0;
 	} else {
 		deadFlag = false;
 		return location;
@@ -129,10 +129,11 @@ struct camVals{
 	float X;
 	float Y;
 };
+camVals dataXYtoPub;
 camVals check_boundaries(float camX, float camY, float currentX, float currentY) {
 	camVals camXY;
-	camX = checkAxisBounds(camX, currentX, (10), (maxX - 10));
-	camY = checkAxisBounds(camY, currentY, (10), (maxY - 10));
+	camX = checkAxisBounds(camX, currentX, (10.0), (maxX - 10.0));
+	camY = checkAxisBounds(camY, currentY, (10.0), (maxY - 10.0));
 	camXY.X = checkAxisDeadBand(camX, tolerance);
 	camXY.Y = checkAxisDeadBand(camY, tolerance);
 	return camXY;
@@ -152,9 +153,12 @@ lengthStruct findNewLengths(float dX, float dY){
 
 	float currentX = maxX / 2 + (pow(currentl3,2.0) - pow(currentl4,2.0)) / (2 * maxX);
 	float currentY = maxY / 2 + (pow(currentl4,2.0) - pow(currentl2,2.0)) / (2 * maxY);
-  //camXY = check_boundaries(dX,dY,currentX,currentY);
-  //dX = camXY.X;
-  //dY = camXY.Y;
+	camXY = check_boundaries(dX,dY,currentX,currentY);
+	dX = camXY.X;
+	dY = camXY.Y;
+
+	dataXYtoPub.X = dX;
+	dataXYtoPub.Y = dY;
 
 	float newL1 = sqrt(pow(      (currentX + dX),2.0)  + pow((maxY - (currentY + dY)),2.0));
 	float newL2 = sqrt(pow((maxX - (currentX + dX)),2.0) + pow((maxY - (currentY + dY)),2.0));
@@ -175,7 +179,7 @@ lengthStruct findNewLengths(float dX, float dY){
 
 
 float maxSpeedRamp = 0.0;
-float maxSpeed = 5.0;
+float maxSpeed = 1.0;
 float beta = 0.99;
 float acceleration_scale(void) {
 	if ((camX == 0) && (camY == 0)) {
@@ -196,16 +200,24 @@ speedStruct calculate_speeds(lengthStruct change_in_lengths) {
 	float speedScaler = std::max(diff1, diff2);
 	speedScaler = std::max(speedScaler, diff3);
 	speedScaler = std::max(speedScaler, diff4);
-	float speedMult1 = diff1 / speedScaler;
-	float speedMult2 = diff2 / speedScaler;
-	float speedMult3 = diff3 / speedScaler;
-	float speedMult4 = diff4 / speedScaler;
+	if (speedScaler != 0.0){
+		float speedMult1 = diff1 / speedScaler;
+		float speedMult2 = diff2 / speedScaler;
+		float speedMult3 = diff3 / speedScaler;
+		float speedMult4 = diff4 / speedScaler;
 
-	maxSpeedRamp = acceleration_scale();
-	speeds.s1 = (maxSpeedRamp * speedMult1);
-	speeds.s2 = (maxSpeedRamp * speedMult2);
-	speeds.s3 = (maxSpeedRamp * speedMult3);
-	speeds.s4 = (maxSpeedRamp * speedMult4);
+		maxSpeedRamp = 4.0; //acceleration_scale();
+		speeds.s1 = (maxSpeedRamp * speedMult1);
+		speeds.s2 = (maxSpeedRamp * speedMult2);
+		speeds.s3 = (maxSpeedRamp * speedMult3);
+		speeds.s4 = (maxSpeedRamp * speedMult4);
+
+	} else {
+		speeds.s1 = 0.0;
+		speeds.s2 = 0.0;
+		speeds.s3 = 0.0;
+		speeds.s4 = 0.0;
+	}
 	return speeds;
 }
 
@@ -224,6 +236,7 @@ int main(int argc, char **argv)
 	std_msgs::Float64 m3NewPos;
 	std_msgs::Float64 m4NewPos;
 	geometry_msgs::Point XY;
+	geometry_msgs::Point dataXYpub;
 	geometry_msgs::Quaternion lengths;
 	geometry_msgs::Quaternion positions;
 	ros::Subscriber cameraSub = n.subscribe("coordinate_send_topic", 1, cameraDataCallback);
@@ -238,21 +251,61 @@ int main(int argc, char **argv)
 	ros::Publisher motorLengthPub = n.advertise<geometry_msgs::Quaternion>("motorLengths", 1);
 	ros::Publisher motorPositionsPub = n.advertise<geometry_msgs::Quaternion>("motorPositions", 1);
 	ros::Publisher PositionPub = n.advertise<geometry_msgs::Point>("current_pos", 1);
+	ros::Publisher dataXYpublisher = n.advertise<geometry_msgs::Point>("dataXYpublisher", 1);
+	
 	bool flag1 = false;
 	bool flag2 = false;
 	bool flag3 = false;
 	bool flag4 = false;
 
-	ros::Rate loop_rate(10);
+
+	ros::Rate loop_rate(50);
 	lengthStruct newLengths;
+
+	
 	m1NewPos.data = PI;
 	m2NewPos.data = PI;
 	m3NewPos.data = PI;
 	m4NewPos.data = PI;
+	srv.request.speed = 5.0;
+	client1.call(srv);
+	client2.call(srv);
+	client3.call(srv);
+	client4.call(srv);
+	ros::spinOnce();
+	loop_rate.sleep();
+	ros::spinOnce();
+	loop_rate.sleep();
 	motor1Pub.publish(m1NewPos);
 	motor2Pub.publish(m2NewPos);
 	motor3Pub.publish(m3NewPos);
 	motor4Pub.publish(m4NewPos);
+	ros::spinOnce();
+	loop_rate.sleep();
+	int microseconds = 0.5*1000*1000;
+	usleep(microseconds);
+	ros::spinOnce();
+	loop_rate.sleep();
+	srv.request.speed = 5.0;
+	client1.call(srv);
+	client2.call(srv);
+	client3.call(srv);
+	client4.call(srv);
+	ros::spinOnce();
+	loop_rate.sleep();
+	ros::spinOnce();
+	loop_rate.sleep();
+	motor1Pub.publish(m1NewPos);
+	motor2Pub.publish(m2NewPos);
+	motor3Pub.publish(m3NewPos);
+	motor4Pub.publish(m4NewPos);
+	ros::spinOnce();
+	microseconds = 3*1000*1000;
+	usleep(microseconds);
+	ros::spinOnce();
+	loop_rate.sleep();
+	ros::spinOnce();
+	loop_rate.sleep();
 
 	while (ros::ok()){
 		if (goFlag = true){
@@ -272,6 +325,10 @@ int main(int argc, char **argv)
 			PositionPub.publish(XY);
 			motorLengthPub.publish(lengths);
 			motorPositionsPub.publish(positions);
+
+			dataXYpub.x = dataXYtoPub.X;
+			dataXYpub.y = dataXYtoPub.Y;
+			dataXYpublisher.publish(dataXYpub);
 
 
 			srv.request.speed = motorSpeeds.s1;
