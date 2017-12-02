@@ -238,6 +238,10 @@ int main(int argc, char **argv)
 	ros::Publisher motorLengthPub = n.advertise<geometry_msgs::Quaternion>("motorLengths", 1);
 	ros::Publisher motorPositionsPub = n.advertise<geometry_msgs::Quaternion>("motorPositions", 1);
 	ros::Publisher PositionPub = n.advertise<geometry_msgs::Point>("current_pos", 1);
+	bool flag1 = false;
+	bool flag2 = false;
+	bool flag3 = false;
+	bool flag4 = false;
 
 	ros::Rate loop_rate(10);
 	lengthStruct newLengths;
@@ -272,32 +276,40 @@ int main(int argc, char **argv)
 
 			srv.request.speed = motorSpeeds.s1;
 			if (client1.call(srv)){
-				ROS_INFO("Success client 1 %f", motorSpeeds.s1);			
+				flag1 = true;
 			} else {
 				ROS_ERROR("Failed to call service 1");
+				flag1 = false;
 			}
 
 			srv.request.speed = motorSpeeds.s2;
 			if (client2.call(srv)){
-				ROS_INFO("Success client 2 %f", motorSpeeds.s2);			
+				flag2 = true;
 			} else {
 				ROS_ERROR("Failed to call service 2");
+				flag2 = false;
 			}
 
 			srv.request.speed = motorSpeeds.s3;
 			if (client3.call(srv)){
-				ROS_INFO("Success client 3 %f", motorSpeeds.s3);			
+				flag3 = true;
 			} else {
 				ROS_ERROR("Failed to call service 3");
+				flag3 = false;
 			}
 
 			srv.request.speed = motorSpeeds.s4;
 			if (client4.call(srv)){
-				ROS_INFO("Success client 4 %f", motorSpeeds.s4);			
+				flag4 = true;
+
 			} else {
 				ROS_ERROR("Failed to call service 4");
+				flag4 = false;
 			}
+			if (flag1 && flag2 && flag3 && flag4){
+				ROS_INFO("Successfully published all speeds. \n Speed1 =  %f Speed2 =  %f Speed3 =  %f Speed4 =  %f \n", motorSpeeds.s1, motorSpeeds.s2, motorSpeeds.s3, motorSpeeds.s4);			
 
+			}
 
 			m1NewPos.data = m1Position + motorLengthToPosition(newLengths.l1);
 			m2NewPos.data = m2Position + motorLengthToPosition(newLengths.l2);
