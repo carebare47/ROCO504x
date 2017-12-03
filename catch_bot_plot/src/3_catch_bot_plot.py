@@ -4,41 +4,30 @@ from geometry_msgs.msg import Point
 from matplotlib import pyplot as plt
 import time
 
-plt.ioff()
 global trails
+x1 = 44.75
+x2 = 35.75
 def callback(data):
-    if data.z == 0:
-        plt.cla() 
-    plt.plot(data.x, data.y, '*')
+    rospy.loginfo(rospy.get_caller_id() + "X : %f   Y : %f", data.x,data.y)
+    plt.clf()
+    plt.ion()
+    axes = plt.gca()
+    axes.set_xlim([-10,100])
+    axes.set_ylim([-10,80])
+    axes.set_autoscale_on(False)
+    x1=(data.x)
+    x2=(data.y)
+    plt.plot(x1, x2, '*')
    # plt.axis("equal")
-    axes.set_xlim([-10,86])
-    axes.set_ylim([-10,110])
     plt.draw()
-    plt.pause(0.00000000001)   
+    plt.pause(0.05)
     plt.show()
 
- 
-def listener():
-
-    # In ROS, nodes are uniquely named. If two nodes with the same
-    # node are launched, the previous one is kicked off. The
-    # anonymous=True flag means that rospy will choose a unique
-    # name for our 'listener' node so that multiple listeners can
-    # run simultaneously.
-    rospy.init_node('plotter_node', anonymous=True)
-    rospy.Subscriber("current_pos", Point, callback)
-    plt.show(block=True)
-    # spin() simply keeps python from exiting until this node is stopped
-#    rospy.spin()
 
 if __name__ == '__main__':
-    listener()
-    plt.plot(35.75, 44.75, 'h')
-    #plt.axis("equal")
-    axes = plt.gca()
-    axes.set_xlim([0,320])
-    axes.set_ylim([0,240])
-    plt.draw()
-    plt.pause(0.00000000001)   
+    rospy.init_node('plotter_node', anonymous=True)
+    rospy.Subscriber("current_pos", Point, callback, queue_size = 1)
+    rospy.spin()
     time.sleep(1)
-    plt.show()
+    #plt.axis("equal")
+

@@ -4,7 +4,7 @@ motor4_controller:
         module: joint_position_controller
         type: JointPositionController
     joint_name: m1
-    joint_speed: 1.0
+    joint_speed: 10.0
     motor:
         id: 1
         init: 0
@@ -17,7 +17,7 @@ motor2_controller:
         module: joint_position_controller
         type: JointPositionController
     joint_name: m2
-    joint_speed: 1.0
+    joint_speed: 10.0
     motor:
         id: 2
         init: 0
@@ -30,7 +30,7 @@ motor3_controller:
         module: joint_position_controller
         type: JointPositionController
     joint_name: m3
-    joint_speed: 1.0
+    joint_speed: 10.0
     motor:
         id: 3
         init: 0
