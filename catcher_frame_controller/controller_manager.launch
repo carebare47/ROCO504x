@@ -7,10 +7,10 @@
             serial_ports:
                 mx64_port:
                     port_name: "/dev/ttyUSB0"
-                    baud_rate: 57600
+                    baud_rate: 250000
                     min_motor_id: 0
                     max_motor_id: 25
-                    update_rate: 20
+                    update_rate: 200
         </rosparam>
     </node>
 </launch>

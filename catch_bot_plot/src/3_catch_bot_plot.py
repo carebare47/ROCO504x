@@ -28,6 +28,6 @@ if __name__ == '__main__':
     rospy.init_node('plotter_node', anonymous=True)
     rospy.Subscriber("current_pos", Point, callback, queue_size = 1)
     rospy.spin()
-    time.sleep(1)
+    time.sleep(0.1)
     #plt.axis("equal")
 

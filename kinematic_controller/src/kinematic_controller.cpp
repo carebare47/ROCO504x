@@ -159,8 +159,10 @@ lengthStruct findNewLengths(float dX, float dY){
   float currentl3 = m3Length + startingl3;
   float currentl4 = m4Length + startingl4;
 
-  float currentX = maxX / 2.0 + (pow(currentl3,2.0) - pow(currentl4,2.0)) / (2 * maxX);
-  float currentY = maxY / 2.0 + (pow(currentl4,2.0) - pow(currentl2,2.0)) / (2 * maxY);
+  float currentX = maxX / 2.0 + (pow(currentl1,2.0) - pow(currentl2,2.0)) / (2 * maxX);
+  //float currentY = maxY / 2.0 + (pow(currentl4,2.0) - pow(currentl2,2.0)) / (2 * maxY);
+  //l3^2 = sqrt(x^2 + y^2)
+  float currentY = maxY - sqrt(pow(currentl1,2.0) - pow(currentX,2.0));
   camXY = check_boundaries(dX,dY,currentX,currentY);
   dX = camXY.X;
   dY = camXY.Y;
@@ -231,13 +233,13 @@ void setSpeedSrv(ros::ServiceClient client1, ros::ServiceClient client2, ros::Se
       bool flag2 = false;
       bool flag3 = false;
       bool flag4 = false;
-      srv.request.speed = motorSpeeds.s1;
-      if (client1.call(srv)){
-        flag1 = true;
-      } else {
-        ROS_ERROR("Failed to call service 1");
-        flag1 = false;
-      }
+      // srv.request.speed = motorSpeeds.s1;
+      // if (client1.call(srv)){
+      //   flag1 = true;
+      // } else {
+      //   ROS_ERROR("Failed to call service 1");
+      //   flag1 = false;
+      // }
 
       srv.request.speed = motorSpeeds.s2;
       if (client2.call(srv)){
@@ -350,6 +352,7 @@ int main(int argc, char **argv)
       motor2simPub.publish(motor2sim);
       motor3simPub.publish(motor3sim);
       motor4simPub.publish(motor4sim);
+      initFlag = false;
       goFlag = false;
     }
     else if (initFlag == true){
@@ -366,12 +369,12 @@ int main(int argc, char **argv)
       motor2Pub.publish(m2NewPos);
       motor3Pub.publish(m3NewPos);
       motor4Pub.publish(m4NewPos);
-      initFlag = false;
+
       ros::spinOnce();
       loop_rate.sleep();
-    }else if (initFlag == false)
+    }else if (initFlag == false){
       newLengths = findNewLengths(0, 0);
-      //motorSpeeds = calculate_speeds(newLengths);
+      motorSpeeds = calculate_speeds(newLengths);
       XY.x = newLengths.x;
       XY.y = newLengths.y;
       lengths.x = newLengths.nl1;
@@ -385,6 +388,7 @@ int main(int argc, char **argv)
       PositionPub.publish(XY);
       motorLengthPub.publish(lengths);
       motorPositionsPub.publish(positions);
+    }
     ros::spinOnce();
     loop_rate.sleep();
 
