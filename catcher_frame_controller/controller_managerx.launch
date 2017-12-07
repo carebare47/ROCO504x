@@ -1,0 +1,93 @@
+<!-- -*- mode: XML -*- -->
+
+<launch>
+
+    <node name="dynamixel_manager1" pkg="dynamixel_controllers" type="controller_manager.py" required="true" output="screen">
+        <rosparam>
+            namespace: dxl_manager
+            serial_ports:
+                mx64_port1:
+                    <!--motor1-->
+                    port_name: "/dev/ttyUSB3"
+                    baud_rate: 250000
+                    min_motor_id: 0
+                    max_motor_id: 25
+                    update_rate: 200
+        </rosparam>
+    </node>
+
+    <node name="dynamixel_manager2" pkg="dynamixel_controllers" type="controller_manager.py" required="true" output="screen">
+        <rosparam>
+            namespace: dxl_manager
+            serial_ports:
+                mx64_port2:
+                    <!--motor2-->
+                    port_name: "/dev/ttyUSB2"
+                    baud_rate: 250000
+                    min_motor_id: 0
+                    max_motor_id: 25
+                    update_rate: 200
+        </rosparam>
+    </node>
+
+    <node name="dynamixel_manager3" pkg="dynamixel_controllers" type="controller_manager.py" required="true" output="screen">
+        <rosparam>
+            namespace: dxl_manager
+            serial_ports:
+                mx64_port3:
+                    <!--motor3-->
+                    port_name: "/dev/ttyUSB0"
+                    baud_rate: 250000
+                    min_motor_id: 0
+                    max_motor_id: 25
+                    update_rate: 200
+        </rosparam>
+    </node>
+
+    <node name="dynamixel_manager4" pkg="dynamixel_controllers" type="controller_manager.py" required="true" output="screen">
+        <rosparam>
+            namespace: dxl_manager
+            serial_ports:
+                mx64_port4:
+                    <!--motor4-->
+                    port_name: "/dev/ttyUSB1"
+                    baud_rate: 250000
+                    min_motor_id: 0
+                    max_motor_id: 25
+                    update_rate: 200
+        </rosparam>
+    </node>
+
+    <rosparam file="$(find catcher_frame_controller)/frame.yaml" command="load"/>
+
+    <node name="controller_spawner1" pkg="dynamixel_controllers" type="controller_spawner.py"
+            args="--manager=dxl_manager
+                --port mx64_port1
+                motor1_controller
+                "
+            output="screen"/>
+
+
+    <node name="controller_spawner2" pkg="dynamixel_controllers" type="controller_spawner.py"
+            args="--manager=dxl_manager
+                --port mx64_port2
+                motor2_controller
+                "
+            output="screen"/>
+
+
+    <node name="controller_spawner3" pkg="dynamixel_controllers" type="controller_spawner.py"
+            args="--manager=dxl_manager
+                --port mx64_port3
+                motor3_controller
+                "
+            output="screen"/>
+
+
+    <node name="controller_spawner4" pkg="dynamixel_controllers" type="controller_spawner.py"
+            args="--manager=dxl_manager
+                --port mx64_port4
+                motor4_controller
+                "
+            output="screen"/>
+</launch>

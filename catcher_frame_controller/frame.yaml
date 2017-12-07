@@ -1,4 +1,4 @@
-motor4_controller:
+motor1_controller:
     controller:
         package: dynamixel_controllers
         module: joint_position_controller
@@ -10,6 +10,7 @@ motor4_controller:
         init: 0
         min: 0
         max: 4095
+
         
 motor2_controller:
     controller:
@@ -23,6 +24,7 @@ motor2_controller:
         init: 0
         min: 0
         max: 4095
+
         
 motor3_controller:
     controller:
@@ -36,3 +38,20 @@ motor3_controller:
         init: 0
         min: 0
         max: 4095
+
+        
+motor4_controller:
+    controller:
+        package: dynamixel_controllers
+        module: joint_position_controller
+        type: JointPositionController
+    joint_name: m4
+    joint_speed: 10.0
+    motor:
+        id: 4
+        init: 0
+        min: 0
+        max: 4095
+
+        
+
