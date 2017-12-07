@@ -160,9 +160,9 @@ lengthStruct findNewLengths(float dX, float dY){
   float currentl4 = m4Length + startingl4;
 
   float currentX = maxX / 2.0 + (pow(currentl1,2.0) - pow(currentl2,2.0)) / (2 * maxX);
-  //float currentY = maxY / 2.0 + (pow(currentl4,2.0) - pow(currentl2,2.0)) / (2 * maxY);
+  float currentY = maxY / 2.0 + (pow(currentl4,2.0) - pow(currentl2,2.0)) / (2 * maxY);
   //l3^2 = sqrt(x^2 + y^2)
-  float currentY = maxY - sqrt(pow(currentl1,2.0) - pow(currentX,2.0));
+  //float currentY = maxY - sqrt(pow(currentl1,2.0) - pow(currentX,2.0));
   camXY = check_boundaries(dX,dY,currentX,currentY);
   dX = camXY.X;
   dY = camXY.Y;
@@ -212,7 +212,7 @@ speedStruct calculate_speeds(lengthStruct change_in_lengths) {
   float speedMult2 = diff2 / speedScaler;
   float speedMult3 = diff3 / speedScaler;
   float speedMult4 = diff4 / speedScaler;
-  maxSpeedRamp = 4.0;
+  maxSpeedRamp = 10.0;
   speeds.s1 = (maxSpeedRamp * speedMult1);
   speeds.s2 = (maxSpeedRamp * speedMult2);
   speeds.s3 = (maxSpeedRamp * speedMult3);
@@ -233,13 +233,14 @@ void setSpeedSrv(ros::ServiceClient client1, ros::ServiceClient client2, ros::Se
       bool flag2 = false;
       bool flag3 = false;
       bool flag4 = false;
-      // srv.request.speed = motorSpeeds.s1;
-      // if (client1.call(srv)){
-      //   flag1 = true;
-      // } else {
-      //   ROS_ERROR("Failed to call service 1");
-      //   flag1 = false;
-      // }
+      
+      srv.request.speed = motorSpeeds.s1;
+      if (client1.call(srv)){
+        flag1 = true;
+      } else {
+        ROS_ERROR("Failed to call service 1");
+        flag1 = false;
+      }
 
       srv.request.speed = motorSpeeds.s2;
       if (client2.call(srv)){
@@ -285,10 +286,10 @@ int main(int argc, char **argv)
   std_msgs::Float64 m2NewPos;
   std_msgs::Float64 m3NewPos;
   std_msgs::Float64 m4NewPos;
-  dynamixel_msgs::JointState motor1sim;
-  dynamixel_msgs::JointState motor2sim;
-  dynamixel_msgs::JointState motor3sim;
-  dynamixel_msgs::JointState motor4sim;
+  // dynamixel_msgs::JointState motor1sim;
+  // dynamixel_msgs::JointState motor2sim;
+  // dynamixel_msgs::JointState motor3sim;
+  // dynamixel_msgs::JointState motor4sim;
   geometry_msgs::Point XY;
   geometry_msgs::Quaternion lengths;
   geometry_msgs::Quaternion positions;
@@ -301,10 +302,10 @@ int main(int argc, char **argv)
   ros::Publisher motor2Pub = n.advertise<std_msgs::Float64>("/motor2_controller/command", 1);
   ros::Publisher motor3Pub = n.advertise<std_msgs::Float64>("/motor3_controller/command", 1);
   ros::Publisher motor4Pub = n.advertise<std_msgs::Float64>("/motor4_controller/command", 1);
-  ros::Publisher motor1simPub = n.advertise<dynamixel_msgs::JointState>("/motor1_controller/state", 1);
-  ros::Publisher motor2simPub = n.advertise<dynamixel_msgs::JointState>("/motor2_controller/state", 1);
-  ros::Publisher motor3simPub = n.advertise<dynamixel_msgs::JointState>("/motor3_controller/state", 1);
-  ros::Publisher motor4simPub = n.advertise<dynamixel_msgs::JointState>("/motor4_controller/state", 1);
+  // ros::Publisher motor1simPub = n.advertise<dynamixel_msgs::JointState>("/motor1_controller/state", 1);
+  // ros::Publisher motor2simPub = n.advertise<dynamixel_msgs::JointState>("/motor2_controller/state", 1);
+  // ros::Publisher motor3simPub = n.advertise<dynamixel_msgs::JointState>("/motor3_controller/state", 1);
+  // ros::Publisher motor4simPub = n.advertise<dynamixel_msgs::JointState>("/motor4_controller/state", 1);
   ros::Publisher motorLengthPub = n.advertise<geometry_msgs::Quaternion>("motorLengths", 1);
   ros::Publisher motorPositionsPub = n.advertise<geometry_msgs::Quaternion>("motorPositions", 1);
   ros::Publisher PositionPub = n.advertise<geometry_msgs::Point>("current_pos", 1);
@@ -332,26 +333,26 @@ int main(int argc, char **argv)
       motorLengthPub.publish(lengths);
       motorPositionsPub.publish(positions);
 
-      //setSpeedSrv(client1,client2,client3,client4,srv,motorSpeeds);
+      setSpeedSrv(client1,client2,client3,client4,srv,motorSpeeds);
 
       m1NewPos.data = motorLengthToPosition(newLengths.l1) + m1Position;
       m2NewPos.data = motorLengthToPosition(newLengths.l2) + m2Position;
       m3NewPos.data = motorLengthToPosition(newLengths.l3) + m3Position;
       m4NewPos.data = motorLengthToPosition(newLengths.l4) + m4Position;
-      motor1sim.current_pos = m1NewPos.data;
-      motor2sim.current_pos = m2NewPos.data;
-      motor3sim.current_pos = m3NewPos.data;
-      motor4sim.current_pos = m4NewPos.data;
+      // motor1sim.current_pos = m1NewPos.data;
+      // motor2sim.current_pos = m2NewPos.data;
+      // motor3sim.current_pos = m3NewPos.data;
+      // motor4sim.current_pos = m4NewPos.data;
 
       motor1Pub.publish(m1NewPos);
       motor2Pub.publish(m2NewPos);
       motor3Pub.publish(m3NewPos);
       motor4Pub.publish(m4NewPos);
 
-      motor1simPub.publish(motor1sim);
-      motor2simPub.publish(motor2sim);
-      motor3simPub.publish(motor3sim);
-      motor4simPub.publish(motor4sim);
+      // motor1simPub.publish(motor1sim);
+      // motor2simPub.publish(motor2sim);
+      // motor3simPub.publish(motor3sim);
+      // motor4simPub.publish(motor4sim);
       initFlag = false;
       goFlag = false;
     }
@@ -364,7 +365,7 @@ int main(int argc, char **argv)
       motorSpeeds.s2 = 10.0;
       motorSpeeds.s3 = 10.0;
       motorSpeeds.s4 = 10.0;
-      //setSpeedSrv(client1,client2,client3,client4,srv,motorSpeeds);
+      setSpeedSrv(client1,client2,client3,client4,srv,motorSpeeds);
       motor1Pub.publish(m1NewPos);
       motor2Pub.publish(m2NewPos);
       motor3Pub.publish(m3NewPos);
