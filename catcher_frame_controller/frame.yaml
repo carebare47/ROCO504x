@@ -53,5 +53,81 @@ motor4_controller:
         min: 0
         max: 4095
 
-        
+frameclamp1_controller:
+    controller:
+        package: dynamixel_controllers
+        module: joint_position_controller
+        type: JointPositionController
+    joint_name: m5
+    joint_speed: 10.0
+    motor:
+        id: 5
+        init: 0
+        min: 0
+        max: 4095
 
+        
+frameclamp2_controller:
+    controller:
+        package: dynamixel_controllers
+        module: joint_position_controller
+        type: JointPositionController
+    joint_name: m6
+    joint_speed: 10.0
+    motor:
+        id: 6
+        init: 0
+        min: 0
+        max: 4095
+
+frameclamp3_controller:
+    controller:
+        package: dynamixel_controllers
+        module: joint_position_controller
+        type: JointPositionController
+    joint_name: m7
+    joint_speed: 10.0
+    motor:
+        id: 7
+        init: 0
+        min: 0
+        max: 4095
+
+frameclamp4_controller:
+    controller:
+        package: dynamixel_controllers
+        module: joint_position_controller
+        type: JointPositionController
+    joint_name: m8
+    joint_speed: 10.0
+    motor:
+        id: 8
+        init: 0
+        min: 0
+        max: 4095
+
+throwclamp_controller:
+    controller:
+        package: dynamixel_controllers
+        module: joint_position_controller
+        type: JointPositionController
+    joint_name: m9
+    joint_speed: 10.0
+    motor:
+        id: 9
+        init: 0
+        min: 0
+        max: 4095
+
+gripper_controller:
+    controller:
+        package: dynamixel_controllers
+        module: joint_position_controller
+        type: JointPositionController
+    joint_name: m10
+    joint_speed: 10.0
+    motor:
+        id: 10
+        init: 0
+        min: 0
+        max: 4095
