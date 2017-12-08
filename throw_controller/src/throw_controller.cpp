@@ -47,14 +47,16 @@ int main(int argc, char **argv){
     		ThrowSpoolPub.publish(cThrowSpool);
     		sleep(spoolTimeWind);
 
-    		ThrowClampPub,publish(cThrowClamp);
+    		cThrowSpool.data = 0;
+    		ThrowSpoolPub.publish(cThrowSpool);
+    		ThrowClampPub.publish(cThrowClamp);
     		sleep(2);
 
     		cThrowSpool.data = unWind;
-    		sleep(spoolTimeRelease);
+    		sleep(spoolTimeUnwind);
 
     		cThrowClamp.data = clampOpen;
-    		ThrowClampPub,publish(cThrowClamp);
+    		ThrowClampPub.publish(cThrowClamp);
     		sleep(5);
 
     		cThrowClamp.data = clampOpen;

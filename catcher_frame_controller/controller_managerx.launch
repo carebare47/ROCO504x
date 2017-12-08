@@ -58,7 +58,7 @@
         </rosparam>
     </node>
 
-    <node name="dynamixel_manager4" pkg="dynamixel_controllers" type="controller_manager.py" required="true" output="screen">
+    <node name="dynamixel_manager5" pkg="dynamixel_controllers" type="controller_manager.py" required="true" output="screen">
         <rosparam>
             namespace: dxl_manager
             serial_ports:
