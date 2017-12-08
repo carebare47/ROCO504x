@@ -1,12 +1,13 @@
 <!-- Start tilt joint controller -->
 <launch>
-    <rosparam file="$(find catcher_frame_controller)/frame.yaml" command="load"/>
+    <rosparam file="$(find catcher_frame_controller)/frame_106.yaml" command="load"/>
         <node name="controller_spawner" pkg="dynamixel_controllers" type="controller_spawner.py"
             args="--manager=dxl_manager
                 --port mx64_port
-                motor4_controller
+                motor1_controller
                 motor2_controller
                 motor3_controller
+                motor4_controller
                 "
             output="screen"/>
 </launch>

@@ -3,9 +3,7 @@
     <rosparam file="$(find catcher_frame_controller)/frame.yaml" command="load"/>
         <node name="controller_spawner" pkg="dynamixel_controllers" type="controller_spawner.py"
             args="--manager=dxl_manager
-                --port mx64_port
-                motor4_controller
-                motor2_controller
+                --port mx64_port2
                 motor3_controller
                 "
             output="screen"/>
