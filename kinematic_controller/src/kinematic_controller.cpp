@@ -1,5 +1,6 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
+#include "std_msgs/Bool.h"
 #include "std_msgs/Float64.h"
 #include "geometry_msgs/Point.h"
 #include "geometry_msgs/Quaternion.h"
@@ -112,17 +113,30 @@ float motorLengthToPosition(float length){
 
 
 float checkAxisBounds(float cam, float current, float minimum, float maximum) {
-  if ((current <= minimum) && (cam < 0)) {
+  if (((current <= minimum) && (cam < 0))||(cam == 0.0)) {
     boundFlag = true;
-    return (minimum - current - hyst);
-  } else if ((current >= maximum) && (cam > 0)) {
+    return (0.0);
+  } else if (((current >= maximum) && (cam > 0))||(cam == 0.0)) {
     boundFlag = true;
-    return (maximum - current + hyst);
+    return (0.0);
   } else {
     boundFlag = false;
     return cam;
   }
 }
+
+// float checkAxisBounds(float cam, float current, float minimum, float maximum) {
+//   if ((current <= minimum) && (cam < 0)) {
+//     boundFlag = true;
+//     return (minimum - current - hyst);
+//   } else if ((current >= maximum) && (cam > 0)) {
+//     boundFlag = true;
+//     return (maximum - current + hyst);
+//   } else {
+//     boundFlag = false;
+//     return cam;
+//   }
+// }
 
 float checkAxisDeadBand(float location, int iTolerance) {
   if ((location < tolerance) && (location > (tolerance * (-1)))) {
@@ -286,6 +300,7 @@ int main(int argc, char **argv)
   std_msgs::Float64 m2NewPos;
   std_msgs::Float64 m3NewPos;
   std_msgs::Float64 m4NewPos;
+  std_msgs::Bool bound_flag_obj;
   // dynamixel_msgs::JointState motor1sim;
   // dynamixel_msgs::JointState motor2sim;
   // dynamixel_msgs::JointState motor3sim;
@@ -302,6 +317,8 @@ int main(int argc, char **argv)
   ros::Publisher motor2Pub = n.advertise<std_msgs::Float64>("/motor2_controller/command", 1);
   ros::Publisher motor3Pub = n.advertise<std_msgs::Float64>("/motor3_controller/command", 1);
   ros::Publisher motor4Pub = n.advertise<std_msgs::Float64>("/motor4_controller/command", 1);
+  ros::Publisher bound_flag_pub = n.advertise<std_msgs::Bool>("/bound_flag", 1);
+  
   // ros::Publisher motor1simPub = n.advertise<dynamixel_msgs::JointState>("/motor1_controller/state", 1);
   // ros::Publisher motor2simPub = n.advertise<dynamixel_msgs::JointState>("/motor2_controller/state", 1);
   // ros::Publisher motor3simPub = n.advertise<dynamixel_msgs::JointState>("/motor3_controller/state", 1);
@@ -319,6 +336,8 @@ int main(int argc, char **argv)
     if (goFlag == true){
       newLengths = findNewLengths(dataX, dataY);
       motorSpeeds = calculate_speeds(newLengths);
+      bound_flag_obj.data = boundFlag;
+      bound_flag_pub.publish(bound_flag_obj);
       XY.x = newLengths.x;
       XY.y = newLengths.y;
       lengths.x = newLengths.nl1;
@@ -329,8 +348,8 @@ int main(int argc, char **argv)
       positions.y = m2Position;
       positions.z = m3Position;
       positions.w = m4Position;
-      PositionPub.publish(XY);
-      motorLengthPub.publish(lengths);
+      //PositionPub.publish(XY);
+      //motorLengthPub.publish(lengths);
       motorPositionsPub.publish(positions);
 
       setSpeedSrv(client1,client2,client3,client4,srv,motorSpeeds);

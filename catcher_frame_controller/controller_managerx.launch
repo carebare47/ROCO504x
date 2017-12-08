@@ -59,7 +59,7 @@
     </node>
 
 
-    <node name="dynamixel_manager5" pkg="dynamixel_controllers" type="controller_manager.py" required="true" output="screen">
+    <!--node name="dynamixel_manager5" pkg="dynamixel_controllers" type="controller_manager.py" required="true" output="screen">
         <rosparam>
             namespace: dxl_manager
             serial_ports:
@@ -70,7 +70,7 @@
                     max_motor_id: 25
                     update_rate: 200
         </rosparam>
-    </node>
+    </node-->
 
 
     <rosparam file="$(find catcher_frame_controller)/frame.yaml" command="load"/>
@@ -106,10 +106,10 @@
                 "
             output="screen"/>
 
-
+<!--
     <node name="controller_spawner5" pkg="dynamixel_controllers" type="controller_spawner.py"
-        args="--manager=dxl_manager
-            --port gripper_and_clamp_port:
+        args="--> <!-- --><!--manager=dxl_manager-->
+            <!-- --> <!--port gripper_and_clamp_port:
             frameclamp1_controller
             frameclamp2_controller
             frameclamp3_controller
@@ -119,5 +119,5 @@
             "
         output="screen"/>
 
-
+-->
 </launch>
