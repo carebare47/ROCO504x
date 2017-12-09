@@ -15,7 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 ## System dependencies are found with CMake's conventions
-# find_package(Boost REQUIRED COMPONENTS system)
+find_package(Boost REQUIRED COMPONENTS system)
 
 
 ## Uncomment this if the package has a setup.py. This macro ensures
@@ -201,4 +201,4 @@ include_directories(
 
 add_executable(kinematic_controller src/kinematic_controller.cpp)
 target_link_libraries(kinematic_controller ${catkin_LIBRARIES})
-add_dependencies(kinematic_controller beginner_tutorials_generate_messages_cpp)
+#add_dependencies(kinematic_controller beginner_tutorials_generate_messages_cpp)

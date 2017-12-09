@@ -84,10 +84,10 @@ int main(int argc, char **argv)
     cap.set(CV_CAP_PROP_FRAME_WIDTH, 640);
     cap.set(CV_CAP_PROP_FRAME_HEIGHT, 4800);
     cap.set(CV_CAP_PROP_FPS, 60);
-    cap.set(CV_CAP_PROP_SATURATION,255);
+    //cap.set(CV_CAP_PROP_SATURATION,255);
     //brightness 57 contrast 31 saturation 255 hue 46 exposure 170 gain 15 //nighttime
     //daytime brightness 26 //contrast 32 saturation 255// hue 46 exposure 147 gain 0
-    cap.set(CV_CAP_PROP_HUE,46);
+   // cap.set(CV_CAP_PROP_HUE,46);
     //cap.set(CV_CAP_PROP_EXPOSURE,147);
     //cap.set(CV_CAP_PROP_BRIGHTNESS,26);
     //cap.set(CV_CAP_PROP_GAIN,0);
@@ -269,7 +269,7 @@ int main(int argc, char **argv)
             cv::circle(frameRes, centers[index1],int(radius[index1]), CV_RGB(255,255,255),2,8,0);
             cout << int(radius[index1]) << endl;
             Setpoint.x = centers[index1].x;
-            Setpoint.y = centers[index1].y;
+            Setpoint.y = (480 - centers[index1].y);
             Setpoint.z = 0;
             Setpoint_Pub.publish(Setpoint);
 

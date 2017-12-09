@@ -7,6 +7,8 @@
 #include "dynamixel_msgs/JointState.h"
 #include <math.h>
 #include "dynamixel_controllers/SetSpeed.h"
+#include "boost/thread.hpp"
+#include "boost/chrono.hpp"
 
 int camX = 320;
 int camY = 240;
@@ -65,6 +67,8 @@ void cameraDataCallback(const geometry_msgs::Point::ConstPtr& coordinate_msg){
   dataY = 71.5*(coordinate_msg->y-240)/480.0;
   ball_detected = coordinate_msg->z;
   goFlag = true;
+ // ball_detected == 1.0 ? goFlag = false : goFlag = true;
+  
 
 }
 
@@ -242,48 +246,121 @@ speedStruct calculate_speeds(lengthStruct change_in_lengths) {
   return speeds;
 }
 
-void setSpeedSrv(ros::ServiceClient client1, ros::ServiceClient client2, ros::ServiceClient client3, ros::ServiceClient client4,  dynamixel_controllers::SetSpeed srv, speedStruct motorSpeeds){
-      bool flag1 = false;
-      bool flag2 = false;
-      bool flag3 = false;
-      bool flag4 = false;
-      
-      srv.request.speed = motorSpeeds.s1;
-      if (client1.call(srv)){
-        flag1 = true;
-      } else {
-        ROS_ERROR("Failed to call service 1");
-        flag1 = false;
-      }
+struct threadStruct{
+  ros::ServiceClient client;
+  dynamixel_controllers::SetSpeed srv;
+  float speed;
+};
 
-      srv.request.speed = motorSpeeds.s2;
-      if (client2.call(srv)){
-        flag2 = true;
-      } else {
-        ROS_ERROR("Failed to call service 2");
-        flag2 = false;
-      }
+void speedThread1(threadStruct s){
 
-      srv.request.speed = motorSpeeds.s3;
-      if (client3.call(srv)){
-        flag3 = true;
-      } else {
-        ROS_ERROR("Failed to call service 3");
-        flag3 = false;
-      }
-
-      srv.request.speed = motorSpeeds.s4;
-      if (client4.call(srv)){
-        flag4 = true;
-
-      } else {
-        ROS_ERROR("Failed to call service 4");
-        flag4 = false;
-      }
-      if (flag1 && flag2 && flag3 && flag4){
-        ROS_INFO("Successfully published all speeds. \n Speed1 =  %f Speed2 =  %f Speed3 =  %f Speed4 =  %f \n", motorSpeeds.s1, motorSpeeds.s2, motorSpeeds.s3, motorSpeeds.s4);     
-      }
+  s.srv.request.speed = s.speed;
+  if (s.client.call(s.srv)){
+    ROS_INFO("Successfully seriviced speed1. \n Speed1 =  %f", s.speed); 
+    //flag1 = true;
+  } else {
+    ROS_ERROR("Failed to call service 1");
+    //flag1 = false;
+  }
 }
+
+void speedThread2(threadStruct s){
+
+  s.srv.request.speed = s.speed;
+  if (s.client.call(s.srv)){
+    ROS_INFO("Successfully seriviced speed2. \n Speed2 =  %f", s.speed); 
+    //flag1 = true;
+  } else {
+    ROS_ERROR("Failed to call service 2");
+    //flag1 = false;
+  }
+
+}
+void speedThread3(threadStruct s){
+
+  s.srv.request.speed = s.speed;
+  if (s.client.call(s.srv)){
+    ROS_INFO("Successfully seriviced speed3. \n Speed3 =  %f", s.speed); 
+    //flag1 = true;
+  } else {
+    ROS_ERROR("Failed to call service 3");
+    //flag1 = false;
+  }
+
+}
+void speedThread4(threadStruct s){
+
+  s.srv.request.speed = s.speed;
+  if (s.client.call(s.srv)){
+    ROS_INFO("Successfully seriviced speed4. \n Speed4 =  %f", s.speed); 
+    //flag1 = true;
+  } else {
+    ROS_ERROR("Failed to call service 4");
+    //flag1 = false;
+  }
+
+}
+void setSpeedSrv(ros::ServiceClient client1, ros::ServiceClient client2, ros::ServiceClient client3, ros::ServiceClient client4,  dynamixel_controllers::SetSpeed srv, speedStruct motorSpeeds){
+      threadStruct sSpeedSrv;
+
+      sSpeedSrv.client = client1;
+      sSpeedSrv.srv = srv;
+      sSpeedSrv.speed = motorSpeeds.s1;
+
+      boost::thread speedSrv1(speedThread1, sSpeedSrv);
+
+      sSpeedSrv.client = client2;
+      sSpeedSrv.speed = motorSpeeds.s2;
+
+      boost::thread speedSrv2(speedThread2, sSpeedSrv);
+
+
+      sSpeedSrv.client = client3;
+      sSpeedSrv.speed = motorSpeeds.s3;
+
+      boost::thread speedSrv3(speedThread3, sSpeedSrv);
+
+      sSpeedSrv.client = client4;
+      sSpeedSrv.speed = motorSpeeds.s4;
+
+      boost::thread speedSrv4(speedThread4, sSpeedSrv);
+
+      // srv.request.speed = motorSpeeds.s1;
+      // if (client1.call(srv)){
+      //   flag1 = true;
+      // } else {
+      //   ROS_ERROR("Failed to call service 1");
+      //   flag1 = false;
+      // }
+      // srv.request.speed = motorSpeeds.s2;
+      // if (client2.call(srv)){
+      //   flag2 = true;
+      // } else {
+      //   ROS_ERROR("Failed to call service 2");
+      //   flag2 = false;
+      // }
+
+      // srv.request.speed = motorSpeeds.s3;
+      // if (client3.call(srv)){
+      //   flag3 = true;
+      // } else {
+      //   ROS_ERROR("Failed to call service 3");
+      //   flag3 = false;
+      // }
+
+      // srv.request.speed = motorSpeeds.s4;
+      // if (client4.call(srv)){
+      //   flag4 = true;
+
+      // } else {
+      //   ROS_ERROR("Failed to call service 4");
+      //   flag4 = false;
+      // }
+      // if (flag1 && flag2 && flag3 && flag4){
+      //   ROS_INFO("Successfully published all speeds. \n Speed1 =  %f Speed2 =  %f Speed3 =  %f Speed4 =  %f \n", motorSpeeds.s1, motorSpeeds.s2, motorSpeeds.s3, motorSpeeds.s4);     
+      // }
+}
+
 
 
 
@@ -323,17 +400,22 @@ int main(int argc, char **argv)
   // ros::Publisher motor2simPub = n.advertise<dynamixel_msgs::JointState>("/motor2_controller/state", 1);
   // ros::Publisher motor3simPub = n.advertise<dynamixel_msgs::JointState>("/motor3_controller/state", 1);
   // ros::Publisher motor4simPub = n.advertise<dynamixel_msgs::JointState>("/motor4_controller/state", 1);
+
   ros::Publisher motorLengthPub = n.advertise<geometry_msgs::Quaternion>("motorLengths", 1);
   ros::Publisher motorPositionsPub = n.advertise<geometry_msgs::Quaternion>("motorPositions", 1);
   ros::Publisher PositionPub = n.advertise<geometry_msgs::Point>("current_pos", 1);
   speedStruct motorSpeeds;
 
-  ros::Rate loop_rate(100);
+  ros::Rate loop_rate(250);
   lengthStruct newLengths;
   bool initFlag = true;
   while (ros::ok()){
     // goFlag = false;
     if (goFlag == true){
+    	if (ball_detected == 1.0){
+    		dataX = 0.0;
+    		dataY = 0.0;
+    	}
       newLengths = findNewLengths(dataX, dataY);
       motorSpeeds = calculate_speeds(newLengths);
       bound_flag_obj.data = boundFlag;
@@ -408,7 +490,7 @@ int main(int argc, char **argv)
       PositionPub.publish(XY);
       motorLengthPub.publish(lengths);
       motorPositionsPub.publish(positions);
-    }
+     }
     ros::spinOnce();
     loop_rate.sleep();
 
