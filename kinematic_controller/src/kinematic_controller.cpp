@@ -66,6 +66,8 @@ void cameraDataCallback(const geometry_msgs::Point::ConstPtr& coordinate_msg){
   dataY = 71.5*(coordinate_msg->y-240)/480.0;
   ball_detected = coordinate_msg->z;
   goFlag = true;
+ // ball_detected == 1.0 ? goFlag = false : goFlag = true;
+  
 
 }
 
@@ -361,10 +363,10 @@ int main(int argc, char **argv)
   std_msgs::Float64 m2NewPos;
   std_msgs::Float64 m3NewPos;
   std_msgs::Float64 m4NewPos;
-  dynamixel_msgs::JointState motor1sim;
-  dynamixel_msgs::JointState motor2sim;
-  dynamixel_msgs::JointState motor3sim;
-  dynamixel_msgs::JointState motor4sim;
+  // dynamixel_msgs::JointState motor1sim;
+  // dynamixel_msgs::JointState motor2sim;
+  // dynamixel_msgs::JointState motor3sim;
+  // dynamixel_msgs::JointState motor4sim;
   geometry_msgs::Point XY;
   geometry_msgs::Quaternion lengths;
   geometry_msgs::Quaternion positions;
@@ -377,21 +379,25 @@ int main(int argc, char **argv)
   ros::Publisher motor2Pub = n.advertise<std_msgs::Float64>("/motor2_controller/command", 1);
   ros::Publisher motor3Pub = n.advertise<std_msgs::Float64>("/motor3_controller/command", 1);
   ros::Publisher motor4Pub = n.advertise<std_msgs::Float64>("/motor4_controller/command", 1);
-   ros::Publisher motor1simPub = n.advertise<dynamixel_msgs::JointState>("/motor1_controller/state", 1);
-   ros::Publisher motor2simPub = n.advertise<dynamixel_msgs::JointState>("/motor2_controller/state", 1);
-   ros::Publisher motor3simPub = n.advertise<dynamixel_msgs::JointState>("/motor3_controller/state", 1);
-   ros::Publisher motor4simPub = n.advertise<dynamixel_msgs::JointState>("/motor4_controller/state", 1);
+   // ros::Publisher motor1simPub = n.advertise<dynamixel_msgs::JointState>("/motor1_controller/state", 1);
+   // ros::Publisher motor2simPub = n.advertise<dynamixel_msgs::JointState>("/motor2_controller/state", 1);
+   // ros::Publisher motor3simPub = n.advertise<dynamixel_msgs::JointState>("/motor3_controller/state", 1);
+   // ros::Publisher motor4simPub = n.advertise<dynamixel_msgs::JointState>("/motor4_controller/state", 1);
   ros::Publisher motorLengthPub = n.advertise<geometry_msgs::Quaternion>("motorLengths", 1);
   ros::Publisher motorPositionsPub = n.advertise<geometry_msgs::Quaternion>("motorPositions", 1);
   ros::Publisher PositionPub = n.advertise<geometry_msgs::Point>("current_pos", 1);
   speedStruct motorSpeeds;
 
-  ros::Rate loop_rate(120);
+  ros::Rate loop_rate(250);
   lengthStruct newLengths;
   bool initFlag = true;
   while (ros::ok()){
     // goFlag = false;
     if (goFlag == true){
+    	if (ball_detected == 1.0){
+    		dataX = 0.0;
+    		dataY = 0.0;
+    	}
       newLengths = findNewLengths(dataX, dataY);
       motorSpeeds = calculate_speeds(newLengths);
       XY.x = newLengths.x;
@@ -414,20 +420,20 @@ int main(int argc, char **argv)
       m2NewPos.data = motorLengthToPosition(newLengths.l2) + m2Position;
       m3NewPos.data = motorLengthToPosition(newLengths.l3) + m3Position;
       m4NewPos.data = motorLengthToPosition(newLengths.l4) + m4Position;
-      motor1sim.current_pos = m1NewPos.data;
-      motor2sim.current_pos = m2NewPos.data;
-      motor3sim.current_pos = m3NewPos.data;
-      motor4sim.current_pos = m4NewPos.data;
+      // motor1sim.current_pos = m1NewPos.data;
+      // motor2sim.current_pos = m2NewPos.data;
+      // motor3sim.current_pos = m3NewPos.data;
+      // motor4sim.current_pos = m4NewPos.data;
 
       motor1Pub.publish(m1NewPos);
       motor2Pub.publish(m2NewPos);
       motor3Pub.publish(m3NewPos);
       motor4Pub.publish(m4NewPos);
 
-      motor1simPub.publish(motor1sim);
-      motor2simPub.publish(motor2sim);
-      motor3simPub.publish(motor3sim);
-      motor4simPub.publish(motor4sim);
+      // motor1simPub.publish(motor1sim);
+      // motor2simPub.publish(motor2sim);
+      // motor3simPub.publish(motor3sim);
+      // motor4simPub.publish(motor4sim);
       initFlag = false;
       goFlag = false;
     }
