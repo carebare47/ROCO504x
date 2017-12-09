@@ -3,8 +3,8 @@
 #include "std_msgs/Float64.h"
 #include <stdlib.h>
 int throwControl = -1;
-const float clampClose = 4;
-const float clampOpen = 2;
+const float clampClose = 4.5;
+const float clampOpen = 2.5;
 void FrameClamps_cb(const std_msgs::Int16::ConstPtr& clamps_command){
   throwControl = clamps_command->data;
 }
@@ -36,7 +36,7 @@ int main(int argc, char **argv){
 
     		cFrameClamps.data = clampClose;
     		cThrowSpool.data = Wind;
-    		cThrowClamp.data = clampClose;
+    		cThrowClamp.data = 2;
 
     		Clamp1Pub.publish(cFrameClamps);
     		Clamp2Pub.publish(cFrameClamps);
@@ -55,11 +55,10 @@ int main(int argc, char **argv){
     		cThrowSpool.data = unWind;
     		sleep(spoolTimeUnwind);
 
-    		cThrowClamp.data = clampOpen;
+    		cThrowClamp.data = 4;
     		ThrowClampPub.publish(cThrowClamp);
     		sleep(5);
-
-    		cThrowClamp.data = clampOpen;
+    		cFrameClamps.data = clampOpen;
     		Clamp1Pub.publish(cFrameClamps);
     		Clamp2Pub.publish(cFrameClamps);
     		Clamp3Pub.publish(cFrameClamps);
