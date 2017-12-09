@@ -22,35 +22,31 @@ float maxY = 71.5;
 int ball_detected = 0;
 int motor_acceleration = 2000;
 int stepperMaxSpeed = 300;
-
+int tension = 0;
 float gripper_side = 10.0;
 float gripper_diagonal = 14.142;
 float half_gripper_side = gripper_side/2;
 float half_gripper_diagonal = gripper_diagonal/2;
+float maxSpeedRamp = 0.0;
+float maxSpeed = 10.0;
+float beta = 0.99;
 
 const float PI = 3.14159265359;
 const float spoolD = 10.0;
 const float motorPositionScale = 180/PI;
-
-#ifdef square_gripper
 
 //starting lengths of cable
 const float startingl1 = 57.27674048 - half_gripper_diagonal;
 const float startingl2 = 57.27674048 - half_gripper_diagonal;
 const float startingl3 = 57.27674048 - half_gripper_diagonal;
 const float startingl4 = 57.27674048 - half_gripper_diagonal;
-#endif
-#ifdef point_gripper
-const float startingl1 = 57.27674048;
-const float startingl2 = 57.27674048;
-const float startingl3 = 57.27674048;
-const float startingl4 = 57.27674048;
-#endif
 const int hyst = 0;
 const int tolerance = 0;
 
 bool boundFlag = false;
 bool deadFlag = false;
+bool goFlag = false;
+float m1Position,m2Position,m3Position,m4Position;
 
 struct lengthStruct{
 	float l1;
@@ -62,47 +58,44 @@ struct lengthStruct{
 	float nl3;
 	float nl4;
 	float x;
-	float y;
-};
+	float y;};
 
 struct speedStruct{
 	float s1;
 	float s2;
 	float s3;
-	float s4;
-};
+	float s4;};
 
+struct camVals{
+  float X;
+  float Y;};
 
-
-
-bool goFlag = false;
-float m1Position,m2Position,m3Position,m4Position;
+struct threadStruct{
+  ros::ServiceClient client;
+  dynamixel_controllers::SetSpeed srv;
+  float speed;};
 
 void cameraDataCallback(const geometry_msgs::Point::ConstPtr& coordinate_msg){
 	dataX = 89.5*(coordinate_msg->x-320)/640.0;
 	dataY = 71.5*(coordinate_msg->y-240)/480.0;
 	ball_detected = coordinate_msg->z;
-	goFlag = true;
- // ball_detected == 1.0 ? goFlag = false : goFlag = true;
-
-
-}
+	goFlag = true;}
 
 void m1Callback(const dynamixel_msgs::JointState::ConstPtr& m1State){
-	m1Position = m1State->current_pos;
-}
+
+	m1Position = m1State->current_pos;}
 
 void m2Callback(const dynamixel_msgs::JointState::ConstPtr& m2State){
-	m2Position = m2State->current_pos;
-}
+
+	m2Position = m2State->current_pos;}
 
 void m3Callback(const dynamixel_msgs::JointState::ConstPtr& m3State){
-	m3Position = m3State->current_pos;
-}
+
+	m3Position = m3State->current_pos;}
 
 void m4Callback(const dynamixel_msgs::JointState::ConstPtr& m4State){
-	m4Position = m4State->current_pos;
-}
+
+	m4Position = m4State->current_pos;}
 
 float motorPositionToLength2(float motorPosition){
 	float length;
@@ -110,8 +103,7 @@ float motorPositionToLength2(float motorPosition){
 	rotations = (motorPositionScale * (motorPosition)/360);
 	rotations = (rotations)*4.0;
 	length = rotations * PI * spoolD;
-	return length;
-}
+	return length;}
 
 float motorPositionToLength(float motorPosition){
 	float length;
@@ -119,8 +111,7 @@ float motorPositionToLength(float motorPosition){
 	rotations = (motorPositionScale * (motorPosition-PI)/360);
 	rotations = (rotations)*4.0;
 	length = rotations * PI * spoolD;
-	return length;
-}
+	return length;}
 
 float motorLengthToPosition(float length){
 	float motorPosition;
@@ -128,10 +119,7 @@ float motorLengthToPosition(float length){
 	rotations = (length)/(PI*spoolD);
 	motorPosition = 360*(rotations)/motorPositionScale;
 	motorPosition = (motorPosition/4.0);
-	return motorPosition;
-//	14.142 / 2 = 
-}
-
+	return motorPosition;}
 
 float checkAxisBounds(float cam, float current, float minimum, float maximum) {
 	if (((current <= minimum) && (cam < 0))||(cam == 0.0)) {
@@ -143,21 +131,7 @@ float checkAxisBounds(float cam, float current, float minimum, float maximum) {
 	} else {
 		boundFlag = false;
 		return cam;
-	}
-}
-
-// float checkAxisBounds(float cam, float current, float minimum, float maximum) {
-//   if ((current <= minimum) && (cam < 0)) {
-//     boundFlag = true;
-//     return (minimum - current - hyst);
-//   } else if ((current >= maximum) && (cam > 0)) {
-//     boundFlag = true;
-//     return (maximum - current + hyst);
-//   } else {
-//     boundFlag = false;
-//     return cam;
-//   }
-// }
+	}}
 
 float checkAxisDeadBand(float location, int iTolerance) {
 	if ((location < tolerance) && (location > (tolerance * (-1)))) {
@@ -166,79 +140,43 @@ float checkAxisDeadBand(float location, int iTolerance) {
 	} else {
 		deadFlag = false;
 		return location;
-	}
-}
+	}}
 
-struct camVals{
-	float X;
-	float Y;
-};
 camVals check_boundaries(float camX, float camY, float currentX, float currentY) {
 	camVals camXY;
-	camX = checkAxisBounds(camX, currentX, (10), (maxX - 10));
-	camY = checkAxisBounds(camY, currentY, (10), (maxY - 10));
+	camX = checkAxisBounds(camX, currentX, (10), (maxX - 20));
+	camY = checkAxisBounds(camY, currentY, (10), (maxY - 20));
 	camXY.X = checkAxisDeadBand(camX, 89.5*tolerance/640);
 	camXY.Y = checkAxisDeadBand(camY, 71.5*tolerance/480);
-	return camXY;
-}
+	return camXY;}
 
 lengthStruct findNewLengths(float dX, float dY){
 	lengthStruct temp;
 	camVals camXY;
-	float m1Length = motorPositionToLength(m1Position);
-	float m2Length = motorPositionToLength(m2Position);
-	float m3Length = motorPositionToLength(m3Position);
-	float m4Length = motorPositionToLength(m4Position);
+	float m1Length = motorPositionToLength(m1Position+tension);
+	float m2Length = motorPositionToLength(m2Position+tension);
+	float m3Length = motorPositionToLength(m3Position+tension);
+	float m4Length = motorPositionToLength(m4Position+tension);
 	float currentl1 = m1Length + startingl1;
 	float currentl2 = m2Length + startingl2;
 	float currentl3 = m3Length + startingl3;
 	float currentl4 = m4Length + startingl4;
 
-#ifdef point_gripper
-	float currentX = maxX / 2.0 + (pow(currentl1,2.0) - pow(currentl2,2.0)) / (2 * maxX);
-	float currentY = maxY / 2.0 + (pow(currentl4,2.0) - pow(currentl2,2.0)) / (2 * maxY);
-#endif
-#ifdef square_gripper
-	float currentX = maxX / 2.0 + (pow(currentl1,2.0) - pow(currentl2,2.0)) / (2 * (maxX - gripper_side));
-	float currentY = maxY / 2.0 + (pow(currentl4,2.0) - pow(currentl2,2.0)) / (2 * (maxY - gripper_side));
-#endif
-/*
-        y+ 
-   2---------1
-    (+)----(.)
-x+  ----------  x-
-    (.)----(+)
-   4---------3
-     -------
-      -----
-       -5-
-        y-
-
-gripper_starting_motor_offset 
-0.9375
-+PI = 4.07909
--PI = 2.20409
-*/
+	float currentY = (maxY + gripper_side) - (maxX+gripper_side)/2 - (pow(currentl1,2.0) - pow(currentl2,2.0))/(2*(maxX+gripper_side));
+  float currentX = sqrt(pow(currentl3,2.0) - pow(currentY,2.0));
 
 
-  //l3^2 = sqrt(x^2 + y^2)
-  //float currentY = maxY - sqrt(pow(currentl1,2.0) - pow(currentX,2.0));
 	camXY = check_boundaries(dX,dY,currentX,currentY);
 	dX = camXY.X;
 	dY = camXY.Y;
 
-#ifdef point_gripper
-	float newL1 = sqrt(pow(      (currentX + dX),2.0)  + pow((maxY - (currentY + dY)),2.0));
-	float newL2 = sqrt(pow((maxX - (currentX + dX)),2.0) + pow((maxY - (currentY + dY)),2.0));
-	float newL3 = sqrt(pow(      (currentX + dX),2.0)  + pow(        (currentY + dY),2.0));
-	float newL4 = sqrt(pow((maxX - (currentX + dX)),2.0) + pow(        (currentY + dY),2.0));
-#endif
-#ifdef square_gripper
-	float newL1 = sqrt(pow(        (currentX + dX -  half_gripper_side),2.0) + pow((maxY - (currentY + dY - half_gripper_side)),2.0));
-	float newL2 = sqrt(pow((maxX - (currentX + dX - half_gripper_side)),2.0) + pow((maxY - (currentY + dY - half_gripper_side)),2.0));
-	float newL3 = sqrt(pow(        (currentX + dX -  half_gripper_side),2.0) + pow(        (currentY + dY - half_gripper_side),2.0));
-	float newL4 = sqrt(pow((maxX - (currentX + dX - half_gripper_side)),2.0) + pow(        (currentY + dY - half_gripper_side),2.0));
-#endif
+
+
+	float newL1 = sqrt(pow(        (currentX + dX),2.0)                 + pow((maxY - (currentY + dY + gripper_side)),2.0));
+	float newL2 = sqrt(pow((maxX - (currentX + dX + gripper_side)),2.0) + pow((maxY - (currentY + dY + gripper_side)),2.0));
+	float newL3 = sqrt(pow(        (currentX + dX),2.0)                 + pow(        (currentY + dY),2.0));
+	float newL4 = sqrt(pow((maxX - (currentX + dX + gripper_side)),2.0) + pow(        (currentY + dY),2.0));
+
 	temp.l1 = newL1 - currentl1;
 	temp.l2 = newL2 - currentl2;
 	temp.l3 = newL3 - currentl3;	
@@ -249,23 +187,16 @@ gripper_starting_motor_offset
 	temp.nl4 = newL4;
 	temp.x = currentX;
 	temp.y = currentY;
-	return temp;
-}
+	return temp;}
 
-
-float maxSpeedRamp = 0.0;
-float maxSpeed = 10.0;
-float beta = 0.99;
 float acceleration_scale(void) {
 	if ((camX == 0) && (camY == 0)) {
 		maxSpeedRamp = 0.0;
 	} else {
 		maxSpeedRamp = beta * maxSpeedRamp + (1.0 - beta) * maxSpeed;
 		return maxSpeedRamp;  
-	}
-}
+	}}
 
-speedStruct preSpeeds;
 speedStruct calculate_speeds(lengthStruct change_in_lengths) {
 	speedStruct speeds;
 	float diff1 = abs(change_in_lengths.l1);
@@ -293,14 +224,7 @@ speedStruct calculate_speeds(lengthStruct change_in_lengths) {
 		speeds.s4 = 0.0;
 	}
 
-	return speeds;
-}
-
-struct threadStruct{
-	ros::ServiceClient client;
-	dynamixel_controllers::SetSpeed srv;
-	float speed;
-};
+	return speeds;}
 
 void speedThread1(threadStruct s){
 
@@ -324,8 +248,8 @@ void speedThread2(threadStruct s){
 		ROS_ERROR("Failed to call service 2");
     //flag1 = false;
 	}
-
 }
+
 void speedThread3(threadStruct s){
 
 	s.srv.request.speed = s.speed;
@@ -336,8 +260,8 @@ void speedThread3(threadStruct s){
 		ROS_ERROR("Failed to call service 3");
     //flag1 = false;
 	}
-
 }
+
 void speedThread4(threadStruct s){
 
 	s.srv.request.speed = s.speed;
@@ -348,8 +272,8 @@ void speedThread4(threadStruct s){
 		ROS_ERROR("Failed to call service 4");
     //flag1 = false;
 	}
-
 }
+
 void setSpeedSrv(ros::ServiceClient client1, ros::ServiceClient client2, ros::ServiceClient client3, ros::ServiceClient client4,  dynamixel_controllers::SetSpeed srv, speedStruct motorSpeeds){
 	threadStruct sSpeedSrv;
 
@@ -374,91 +298,56 @@ void setSpeedSrv(ros::ServiceClient client1, ros::ServiceClient client2, ros::Se
 	sSpeedSrv.speed = motorSpeeds.s4;
 
 	boost::thread speedSrv4(speedThread4, sSpeedSrv);
-
-      // srv.request.speed = motorSpeeds.s1;
-      // if (client1.call(srv)){
-      //   flag1 = true;
-      // } else {
-      //   ROS_ERROR("Failed to call service 1");
-      //   flag1 = false;
-      // }
-      // srv.request.speed = motorSpeeds.s2;
-      // if (client2.call(srv)){
-      //   flag2 = true;
-      // } else {
-      //   ROS_ERROR("Failed to call service 2");
-      //   flag2 = false;
-      // }
-
-      // srv.request.speed = motorSpeeds.s3;
-      // if (client3.call(srv)){
-      //   flag3 = true;
-      // } else {
-      //   ROS_ERROR("Failed to call service 3");
-      //   flag3 = false;
-      // }
-
-      // srv.request.speed = motorSpeeds.s4;
-      // if (client4.call(srv)){
-      //   flag4 = true;
-
-      // } else {
-      //   ROS_ERROR("Failed to call service 4");
-      //   flag4 = false;
-      // }
-      // if (flag1 && flag2 && flag3 && flag4){
-      //   ROS_INFO("Successfully published all speeds. \n Speed1 =  %f Speed2 =  %f Speed3 =  %f Speed4 =  %f \n", motorSpeeds.s1, motorSpeeds.s2, motorSpeeds.s3, motorSpeeds.s4);     
-      // }
 }
-
-
 
 
 int main(int argc, char **argv)
 {
-	ros::init(argc, argv, "kinematic_controller");
-	ros::NodeHandle n;
-	ros::ServiceClient client1 = n.serviceClient<dynamixel_controllers::SetSpeed>("/motor1_controller/set_speed");
-	ros::ServiceClient client2 = n.serviceClient<dynamixel_controllers::SetSpeed>("/motor2_controller/set_speed");
-	ros::ServiceClient client3 = n.serviceClient<dynamixel_controllers::SetSpeed>("/motor3_controller/set_speed");
-	ros::ServiceClient client4 = n.serviceClient<dynamixel_controllers::SetSpeed>("/motor4_controller/set_speed");
-	dynamixel_controllers::SetSpeed srv;
-	std_msgs::Float64 m1NewPos;
-	std_msgs::Float64 m2NewPos;
-	std_msgs::Float64 m3NewPos;
-	std_msgs::Float64 m4NewPos;
-	std_msgs::Bool bound_flag_obj;
+  ros::init(argc, argv, "kinematic_controller");
+  ros::NodeHandle n;
+  ros::ServiceClient client1 = n.serviceClient<dynamixel_controllers::SetSpeed>("/motor1_controller/set_speed");
+  ros::ServiceClient client2 = n.serviceClient<dynamixel_controllers::SetSpeed>("/motor2_controller/set_speed");
+  ros::ServiceClient client3 = n.serviceClient<dynamixel_controllers::SetSpeed>("/motor3_controller/set_speed");
+  ros::ServiceClient client4 = n.serviceClient<dynamixel_controllers::SetSpeed>("/motor4_controller/set_speed");
+  dynamixel_controllers::SetSpeed srv;
+  std_msgs::Float64 m1NewPos;
+  std_msgs::Float64 m2NewPos;
+  std_msgs::Float64 m3NewPos;
+  std_msgs::Float64 m4NewPos;
+  std_msgs::Bool bound_flag_obj;
   // dynamixel_msgs::JointState motor1sim;
   // dynamixel_msgs::JointState motor2sim;
   // dynamixel_msgs::JointState motor3sim;
   // dynamixel_msgs::JointState motor4sim;
-	geometry_msgs::Point XY;
-	geometry_msgs::Quaternion lengths;
-	geometry_msgs::Quaternion positions;
-	ros::Subscriber cameraSub = n.subscribe("coordinate_send_topic", 1, cameraDataCallback);
-	ros::Subscriber motor1Sub = n.subscribe("/motor1_controller/state", 1, m1Callback);
-	ros::Subscriber motor2Sub = n.subscribe("/motor2_controller/state", 1, m2Callback);
-	ros::Subscriber motor3Sub = n.subscribe("/motor3_controller/state", 1, m3Callback);
-	ros::Subscriber motor4Sub = n.subscribe("/motor4_controller/state", 1, m4Callback);
-	ros::Publisher motor1Pub = n.advertise<std_msgs::Float64>("/motor1_controller/command", 1);
-	ros::Publisher motor2Pub = n.advertise<std_msgs::Float64>("/motor2_controller/command", 1);
-	ros::Publisher motor3Pub = n.advertise<std_msgs::Float64>("/motor3_controller/command", 1);
-	ros::Publisher motor4Pub = n.advertise<std_msgs::Float64>("/motor4_controller/command", 1);
-	ros::Publisher bound_flag_pub = n.advertise<std_msgs::Bool>("/bound_flag", 1);
+  geometry_msgs::Point XY;
+  geometry_msgs::Quaternion lengths;
+  geometry_msgs::Quaternion positions;
+  ros::Subscriber cameraSub = n.subscribe("coordinate_send_topic", 1, cameraDataCallback);
+  ros::Subscriber motor1Sub = n.subscribe("/motor1_controller/state", 1, m1Callback);
+  ros::Subscriber motor2Sub = n.subscribe("/motor2_controller/state", 1, m2Callback);
+  ros::Subscriber motor3Sub = n.subscribe("/motor3_controller/state", 1, m3Callback);
+  ros::Subscriber motor4Sub = n.subscribe("/motor4_controller/state", 1, m4Callback);
+  ros::Publisher motor1Pub = n.advertise<std_msgs::Float64>("/motor1_controller/command", 1);
+  ros::Publisher motor2Pub = n.advertise<std_msgs::Float64>("/motor2_controller/command", 1);
+  ros::Publisher motor3Pub = n.advertise<std_msgs::Float64>("/motor3_controller/command", 1);
+  ros::Publisher motor4Pub = n.advertise<std_msgs::Float64>("/motor4_controller/command", 1);
+  ros::Publisher bound_flag_pub = n.advertise<std_msgs::Bool>("/bound_flag", 1);
 
   // ros::Publisher motor1simPub = n.advertise<dynamixel_msgs::JointState>("/motor1_controller/state", 1);
   // ros::Publisher motor2simPub = n.advertise<dynamixel_msgs::JointState>("/motor2_controller/state", 1);
   // ros::Publisher motor3simPub = n.advertise<dynamixel_msgs::JointState>("/motor3_controller/state", 1);
   // ros::Publisher motor4simPub = n.advertise<dynamixel_msgs::JointState>("/motor4_controller/state", 1);
 
-	ros::Publisher motorLengthPub = n.advertise<geometry_msgs::Quaternion>("motorLengths", 1);
-	ros::Publisher motorPositionsPub = n.advertise<geometry_msgs::Quaternion>("motorPositions", 1);
-	ros::Publisher PositionPub = n.advertise<geometry_msgs::Point>("current_pos", 1);
-	speedStruct motorSpeeds;
+  ros::Publisher motorLengthPub = n.advertise<geometry_msgs::Quaternion>("motorLengths", 1);
+  ros::Publisher motorPositionsPub = n.advertise<geometry_msgs::Quaternion>("motorPositions", 1);
+  ros::Publisher PositionPub = n.advertise<geometry_msgs::Point>("current_pos", 1);
+  speedStruct motorSpeeds;
 
-	ros::Rate loop_rate(250);
-	lengthStruct newLengths;
-	bool initFlag = true;
+  ros::Rate loop_rate(250);
+  lengthStruct newLengths;
+  bool initFlag = true;
+
+  
 	while (ros::ok()){
     // goFlag = false;
 		if (goFlag == true){
@@ -486,10 +375,10 @@ int main(int argc, char **argv)
 
 			setSpeedSrv(client1,client2,client3,client4,srv,motorSpeeds);
 
-			m1NewPos.data = motorLengthToPosition(newLengths.l1) + m1Position;
-			m2NewPos.data = motorLengthToPosition(newLengths.l2) + m2Position;
-			m3NewPos.data = motorLengthToPosition(newLengths.l3) + m3Position;
-			m4NewPos.data = motorLengthToPosition(newLengths.l4) + m4Position;
+			m1NewPos.data = motorLengthToPosition(newLengths.l1) + m1Position - tension;
+			m2NewPos.data = motorLengthToPosition(newLengths.l2) + m2Position - tension;
+			m3NewPos.data = motorLengthToPosition(newLengths.l3) + m3Position - tension;
+			m4NewPos.data = motorLengthToPosition(newLengths.l4) + m4Position - tension;
       // motor1sim.current_pos = m1NewPos.data;
       // motor2sim.current_pos = m2NewPos.data;
       // motor3sim.current_pos = m3NewPos.data;
@@ -508,24 +397,20 @@ int main(int argc, char **argv)
 			goFlag = false;
 		}
 		else if (initFlag == true){
-		#ifdef square_gripper
+
 			float starting_gripper_offset = motorLengthToPosition(half_gripper_diagonal);
-			m1NewPos.data = PI - starting_gripper_offset;//correct
-			m2NewPos.data = PI - starting_gripper_offset;//correct
-			m3NewPos.data = PI - starting_gripper_offset;//correct
-			m4NewPos.data = PI - starting_gripper_offset;//correct?
-		#endif
-		#ifdef point_gripper
-			m1NewPos.data = PI;
-			m2NewPos.data = PI;
-			m3NewPos.data = PI;
-			m4NewPos.data = PI;
-		#endif
+			m1NewPos.data = PI - starting_gripper_offset - tension;//correct
+			m2NewPos.data = PI - starting_gripper_offset - tension;//correct
+			m3NewPos.data = PI - starting_gripper_offset - tension;//correct
+			m4NewPos.data = PI - starting_gripper_offset - tension;//correct?
+
 			motorSpeeds.s1 = 10.0;
 			motorSpeeds.s2 = 10.0;
 			motorSpeeds.s3 = 10.0;
 			motorSpeeds.s4 = 10.0;
+
 			setSpeedSrv(client1,client2,client3,client4,srv,motorSpeeds);
+
 			motor1Pub.publish(m1NewPos);
 			motor2Pub.publish(m2NewPos);
 			motor3Pub.publish(m3NewPos);
@@ -533,7 +418,9 @@ int main(int argc, char **argv)
 
 			ros::spinOnce();
 			loop_rate.sleep();
-		}else if (initFlag == false){
+		}
+    else if (initFlag == false){
+
 			newLengths = findNewLengths(0, 0);
 			motorSpeeds = calculate_speeds(newLengths);
 			XY.x = newLengths.x;
@@ -549,10 +436,31 @@ int main(int argc, char **argv)
 			PositionPub.publish(XY);
 			motorLengthPub.publish(lengths);
 			motorPositionsPub.publish(positions);
+
 		}
+
 		ros::spinOnce();
 		loop_rate.sleep();
 
 	}
 	return 0;
 }
+
+
+/*
+        y+ 
+   2---------1
+    (+)----(.)
+x+  ----------  x-
+    (.)----(+)
+   4---------3
+     -------
+      -----
+       -5-
+        y-
+
+gripper_starting_motor_offset 
+0.9375
++PI = 4.07909
+-PI = 2.20409
+*/
