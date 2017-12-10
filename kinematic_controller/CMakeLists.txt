@@ -198,7 +198,7 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
-
+include_directories(include)
 add_executable(kinematic_controller src/kinematic_controller.cpp)
 target_link_libraries(kinematic_controller ${catkin_LIBRARIES})
 #add_dependencies(kinematic_controller beginner_tutorials_generate_messages_cpp)
