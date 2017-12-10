@@ -15,7 +15,7 @@
         </rosparam>
     </node>
 
-    <rosparam file="$(find catcher_frame_controller)/frame.yaml" command="load"/>
+    <rosparam file="$(find catcher_frame_controller)/config/frame.yaml" command="load"/>
 
     <node name="controller_spawner5" pkg="dynamixel_controllers" type="controller_spawner.py"
         args="--manager=dxl_manager
