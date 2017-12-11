@@ -37,6 +37,9 @@ using namespace cv;
 #define MIN_H_BLUE 200
 #define MAX_H_BLUE 300
 
+// Camera Index
+int idx = 1;
+
 int mouseflag = 0;
 int mX = -1,minX,maxX;
 int mY = -1,minY,maxY;
@@ -52,10 +55,48 @@ void CallBackFunc(int event, int x, int y, int flags, void* userdata)
         mY = y;
         mouseflag = 1;
         cout << "Left button of the mouse is clicked - position (" << x << ", " << y << ")" << endl;
-
      }
-
 }
+
+int exposure = 120,hue = 46, gain = 16,saturation = 255;
+
+void setV4lParameter(int idx, const char*data, int value){
+    //Create string container
+    stringstream ss;
+    //Sub in camera id number (idx), and required parameter and value
+    ss << "uvcdynctrl --device=/dev/video" << idx <<  " -s '" << data << "' -- " << value;
+    //Print string to shell to call uvcdynctrl to set parameter in v4l 
+    system( ss.str().c_str() );
+    //Clear ss
+    ss.str("");
+}
+void Hue(int, void *){
+    setV4lParameter(idx, "Hue", hue);
+    return;
+}
+void Saturation(int, void *){
+    setV4lParameter(idx, "Saturation", saturation);
+    return;
+}
+void Gain(int, void *){
+    setV4lParameter(idx, "Gain", gain);
+    return;
+}
+void Exposure(int, void *){
+    setV4lParameter(idx, "Exposure", exposure);
+    return;
+}
+
+void createTrackbars(void){
+    /// Create Windows
+    namedWindow("V4L parameters", 1);
+
+    createTrackbar("Hue","V4L parameters", &hue, 90, Hue);
+    createTrackbar("Saturation","V4L parameters", &saturation, 255, Saturation);
+    createTrackbar("Gain","V4L parameters", &gain, 63, Gain);
+    createTrackbar("Exposure","V4L parameters", &exposure, 255, Exposure);
+}
+
 
 int main(int argc, char **argv)
 {
@@ -68,8 +109,18 @@ int main(int argc, char **argv)
     std_msgs::Float64 Gripper;
     // Camera frame
     cv::Mat frame;
-    // Camera Index
-    int idx = 1;
+
+    //Set parameters in qv4l. Hue, saturation, gain and exposure can be modified with trackbars
+    setV4lParameter(idx, "White Balance, Automatic", 0);
+    setV4lParameter(idx, "Gain, Automatic", 0);
+    setV4lParameter(idx, "Auto Exposure", 0);
+    setV4lParameter(idx, "Hue", hue);
+    setV4lParameter(idx, "Saturation", saturation);
+    setV4lParameter(idx, "Gain", gain);
+    setV4lParameter(idx, "Exosure", exposure);
+
+    createTrackbars();
+
 
     // Camera Capture
     cv::VideoCapture cap;
@@ -90,10 +141,10 @@ int main(int argc, char **argv)
    // cap.set(CV_CAP_PROP_HUE,46);
     //cap.set(CV_CAP_PROP_EXPOSURE,147);
     //cap.set(CV_CAP_PROP_BRIGHTNESS,26);
-    //cap.set(CV_CAP_PROP_GAIN,0);
-    
-    
-    
+    //cap.set(CV_CAP_PROP_GAIN,0.23);
+
+
+   
     int fWidth = cap.get(CV_CAP_PROP_FRAME_WIDTH);
     int fHeight = cap.get(CV_CAP_PROP_FRAME_HEIGHT);
     char ch = 0;
@@ -135,6 +186,20 @@ int main(int argc, char **argv)
         cv::GaussianBlur(frame, blur, cv::Size(5, 5), 3.0, 3.0);
         Mat frmHSV;
         cvtColor(blur, frmHSV,CV_BGR2HSV);
+
+        // //cv::Mat HSV_split[3];   //destination array
+        // vector<cv::Mat> HSV_split;
+        // split(frmHSV,HSV_split);//split source  
+        // HSV_split[0] += 42;
+        // //HSV_spslit(0).setTo(new Scalar(42));
+        // merge(HSV_split, frmHSV);
+        // Mat rgb_hue_shifted;
+        // cvtColor(frmHSV, rgb_hue_shifted, CV_HSV2BGR);
+
+        // namedWindow("frame", WINDOW_NORMAL);
+        // imshow("frame",frmHSV);
+        // setMouseCallback("frame", CallBackFunc, NULL);
+
         Mat rangeRes = cv::Mat::zeros(frame.size(), CV_8UC1);
         Mat rangeRes2;
         Mat frmGray;
