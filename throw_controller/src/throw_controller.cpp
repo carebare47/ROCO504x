@@ -53,8 +53,11 @@ int main(int argc, char **argv){
     		sleep(2);
 
     		cThrowSpool.data = unWind;
+    		ThrowSpoolPub.publish(cThrowSpool);
     		sleep(spoolTimeUnwind);
-
+    		cThrowSpool.data = 0;
+    		ThrowSpoolPub.publish(cThrowSpool);
+    		
     		cThrowClamp.data = 4;
     		ThrowClampPub.publish(cThrowClamp);
     		sleep(5);
