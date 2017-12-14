@@ -50,6 +50,8 @@ int maxG = 0,minG = 255;
 int offset0L = 10, offset0H = 10, offset1L = 100, offset1H = 100, offset2L = 100, offset2H = 100;
 int roffset0L = 75, roffset0H = 75, roffset1L = 75, roffset1H = 50, roffset2L = 75, roffset2H = 75;
 float maxScale = 0;
+int gripperclosed = 0;
+int sent = 0;
 void CallBackFunc(int event, int x, int y, int flags, void* userdata)
 {
 	if  ( event == EVENT_LBUTTONDOWN )
@@ -58,6 +60,14 @@ void CallBackFunc(int event, int x, int y, int flags, void* userdata)
 		mY = y;
 		mouseflag = 1;
 		cout << "Left button of the mouse is clicked - position (" << x << ", " << y << ")" << endl;
+	}
+}
+
+void finished_throwingCB(const std_msgs::Bool::ConstPtr& data){
+	bool finished_throwing = data->data;
+	if (finished_throwing){
+		gripperclosed = 0;
+		sent = 0;
 	}
 }
 
@@ -112,6 +122,8 @@ int main(int argc, char **argv)
 	ros::Publisher Setpoint_Pub = n.advertise<geometry_msgs::Point>("coordinate_send_topic", 1);
 	ros::Publisher Gripper_Control = n.advertise<std_msgs::Float64>("gripper_controller/command", 1);
 	ros::Publisher ball_caught = n.advertise<std_msgs::Bool>("frame_clamps_command",1);
+	ros::Subscriber finished_throwing_sub = n.subscribe("/finished_throwing", 1, finished_throwingCB);
+
 	ros::Rate loop_rate(200);
 	geometry_msgs::Point Setpoint;
 	std_msgs::Bool caught;
@@ -122,7 +134,8 @@ int main(int argc, char **argv)
     //Set parameters in qv4l. Hue, saturation, gain and exposure can be modified with trackbars
 	setV4lParameter(idx, "White Balance, Automatic", 0);
 	setV4lParameter(idx, "Gain, Automatic", 0);
-	setV4lParameter(idx, "Auto Exposure", 0);
+	//set auto exposure off, for some reason it's inverted in v4l
+	setV4lParameter(idx, "Auto Exposure", 1);
 	setV4lParameter(idx, "Hue", hue);
 	setV4lParameter(idx, "Saturation", saturation);
 	setV4lParameter(idx, "Gain", gain);
@@ -174,9 +187,8 @@ int main(int argc, char **argv)
 	Vec3b maxintensity2;
 	Scalar grayness;
 	Point2f lastpoint;
-	int gripperclosed = 0;
             // >>>>> Contours detection
-
+	caught.data = false;
     // >>>>> Main loop
 	while (ch != 'q' && ch != 'Q')
 	{
@@ -220,11 +232,13 @@ int main(int argc, char **argv)
 		Mat rangeRes3;
 		Mat andRes2;
 		Mat frmRGB;
+
 		cvtColor(blur,frmGray,CV_BGR2GRAY);
 		cvtColor(blur, frmRGB, CV_BGR2RGB);
 		frame.copyTo(frameRes);
 		int index1 = 0;
 		maxScale = 0;
+
 		if (gripperclosed == 0){
 			if (mouseflag == 2){
 				inRange(frmHSV,Scalar(minintensity),Scalar(maxintensity),rangeRes);
@@ -364,81 +378,88 @@ int main(int argc, char **argv)
 							gripperclosed = 0;          
 						}
 					}
+					namedWindow("frameres", WINDOW_NORMAL);
+					imshow("frameres", frameRes);
+					namedWindow("inrange", WINDOW_NORMAL);
+					imshow("inrange", rangeRes);
+					namedWindow("inrange2", WINDOW_NORMAL);
+					imshow("inrange2", rangeRes3);
 
 				}
 
-				else
-				{
-            Setpoint.x = 0;//centers[index1].x;
-            Setpoint.y = 0;//center[index1].y;
-            Setpoint.z = 1;
-            Setpoint_Pub.publish(Setpoint);
+				else {
+	            	Setpoint.x = 0;//centers[index1].x;
+	            	Setpoint.y = 0;//center[index1].y;
+	            	Setpoint.z = 1;
+	            	Setpoint_Pub.publish(Setpoint);
+	            	namedWindow("frameres", WINDOW_NORMAL);
+	            	imshow("frameres", frameRes);
+	            	namedWindow("inrange", WINDOW_NORMAL);
+	            	imshow("inrange", rangeRes);
+	            	namedWindow("inrange2", WINDOW_NORMAL);
+	            	imshow("inrange2", rangeRes3);
 
 
-        }
-    }
-    else{
-    	caught.data = true;
-    	ball_caught.publish(caught);
-    }
-    if (ch == 'o'){
-    	Gripper.data = 3.4;
-    	Gripper_Control.publish(Gripper);
-    	gripperclosed = 0;
-    } 
-    namedWindow("frameres", WINDOW_NORMAL);
-    imshow("frameres", frameRes);
-    namedWindow("inrange", WINDOW_NORMAL);
-    imshow("inrange", rangeRes);
-    namedWindow("inrange2", WINDOW_NORMAL);
-    imshow("inrange2", rangeRes3);
 
+	            }
+	        }
+	    }
+	    else{
 
-}
-
-if (mouseflag == 1){
-	intensity.val[0] = 0;
-	intensity.val[1] = 0;
-	intensity.val[2] = 0;
+	    	if (sent == 0){
+	    		caught.data = true;
+	    		ball_caught.publish(caught);
+	    		sent = 1;
+	    	}
+	    }
+	    if (ch == 'o'){
+	    	Gripper.data = 3.4;
+	    	Gripper_Control.publish(Gripper);
+	    	gripperclosed = 0;
+	    } 
+	    if (mouseflag == 1){
+	    	intensity.val[0] = 0;
+	    	intensity.val[1] = 0;
+	    	intensity.val[2] = 0;
             // intensity2.val[0] = 0;
             // intensity2.val[1] = 0;
             // intensity2.val[2] = 0;
 
-	if ((mX-10)<0)
-		minX = 0;
-	else
-		minX = mX-10;
-	if ((mX+10)>fWidth)
-		maxX = fWidth;
-	else
-		maxX = mX+10;
+	    	if ((mX-10)<0)
+	    		minX = 0;
+	    	else
+	    		minX = mX-10;
+	    	if ((mX+10)>fWidth)
+	    		maxX = fWidth;
+	    	else
+	    		maxX = mX+10;
 
-	if ((mY-10)<0)
-		minY = 0;
-	else
-		minY = mY-10;
-	if ((mY+10)>fHeight)
-		maxY = fHeight;
-	else
-		maxY = mY+10;    
+	    	if ((mY-10)<0)
+	    		minY = 0;
+	    	else
+	    		minY = mY-10;
+	    	if ((mY+10)>fHeight)
+	    		maxY = fHeight;
+	    	else
+	    		maxY = mY+10;    
 
 
 
             //intensity += frmHSV.at<Vec3b>(mY, mX);
-	for (int i = minY; i<maxY; i = i+1){
-		for(int n = minX; n<maxX; n=n+1){
+	    	for (int i = minY; i<maxY; i = i+1){
+	    		for(int n = minX; n<maxX; n=n+1){
                     //cout << "value of i: " << i << endl;
                     //cout << "value of n: " << n << endl;
-			intensitytemp = frmHSV.at<Vec3b>(i, n);
-			intensity2temp = blur.at<Vec3b>(i, n);
+	    			intensitytemp = frmHSV.at<Vec3b>(i, n);
+	    			intensity2temp = blur.at<Vec3b>(i, n);
 
-			intensity.val[0] = int(intensitytemp.val[0]/2.0) + int(intensity.val[0]/2.0);
+	    			intensity.val[0] = int(intensitytemp.val[0]/2.0) + int(intensity.val[0]/2.0);
 
-			intensity.val[1] = int(intensitytemp.val[1]/2.0) + int(intensity.val[1]/2.0);
-			intensity.val[2] = int(intensitytemp.val[2]/2.0) + int(intensity.val[2]/2.0);
-			intensity2.val[0] = int(intensity2temp.val[0]/2.0) + int(intensity2.val[0]/2.0);
-			intensity2.val[1] = int(intensity2temp.val[1]/2.0) + int(intensity2.val[1]/2.0);
-			intensity2.val[2] = int(intensity2temp.val[2]/2.0) + int(intensity2.val[2]/2.0);
+	    			intensity.val[1] = int(intensitytemp.val[1]/2.0) + int(intensity.val[1]/2.0);
+	    			intensity.val[2] = int(intensitytemp.val[2]/2.0) + int(intensity.val[2]/2.0);
+	    			intensity2.val[0] = int(intensity2temp.val[0]/2.0) + int(intensity2.val[0]/2.0);
+	    			intensity2.val[1] = int(intensity2temp.val[1]/2.0) + int(intensity2.val[1]/2.0);
+	    			intensity2.val[2] = int(intensity2temp.val[2]/2.0) + int(intensity2.val[2]/2.0);
 
 
                     // intensity.val[0] = int(int(intensity.val[0]) + int(frmHSV.at<Vec3b>(i, n).val[0])/2.0);
@@ -461,30 +482,30 @@ if (mouseflag == 1){
                                 //cout << int(intensity2.val[1])  << endl;
 
 
-		}
-	}
+	    		}
+	    	}
 
             //cout << int(intensity2.val[0])  << endl;
             //cout << int(intensity2.val[1])  << endl;
             //cout << int(intensity2.val[2])  << endl;
 
-	minintensity.val[0] = int(intensity.val[0]) - offset0L;
-	maxintensity.val[0] = int(intensity.val[0]) + offset0H;
-	minintensity.val[1] = int(intensity.val[1]) - offset1L;
-	maxintensity.val[1] = int(intensity.val[1]) + offset1H;
-	minintensity.val[2] = int(intensity.val[2]) - offset2L;
-	maxintensity.val[2] = int(intensity.val[2]) + offset2H;
-	minintensity2.val[0] = ((int(intensity2.val[0]) - roffset0L)<0) ? 0 : (int(intensity2.val[0]) - roffset0L);
-	maxintensity2.val[0] = ((int(intensity2.val[0]) + roffset0H)>255) ? 255 : (int(intensity2.val[0]) + roffset0H);
-	minintensity2.val[1] = ((int(intensity2.val[1]) - roffset1L)<0) ? 0 : (int(intensity2.val[1]) - roffset1L);
-	maxintensity2.val[1] = ((int(intensity2.val[1]) + roffset1H)>255) ? 255 : (int(intensity2.val[1]) + roffset1H);
-	minintensity2.val[2] = ((int(intensity2.val[2]) - roffset1L)<0) ? 0 : (int(intensity2.val[2]) - roffset2L);
-	maxintensity2.val[2] = ((int(intensity2.val[2]) + roffset2H)>255) ? 255 : (int(intensity2.val[2]) + roffset2H);          
-	if (int(minintensity.val[0])<0)
-		minintensity.val[0] = 0;
+	    	minintensity.val[0] = int(intensity.val[0]) - offset0L;
+	    	maxintensity.val[0] = int(intensity.val[0]) + offset0H;
+	    	minintensity.val[1] = int(intensity.val[1]) - offset1L;
+	    	maxintensity.val[1] = int(intensity.val[1]) + offset1H;
+	    	minintensity.val[2] = int(intensity.val[2]) - offset2L;
+	    	maxintensity.val[2] = int(intensity.val[2]) + offset2H;
+	    	minintensity2.val[0] = ((int(intensity2.val[0]) - roffset0L)<0) ? 0 : (int(intensity2.val[0]) - roffset0L);
+	    	maxintensity2.val[0] = ((int(intensity2.val[0]) + roffset0H)>255) ? 255 : (int(intensity2.val[0]) + roffset0H);
+	    	minintensity2.val[1] = ((int(intensity2.val[1]) - roffset1L)<0) ? 0 : (int(intensity2.val[1]) - roffset1L);
+	    	maxintensity2.val[1] = ((int(intensity2.val[1]) + roffset1H)>255) ? 255 : (int(intensity2.val[1]) + roffset1H);
+	    	minintensity2.val[2] = ((int(intensity2.val[2]) - roffset1L)<0) ? 0 : (int(intensity2.val[2]) - roffset2L);
+	    	maxintensity2.val[2] = ((int(intensity2.val[2]) + roffset2H)>255) ? 255 : (int(intensity2.val[2]) + roffset2H);          
+	    	if (int(minintensity.val[0])<0)
+	    		minintensity.val[0] = 0;
 
-	if (int(maxintensity.val[0])>255)
-		maxintensity.val[0] = 255;
+	    	if (int(maxintensity.val[0])>255)
+	    		maxintensity.val[0] = 255;
 
             // if (int(minintensity2.val[0])<0)
             // minintensity2.val[0] = 0;
@@ -553,88 +574,88 @@ if (mouseflag == 1){
             //cout << int(maxintensity2.val[2]) << endl;
 
             //if (minintensity.val[1]<0)
-	minintensity.val[1] = 0;
+	    	minintensity.val[1] = 0;
 
             //if (maxintensity.val[1]>255)
-	maxintensity.val[1] = 255;
+	    	maxintensity.val[1] = 255;
 
             //if (minintensity.val[2]<0)
-	minintensity.val[2] = 0;
+	    	minintensity.val[2] = 0;
 
             //if (maxintensity.val[2]>255)
-	maxintensity.val[2] = 255;
-	inRange(frmHSV,Scalar(minintensity),Scalar(maxintensity),rangeRes);
-	inRange(blur,Scalar(minintensity2),Scalar(maxintensity2),rangeRes3);
-	cv::dilate(rangeRes, rangeRes, cv::Mat(), cv::Point(-1, -1), 2);
-	cv::erode(rangeRes, rangeRes, cv::Mat(), cv::Point(-1, -1), 2);
-	cv::dilate(rangeRes3, rangeRes3, cv::Mat(), cv::Point(-1, -1), 2);
-	cv::erode(rangeRes3, rangeRes3, cv::Mat(), cv::Point(-1, -1), 2);
-	bitwise_and(rangeRes3,rangeRes,andRes);
+	    	maxintensity.val[2] = 255;
+	    	inRange(frmHSV,Scalar(minintensity),Scalar(maxintensity),rangeRes);
+	    	inRange(blur,Scalar(minintensity2),Scalar(maxintensity2),rangeRes3);
+	    	cv::dilate(rangeRes, rangeRes, cv::Mat(), cv::Point(-1, -1), 2);
+	    	cv::erode(rangeRes, rangeRes, cv::Mat(), cv::Point(-1, -1), 2);
+	    	cv::dilate(rangeRes3, rangeRes3, cv::Mat(), cv::Point(-1, -1), 2);
+	    	cv::erode(rangeRes3, rangeRes3, cv::Mat(), cv::Point(-1, -1), 2);
+	    	bitwise_and(rangeRes3,rangeRes,andRes);
             //bitwise_and(rangeRes2,andRes,andRes2);
 
 
                         //cout << "pass"  << endl;
-	contours.clear();
-	cv::findContours(rangeRes, contours, CV_RETR_EXTERNAL,CV_CHAIN_APPROX_NONE);
+	    	contours.clear();
+	    	cv::findContours(rangeRes, contours, CV_RETR_EXTERNAL,CV_CHAIN_APPROX_NONE);
             //cout << "pass" << endl;
-	vector<vector<cv::Point> > balls;
-	vector<cv::Rect> ballsBox;
-	vector<Point2f>centers( contours.size() );
-	vector<float>radius( contours.size() );
-	vector<Point2f>centers2( contours.size() );
-	vector<float>radius2( contours.size() );
-	balls.clear();
-	ballsBox.clear();
-	centers.clear();
-	radius.clear();
-	for (size_t i = 0; i < contours.size(); i++)
-	{
-		cv::Rect bBox;
-		bBox = cv::boundingRect(contours[i]);
+	    	vector<vector<cv::Point> > balls;
+	    	vector<cv::Rect> ballsBox;
+	    	vector<Point2f>centers( contours.size() );
+	    	vector<float>radius( contours.size() );
+	    	vector<Point2f>centers2( contours.size() );
+	    	vector<float>radius2( contours.size() );
+	    	balls.clear();
+	    	ballsBox.clear();
+	    	centers.clear();
+	    	radius.clear();
+	    	for (size_t i = 0; i < contours.size(); i++)
+	    	{
+	    		cv::Rect bBox;
+	    		bBox = cv::boundingRect(contours[i]);
 
  //               minEnclosingCircle( (Mat)contours[i], centers[i], radius[i] );
 
-		float ratio = (float) bBox.width / (float) bBox.height;
-		if (ratio > 1.0f)
-			ratio = 1.0f / ratio;
+	    		float ratio = (float) bBox.width / (float) bBox.height;
+	    		if (ratio > 1.0f)
+	    			ratio = 1.0f / ratio;
 
                 // Searching for a bBox almost square
-		if (ratio > 0.75 && bBox.area() >= 1000)
-		{
-			balls.push_back(contours[i]);
-			ballsBox.push_back(bBox);
+	    		if (ratio > 0.75 && bBox.area() >= 1000)
+	    		{
+	    			balls.push_back(contours[i]);
+	    			ballsBox.push_back(bBox);
 
-		}
-	}
+	    		}
+	    	}
                         //cout << "pass"  << endl;
 
-	for (size_t i = 0; i < balls.size(); i++)
-	{
-		cv::drawContours(frameRes, balls, i, CV_RGB(20,150,20), 1);
-		cv::rectangle(frameRes, ballsBox[i], CV_RGB(0,255,0), 2);
-		minEnclosingCircle( (Mat)balls[i], centers[i], radius[i] );
-		cv::Point center;
-		center.x = ballsBox[i].x + ballsBox[i].width / 2;
-		center.y = ballsBox[i].y + ballsBox[i].height / 2;
-		cv::circle(frameRes, center, 2, CV_RGB(20,150,20), -1);
-		cv::circle(frameRes, centers[i],int(radius[i]), CV_RGB(0,255,0),2,8,0);
+	    	for (size_t i = 0; i < balls.size(); i++)
+	    	{
+	    		cv::drawContours(frameRes, balls, i, CV_RGB(20,150,20), 1);
+	    		cv::rectangle(frameRes, ballsBox[i], CV_RGB(0,255,0), 2);
+	    		minEnclosingCircle( (Mat)balls[i], centers[i], radius[i] );
+	    		cv::Point center;
+	    		center.x = ballsBox[i].x + ballsBox[i].width / 2;
+	    		center.y = ballsBox[i].y + ballsBox[i].height / 2;
+	    		cv::circle(frameRes, center, 2, CV_RGB(20,150,20), -1);
+	    		cv::circle(frameRes, centers[i],int(radius[i]), CV_RGB(0,255,0),2,8,0);
                 // Setpoint.x = center.x;
                 // Setpoint.y = center.y;
                 // Setpoint.z = 0;
                 // Setpoint_Pub.publish(Setpoint);
-		stringstream sstr;
-		sstr << "(" << center.x << "," << center.y << ")";
-		cv::putText(frameRes, sstr.str(),
-			cv::Point(center.x + 3, center.y - 3),
-			cv::FONT_HERSHEY_SIMPLEX, 0.5, CV_RGB(20,150,20), 2);
-	}
+	    		stringstream sstr;
+	    		sstr << "(" << center.x << "," << center.y << ")";
+	    		cv::putText(frameRes, sstr.str(),
+	    			cv::Point(center.x + 3, center.y - 3),
+	    			cv::FONT_HERSHEY_SIMPLEX, 0.5, CV_RGB(20,150,20), 2);
+	    	}
                         //cout << "pass"  << endl;
 
 
-	namedWindow("frameres", WINDOW_NORMAL);
-	imshow("frameres", frameRes);
-	namedWindow("inrange", WINDOW_NORMAL);
-	imshow("inrange", rangeRes);
+	    	namedWindow("frameres", WINDOW_NORMAL);
+	    	imshow("frameres", frameRes);
+	    	namedWindow("inrange", WINDOW_NORMAL);
+	    	imshow("inrange", rangeRes);
             //             namedWindow("inrange2", WINDOW_NORMAL);
             // imshow("inrange2", rangeRes2);
             //             namedWindow("inrange3", WINDOW_NORMAL);
@@ -645,10 +666,10 @@ if (mouseflag == 1){
             // imshow("andRes2", andRes2);
                         //cout << "pass"  << endl;
 
-	mouseflag = 2;
+	    	mouseflag = 2;
             //lastpoint.y = mY;
             //lastpoint.x = mX;
-}
+	    }
 
 
 
@@ -656,14 +677,14 @@ if (mouseflag == 1){
 
 
 
-ros::spinOnce();
+	    ros::spinOnce();
 
-loop_rate.sleep();
+	    loop_rate.sleep();
         // User key
-ch = cv::waitKey(1);
+	    ch = cv::waitKey(1);
 
-}
+	}
     // <<<<< Main loop
 
-return EXIT_SUCCESS;
+	return EXIT_SUCCESS;
 }
