@@ -200,4 +200,8 @@ include_directories(
 
 add_executable(throw_controller src/throw_controller.cpp)
 target_link_libraries(throw_controller ${catkin_LIBRARIES})
+
+
+add_executable(throw_controller_manual src/throw_controller_manual.cpp)
+target_link_libraries(throw_controller_manual ${catkin_LIBRARIES})
 #add_dependencies(throw_controller beginner_tutorials_generate_messages_cpp)
