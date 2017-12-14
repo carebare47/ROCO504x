@@ -32,6 +32,7 @@ rosrun throw_controller throw_ctroller_manual
 rosrun hough_ball_tracker hough_ball_tracker 
 ```
 
+Here's a video of it working: https://youtu.be/0yMIV64DRBU
 
 TODO:
 
