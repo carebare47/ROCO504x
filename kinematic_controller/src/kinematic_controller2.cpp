@@ -17,6 +17,14 @@ int main(int argc, char **argv)
 	ros::Subscriber motor3Sub = n.subscribe("/motor3_controller/state", 1, m3Callback);
 	ros::Subscriber motor4Sub = n.subscribe("/motor4_controller/state", 1, m4Callback);
 
+	ros::Publisher Clamp1Pub = n.advertise<std_msgs::Float64>("/frameclamp1_controller/command", 1);
+	ros::Publisher Clamp2Pub = n.advertise<std_msgs::Float64>("/frameclamp2_controller/command", 1);
+	ros::Publisher Clamp3Pub = n.advertise<std_msgs::Float64>("/frameclamp3_controller/command", 1);
+	ros::Publisher Clamp4Pub = n.advertise<std_msgs::Float64>("/frameclamp4_controller/command", 1);
+	ros::Publisher ThrowClampPub = n.advertise<std_msgs::Float64>("/throwclamp_controller/command", 1);
+	std_msgs::Float64 cFrameClamps;
+	std_msgs::Float64 cThrowClamp;
+
 	ros::Subscriber initSub = n.subscribe("/init_frame", 1, initCB);	
 
 	ros::Publisher motor1Pub = n.advertise<std_msgs::Float64>("/motor1_controller/command", 1);
@@ -49,10 +57,10 @@ int main(int argc, char **argv)
 	while (ros::ok()){
     // goFlag = false;
 		if (goFlag == true){
-		/*	if (ball_detected == 1.0){
+			if (ball_detected == 1.0){
 				dataX = 0.0;
 				dataY = 0.0;
-			}*/
+			}
 			timer3b.header.stamp =  ros::Time::now();
 			timer3.publish(timer3b);
 			newLengths = findNewLengths(dataX, dataY);
@@ -102,7 +110,23 @@ int main(int argc, char **argv)
 		else if (initFlag == true){
 
 			//for (int x = 0; x<=10; x++){
-				float starting_gripper_offset = motorLengthToPosition(half_gripper_diagonal);
+
+			  //close frame clamps
+			cFrameClamps.data = 2.5;
+    		//close throw clamp
+			cThrowClamp.data = 4.0;
+
+    		//publish frame clamps closed
+			Clamp1Pub.publish(cFrameClamps);
+			Clamp2Pub.publish(cFrameClamps);
+			Clamp3Pub.publish(cFrameClamps);
+			Clamp4Pub.publish(cFrameClamps);
+			ThrowClampPub.publish(cThrowClamp);
+
+
+
+
+			float starting_gripper_offset = motorLengthToPosition(half_gripper_diagonal);
 				m1NewPos.data = PI - starting_gripper_offset - tension;//correct
 				m2NewPos.data = PI - starting_gripper_offset - tension;//correct
 				m3NewPos.data = PI - starting_gripper_offset - tension;//correct
@@ -134,8 +158,8 @@ int main(int argc, char **argv)
 				ros::spinOnce();
 				loop_rate.sleep();
 		//	}
-			initFlag = false;
-		}
+				initFlag = false;
+			}
 		//else if (initFlag == false){
 
 			// newLengths = findNewLengths(0, 0);
@@ -155,7 +179,7 @@ int main(int argc, char **argv)
 			// motorPositionsPub.publish(positions);
 
 		//} 
-		else if (throwFlag == true){
+			else if (throwFlag == true){
 
 			//newLengths = findNewLengths(dataX, dataY);
 			//motorSpeeds = calculate_speeds(newLengths);
@@ -168,24 +192,24 @@ int main(int argc, char **argv)
 			// motorLengthPub.publish(lengths);
 			// motorPositionsPub.publish(positions);
 
-			m3NewPos.data = motorLengthToPosition(throw_length_change) + m3Position - tension;
-			m4NewPos.data = motorLengthToPosition(throw_length_change) + m4Position - tension;
-			ROS_INFO("lengthChange = %f",throw_length_change);
-			ROS_INFO("ThrowFlag = %d ", throwFlag);
+				m3NewPos.data = motorLengthToPosition(throw_length_change) + m3Position - tension;
+				m4NewPos.data = motorLengthToPosition(throw_length_change) + m4Position - tension;
+				ROS_INFO("lengthChange = %f",throw_length_change);
+				ROS_INFO("ThrowFlag = %d ", throwFlag);
 			//ROS_INFO(throwFlag);
-			
-			motor3Pub.publish(m3NewPos);
-			motor4Pub.publish(m4NewPos);
-			throwFlag = false;
+
+				motor3Pub.publish(m3NewPos);
+				motor4Pub.publish(m4NewPos);
+				throwFlag = false;
+
+			}
+
+			ros::spinOnce();
+			loop_rate.sleep();
 
 		}
-
-		ros::spinOnce();
-		loop_rate.sleep();
-
+		return 0;
 	}
-	return 0;
-}
 
 
 /*

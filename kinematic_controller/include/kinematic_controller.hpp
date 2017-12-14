@@ -100,7 +100,7 @@ lengthStruct newLengths;
 
 void proportionalControl(int X, int Y){
 	int proportional = pow(X, 2.0) + pow(Y, 2.0);
-	globalSpeedScalar = 0.3944444	 * proportional;
+	globalSpeedScalar = 0.03944444	 * proportional;
 //return globalSpeedScalar;
 }
 
