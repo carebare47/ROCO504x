@@ -10,7 +10,6 @@ Once ROS Kinetic is installed, set up your catkin workspace: http://wiki.ros.org
 Install the dynamixel motor drivers for ROS: http://wiki.ros.org/dynamixel_motor
 
 Clone this repository to catkin_ws/src
-
 Then from catkin_ws, type `catkin_make`
 
 Copy ROCO504x/USBserialRules/99-usb-serial.rules to /etc/udev/rules.d to assign mappings to the USBtoDynamixel adapters
@@ -30,7 +29,7 @@ Then, in four terminals, start the following programmes:
 roslaunch catcher_frame_controller controller_managerx2.launch
 rosrun kinematic_controller kinematic_controller2 
 rosrun throw_controller throw_ctroller_manual 
-rosrun hough_ball_tracker houghall_tracker 
+rosrun hough_ball_tracker hough_ball_tracker 
 ```
 
 
