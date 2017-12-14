@@ -78,7 +78,7 @@
             serial_ports:
                 gripper_port:
                     port_name: "/dev/gripper_USB"
-                    baud_rate: 57600
+                    baud_rate: 250000
                     min_motor_id: 0
                     max_motor_id: 25
                     update_rate: 200
@@ -137,5 +137,7 @@
                 gripper_controller
                 "
             output="screen"/>
+
+<node name="arduinoThrowMotorController" pkg="rosserial_python" type="serial_node.py" args="/dev/ttyACM0" />
             
 </launch>
