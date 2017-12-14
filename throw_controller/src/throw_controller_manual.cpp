@@ -3,16 +3,19 @@
 #include "std_msgs/Bool.h"
 #include "std_msgs/Float64.h"
 #include <stdlib.h>
-int throwControl = -1;
-const float clampClose = 4.5;
+bool throwControl = false;
+const float clampClose = 5.0;
 //clamp1 = 5
 //clamp2 = 5.2
-//clamp3 = 5.0
-//clamp4 = 5.0
+//clamp3 = 5.2
+//clamp4 = 5.2
+//
+
+
 
 const float clampOpen = 2.5;
 bool step = false;
-void FrameClamps_cb(const std_msgs::Int16::ConstPtr& clamps_command){
+void FrameClamps_cb(const std_msgs::Bool::ConstPtr& clamps_command){
 	throwControl = clamps_command->data;
 }
 /*
@@ -34,6 +37,7 @@ int main(int argc, char **argv){
 	ros::Publisher Clamp4Pub = n.advertise<std_msgs::Float64>("/frameclamp4_controller/command", 1);
 	ros::Publisher Motor3Pub = n.advertise<std_msgs::Float64>("/motor3_controller/command", 1);
 	ros::Publisher Motor4Pub = n.advertise<std_msgs::Float64>("/motor4_controller/command", 1);
+	ros::Publisher finished_pub = n.advertise<std_msgs::Bool>("/finished_throwing", 1);
 
 	ros::Publisher ThrowClampPub = n.advertise<std_msgs::Float64>("/throwclamp_controller/command", 1);
 	ros::Publisher ThrowSpoolPub = n.advertise<std_msgs::Int16>("/throw_motor", 1);
@@ -47,6 +51,7 @@ int main(int argc, char **argv){
 	ros::Subscriber FrameClampsSub = n.subscribe("/frame_clamps_command", 1, FrameClamps_cb);
   	//ros::Subscriber step_pub = n.subscribe("/throw_steps", 1, step_pub_cb);
 	std_msgs::Float64 gripper;
+	std_msgs::Bool finished;
 	std_msgs::Float64 cFrameClamps;
 	std_msgs::Float64 cThrowClamp;
 	std_msgs::Int16 cThrowSpool;
@@ -57,7 +62,7 @@ int main(int argc, char **argv){
 	int spoolTimeWind = 5;
 	int spoolTimeUnwind = 5;
 	while (ros::ok()){
-		if (throwControl == 1){
+		if (throwControl){
 
 			init_kinematic_controller(init_kinematic_controller_pub);
 
@@ -69,7 +74,7 @@ int main(int argc, char **argv){
     		//start winder winding
 			cThrowSpool.data = Wind;
     		//close throw clamp
-			cThrowClamp.data = 2.2;
+			cThrowClamp.data = 1.8;
 
     		//publish frame clamps closed
 			Clamp1Pub.publish(cFrameClamps);
@@ -77,12 +82,21 @@ int main(int argc, char **argv){
 				//Clamp3Pub.publish(cFrameClamps);
     		//cFrameClamps.data = 0;
 				//Clamp4Pub.publish(cFrameClamps);
+
+			length_change.data = -31.0;
+			throw_length_change.publish(length_change);
+			sleep(2);
+
+			Clamp3Pub.publish(cFrameClamps);
+			Clamp4Pub.publish(cFrameClamps);
+
+
 			sleep(2);
 
     		////begin winding
 			ThrowSpoolPub.publish(cThrowSpool);
     		//wait until wound
-			sleep(9);
+			sleep(11);
 
     		//sleep(spoolTimeWind);
 
@@ -97,12 +111,7 @@ int main(int argc, char **argv){
 				// m4Command.data = something;
 				// Motor3Pub.publish(m3Command);
 				// Motor4Pub.publish(m4Command);
-			length_change.data = -31.0;
-			throw_length_change.publish(length_change);
-			sleep(3);
 
-			Clamp3Pub.publish(cFrameClamps);
-			Clamp4Pub.publish(cFrameClamps);
 
 
 
@@ -112,7 +121,7 @@ int main(int argc, char **argv){
     		//begin unwinding
 			cThrowSpool.data = unWind;
 			ThrowSpoolPub.publish(cThrowSpool);
-			sleep(9);
+			sleep(11);
     		//stop unwinding
 			cThrowSpool.data = 0;
 			ThrowSpoolPub.publish(cThrowSpool);
@@ -130,11 +139,13 @@ int main(int argc, char **argv){
 			Clamp2Pub.publish(cFrameClamps);
 			Clamp3Pub.publish(cFrameClamps);
 			Clamp4Pub.publish(cFrameClamps);
-			throwControl = 0;
 
 			sleep(1);
 
 			init_kinematic_controller(init_kinematic_controller_pub);
+			finished.data = true;
+			finished_pub.publish(finished);
+			throwControl = false;
 
 		}
 		ros::spinOnce();
