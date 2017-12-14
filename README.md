@@ -9,8 +9,7 @@ Once ROS Kinetic is installed, set up your catkin workspace: http://wiki.ros.org
 
 Install the dynamixel motor drivers for ROS: http://wiki.ros.org/dynamixel_motor
 
-Clone this repository to catkin_ws/src
-Then from catkin_ws, type `catkin_make`
+Clone this repository to catkin_ws/src, then from catkin_ws, type `catkin_make`
 
 Copy ROCO504x/USBserialRules/99-usb-serial.rules to /etc/udev/rules.d to assign mappings to the USBtoDynamixel adapters
 ```
@@ -37,4 +36,5 @@ Here's a video of it working: https://youtu.be/0yMIV64DRBU
 TODO:
 
 Link to CAD files
+
 Discuss / add license information
