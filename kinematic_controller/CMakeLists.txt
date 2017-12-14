@@ -201,4 +201,8 @@ include_directories(
 include_directories(include)
 add_executable(kinematic_controller src/kinematic_controller.cpp)
 target_link_libraries(kinematic_controller ${catkin_LIBRARIES})
+
+
+add_executable(kinematic_controller2 src/kinematic_controller2.cpp)
+target_link_libraries(kinematic_controller2 ${catkin_LIBRARIES})
 #add_dependencies(kinematic_controller beginner_tutorials_generate_messages_cpp)
