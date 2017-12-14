@@ -23,8 +23,9 @@ void setup() {
 void loop() {
 
   if (spoolCommand == 0) {
-    spoolMotorCommand = 128;
+    spoolMotorCommand = 122;
     analogWrite(MotorControlPin, spoolMotorCommand);
+    //pinMode(MotorControlPin, INPUT);
   }
 
   else if (spoolCommand == 1) {
