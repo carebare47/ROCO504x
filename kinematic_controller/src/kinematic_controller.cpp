@@ -5,6 +5,7 @@ int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "kinematic_controller");
 	ros::NodeHandle n;
+	ros::Time begin = ros::Time::now();
 	ros::ServiceClient client1 = n.serviceClient<dynamixel_controllers::SetSpeed>("/motor1_controller/set_speed");
 	ros::ServiceClient client2 = n.serviceClient<dynamixel_controllers::SetSpeed>("/motor2_controller/set_speed");
 	ros::ServiceClient client3 = n.serviceClient<dynamixel_controllers::SetSpeed>("/motor3_controller/set_speed");
@@ -30,10 +31,15 @@ int main(int argc, char **argv)
 	ros::Publisher motorLengthPub = n.advertise<geometry_msgs::Quaternion>("motorLengths", 1);
 	ros::Publisher motorPositionsPub = n.advertise<geometry_msgs::Quaternion>("motorPositions", 1);
 	ros::Publisher PositionPub = n.advertise<geometry_msgs::Point>("current_pos", 1);
+	geometry_msgs::PointStamped timer3b;
+    geometry_msgs::PointStamped timer4b;
+
+    ros::Publisher timer3 = n.advertise<geometry_msgs::PointStamped>("/timer3", 1);
+    ros::Publisher timer4 = n.advertise<geometry_msgs::PointStamped>("/timer4", 1);
 	speedStruct motorSpeeds;
 
-	ros::Rate loop_rate(250);
-	bool initFlag = true;
+	ros::Rate loop_rate(150);
+	
 
 
 	while (ros::ok()){
@@ -43,6 +49,8 @@ int main(int argc, char **argv)
 				dataX = 0.0;
 				dataY = 0.0;
 			}
+			timer3b.header.stamp =  ros::Time::now();
+			timer3.publish(timer3b);
 			newLengths = findNewLengths(dataX, dataY);
 			motorSpeeds = calculate_speeds(newLengths);
 			bound_flag_obj.data = boundFlag;
@@ -77,9 +85,12 @@ int main(int argc, char **argv)
 			motor3Pub.publish(m3NewPos);
 			motor4Pub.publish(m4NewPos);
 
+						timer4b.header.stamp = ros::Time::now();
+			timer4.publish(timer4b);
+
 			// motor1simPub.publish(motor1sim);
 			// motor2simPub.publish(motor2sim);
-			// motor3simPub.publish(motor3sim);
+			// motor3simPubob.publish(motor3sim);
 			// motor4simPub.publish(motor4sim);
 			initFlag = false;
 			goFlag = false;
@@ -109,10 +120,10 @@ int main(int argc, char **argv)
 			motor3sim.current_pos = m3NewPos.data;
 			motor4sim.current_pos = m4NewPos.data;
 
-			motor1simPub.publish(motor1sim);
-			motor2simPub.publish(motor2sim);
-			motor3simPub.publish(motor3sim);
-			motor4simPub.publish(motor4sim);
+			// motor1simPub.publish(motor1sim);
+			// motor2simPub.publish(motor2sim);
+			// motor3simPub.publish(motor3sim);
+			// motor4simPub.publish(motor4sim);
 
 
 			ros::spinOnce();
