@@ -26,11 +26,17 @@ or
 ```
 sudo apt-get install ros-kinetic-dynamixel-motor --y
 ```
-Install webcam drivers and QV4L2:
+Install webcam drivers, QV4L2 and usb support:
 ```
-sudo apt-get install v4l-* qv4l2
+sudo apt-get install v4l-* qv4l2 libusb
 ```
-Clone this repository to catkin_ws/src, then from catkin_ws, type `catkin_make`
+Clone this repository to catkin_ws/src and build:
+```
+cd ~/catkin_ws/src/
+git clone https://github.com/carebare47/ROCO504x
+cd ..
+catkin_make
+```
 
 Copy ROCO504x/USBserialRules/99-usb-serial.rules to /etc/udev/rules.d and apply rules to assign mappings to the USBtoDynamixel adapters
 ```
