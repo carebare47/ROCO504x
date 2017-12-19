@@ -1,6 +1,6 @@
 # ROCO504x
 
-So far, this is the catkin src workspace for the ROCO504 project.
+This is the git repository for the ROCO504 catching and throwing robot project.
 
 Written for use with ROS Kinetic.
 ROS Kinetic installation instructions: http://wiki.ros.org/kinetic/Installation/Ubuntu
