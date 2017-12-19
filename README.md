@@ -45,6 +45,7 @@ rosrun hough_ball_tracker hough_ball_tracker
 
 Here's a video of it working: https://youtu.be/0yMIV64DRBU
 
+And here are the CAD files created for this project: https://github.com/carebare47/ROCO504xCAD
 TODO:
 
 Link to CAD files
