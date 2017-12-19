@@ -32,7 +32,7 @@ The following step will vary depending on which throw motor you wish to use. An 
 
 Install/setup rosserial: https://github.com/ros-drivers/rosserial
 
-Program the arduino with code found in ROCO504X/throw_controller/ROCO504ThrowControl/ROCO504ThrowControl.ino
+Program the arduino with code found in ROCO504x/throw_controller/ROCO504ThrowControl/ROCO504ThrowControl.ino
 
 
 Then, in four terminals, start the following programmes:
