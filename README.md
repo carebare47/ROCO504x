@@ -11,6 +11,11 @@ mkdir -p ~/catkin_ws/src
 cd ~/catkin_ws
 catkin_make
 ```
+If kinetic is the only version of ROS you are running, then run the following to automatically source your new terminals (and your current one):
+```
+echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
+source ~/.bashrc
+```
 
 Install the dynamixel motor drivers for ROS: http://wiki.ros.org/dynamixel_motor
 
