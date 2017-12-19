@@ -6,6 +6,11 @@ Written for use with ROS Kinetic.
 ROS Kinetic installation instructions: http://wiki.ros.org/kinetic/Installation/Ubuntu
 
 Once ROS Kinetic is installed, set up your catkin workspace: http://wiki.ros.org/catkin/Tutorials/create_a_workspace
+```
+mkdir -p ~/catkin_ws/src
+cd ~/catkin_ws
+catkin_make
+```
 
 Install the dynamixel motor drivers for ROS: http://wiki.ros.org/dynamixel_motor
 
