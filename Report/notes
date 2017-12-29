@@ -1,0 +1,149 @@
+Hi Martin,
+
+
+There are 3 people in this team:
+
+- Demetrius Zaibo
+
+- Dan Turner
+
+- Tom Queen
+
+
+Project Name:
+
+
+Abstract:
+
+A robot catcher using soft control and gripper designs. A gantry frame, possibly tilted, will act as a frame for the x/y translation of gripper via motors and bungee cord. There are currently 2 designs for the gripper, one completely passive and the other active.
+
+
+Control of the x/y position will be done via a PID loop and an on-board camera placed in the center of the gripper. A known object thrown will be discovered by the camera, and its center of mass found, providing x/y sensory feedback. Processing will initially be performed by a laptop, and camera feed acquired via a PS3Eye.
+
+
+The frame has already been constructed and we are in the process of procuring motors. One of the gripper designs is nearly completed, and a test print will be made shortly afterwards.
+
+
+Should the above go well further developments are intended, such as:
+
+- Switching to an embedded processor
+
+- Designing and building either a larger or smaller scale system
+
+- Object return system (throw objects back)
+
+- Improved vision algorithm to find arbitrary objects coming towards the camera
+
+
+Regards,
+
+Demetrius.	
+
+
+
+
+
+Control diagrams:
+Camera data in
+OpenCV - filtering, find CofM
+CofM -> kinematic controller
+motor positions -> Kinematic controller
+kinematic controller -> motors
+
+
+
+
+
+
+
+
+opencv:
+setup camera (white balance, gain, auto exposure, hue, sat, gain, exposure, buffersize, fps, resolution)
+
+gaussuan blur
+convert to hsv
+convert to gray
+convert to rgb
+if gripper open:
+wait for click
+
+
+
+
+Abstract
+
+Introduction
+
+Design Process
+
+    Define the Problem
+    Do Background Research
+    Specify Requirements
+    Brainstorm Solutions
+    Choose the Best Solution
+    Do Development Work
+    Build a Prototype
+    Test and Redesign
+
+
+Implementation
+	Frame
+	kinematics
+	camera/opencv
+	gripper(s)
+	clamps
+	steppers?
+	arduino?
+		What did the code do?
+			data in, copy to x and y
+			perform calculations:
+				zero (minux half x and y)
+				recalc gripper pos:
+					stepperx.currentPos * stepScale + starting lengthx
+					current_x = maxX / 2 + (sq(current_length_3) - sq(current_length_4)) / (2 * maxX);
+					current_y = maxY / 2 + (sq(current_length_4) - sq(current_length_2)) / (2 * maxY);
+
+
+				check_boundaries:
+				if ball detected:
+					calculate lengths
+					calculate & set speeds
+					set positions
+				
+
+
+kinematic_controller2.cpp:
+	init:
+		close gripper, open clamps, publish
+		move to init pos with tension
+		set speeds to max
+		go to pos
+		set speeds
+
+	find new lengths
+	calculate speeds
+	publish positions
+	set speeds
+	motor length to position
+	apply tension
+
+
+Calculate required new lengths
+calculate speeds
+publish positions
+publish speeds
+calculate current position
+loop
+
+
+
+
+Experiments (Method, Results, and Discussion for each)
+
+Overall Discussion
+
+Conclusion
+
+The report should also contain appropriate references to relevant scientific and technical work.
+
+

@@ -1,0 +1,66 @@
+Structure:
+abstract
+intro
+design process:
+problems:
+	speed of:
+		camera
+		processing
+		motors
+	torque of motors
+	how to store force
+
+research
+requirements:
+	active gripper
+	passive gripper
+	throwing mechanism
+	Frame
+	Computer vision
+	gripper motion?
+	catching?
+
+
+solutions:
+	clamps
+	steppers
+	gearboxes
+	ps3 cam
+	laptop vs micro
+	servos
+
+soluton
+	prototype steppers/arduino?
+test/redev:
+	servos
+	laptop
+
+
+Implementation
+	Frame
+	kinematics
+	camera/opencv
+	gripper(s)
+	clamps
+	steppers?
+	arduino?
+
+
+
+Experiments (Method, Results, and Discussion for each)
+
+Overall Discussion
+
+Conclusion
+
+Pictures:
+finished both grippers (cad?)
+Frame?
+screencap vid/sim
+FEA
+control diagrams:
+overall
+kinematic controller
+hough tracker
+throw?
+

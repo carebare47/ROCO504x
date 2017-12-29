@@ -1,0 +1,36 @@
+General structure looks good 🙂 In terms of pictures I would be fairly sparing as we only have 8 pages, definately want a picture of the finished activepassive grippers and frame in there, side by side picture of the screen carture and video and simulation... We want some cad stuff and fea in there aswell but that could possibly go in the appendices
+
+In terms of why we built the thing
+Mainly because its an interesting research problem
+I think thats the best we of saying because it looked like fun xD
+
+Research we have a fair few papers we can point to
+
+Requirements
+We had
+active gripper
+passive gripper
+throwing mechanism
+Frame
+
+throwing can be broken down
+to throwing motor set up
+and clamps
+and computer vision
+
+computer vision as a seperate requirement
+and gripper motion
+which could be, motor setup + kinematics
+and catching i guess
+
+i guess you could switch some of that to solutions
+so maybe for requirements
+just start with catching and throwing
+Break catching down into motion, vision and gripping
+maybe add compliant
+compliance
+
+then for throwing break that down into force storage and quick release, or something like that
+
+Then in solutions you can talk about, clamps, steppers, gearbox etc 🙂
+
