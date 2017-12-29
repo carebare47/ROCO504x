@@ -10,7 +10,10 @@ problems:
 	torque of motors
 	how to store force
 
-research
+research:
+	kinematic solutoin(s)
+	motors?
+
 requirements:
 	active gripper
 	passive gripper

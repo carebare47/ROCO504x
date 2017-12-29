@@ -1,5 +1,22 @@
 General structure looks good 🙂 In terms of pictures I would be fairly sparing as we only have 8 pages, definately want a picture of the finished activepassive grippers and frame in there, side by side picture of the screen carture and video and simulation... We want some cad stuff and fea in there aswell but that could possibly go in the appendices
 
+Pictures:
+finished both grippers (cad?)
+Frame?
+screencap vid/sim
+FEA
+control diagrams:
+overall
+kinematic controller
+hough tracker
+throw?
+
+In terms of why we built the thing
+Interesting research problem
+
+
+
+
 In terms of why we built the thing
 Mainly because its an interesting research problem
 I think thats the best we of saying because it looked like fun xD
@@ -7,16 +24,15 @@ I think thats the best we of saying because it looked like fun xD
 Research we have a fair few papers we can point to
 
 Requirements
-We had
 active gripper
 passive gripper
 throwing mechanism
 Frame
 
-throwing can be broken down
-to throwing motor set up
-and clamps
-and computer vision
+throwing:
+throwing motor set up
+clamps
+computer vision
 
 computer vision as a seperate requirement
 and gripper motion

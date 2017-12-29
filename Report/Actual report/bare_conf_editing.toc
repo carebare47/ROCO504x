@@ -1,0 +1,34 @@
+\contentsline {section}{\numberline {I}Introduction}{2}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {I-A}}Subsection Heading Here}{2}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {I-A}1}Subsubsection Heading Here}{2}
+\contentsline {section}{\numberline {II}Design Process}{2}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-A}}Problem}{2}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-A}1}Inverse Kinematics}{2}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-A}2}Camera speed}{2}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-A}3}Motors}{2}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-B}}Research}{2}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-C}}Requirements}{2}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-D}}Solutions}{2}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-D}1}Motors}{2}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-D}2}Camera}{2}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-D}3}Kinematic solution 1}{2}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-E}}Prototype}{3}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-F}}Further problems}{3}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-F}1}Kinematics}{3}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-F}2}Motors}{3}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-F}3}Arduino}{3}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-G}}Redesign}{3}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-H}}Final solution}{3}
+\contentsline {section}{\numberline {III}Implementation}{3}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-A}}Software}{3}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-B}}Frame}{4}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-C}}Kinematics}{4}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-D}}Grippers}{4}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-E}}Clamps}{4}
+\contentsline {section}{\numberline {IV}Experiments}{4}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-A}}Method}{4}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}}Results}{4}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-C}}Discussion}{4}
+\contentsline {section}{\numberline {V}Overall Discussion}{4}
+\contentsline {section}{\numberline {VI}Conclusion}{4}
+\contentsline {section}{References}{4}

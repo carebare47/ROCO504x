@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6530) (preloaded format=pdflatex 2017.12.28)  29 DEC 2017 20:22
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6530) (preloaded format=pdflatex 2017.12.28)  29 DEC 2017 22:48
 entering extended mode
 **./bare_conf_editing.tex
 (bare_conf_editing.tex
@@ -715,31 +715,45 @@ Package grfext Info: Graphics extension search list:
 G,.JBIG2,.JB2,.eps]
 (grfext)             \AppendGraphicsExtensions on input line 456.
 )
-ABD: EveryShipout initializing macros
-LaTeX Font Info:    Try loading font information for U+msa on input line 413.
+ABD: EveryShipout initializing macros (bare_conf_editing.toc
+LaTeX Font Info:    Try loading font information for U+msa on input line 2.
 
 (/home/tom/.miktex/texmfs/install/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 413.
+LaTeX Font Info:    Try loading font information for U+msb on input line 2.
 
 (/home/tom/.miktex/texmfs/install/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-Underfull \hbox (badness 10000) in paragraph at lines 537--580
+))
+\tf@toc=\write4
+\openout4 = `bare_conf_editing.toc'.
+
+ [1
+
+{/home/tom/.miktex/texmfs/data/pdftex/config/pdftex.map}
+
+] [2
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 702--704
+[][]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 702--704
 
  []
 
-[1{/home/tom/.miktex/texmfs/data/pdftex/config/pdftex.map}
 
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
-]
-<ROCO504-overall.png, id=18, 1860.9525pt x 1742.51pt>
+<ROCO504-overall.png, id=20, 1860.9525pt x 1742.51pt>
 File: ROCO504-overall.png Graphic file (type png)
 <use ROCO504-overall.png>
-Package pdftex.def Info: ROCO504-overall.png  used on input line 637.
+Package pdftex.def Info: ROCO504-overall.png  used on input line 738.
 (pdftex.def)             Requested size: 1860.94797pt x 1742.50577pt.
-
+ [3]
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -751,29 +765,32 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[2 <./ROCO504-overall.png>] (bare_conf_editing.aux) ) 
+[4
+
+ <./ROCO504-overall.png>] (bare_conf_editing.aux) ) 
 Here is how much of TeX's memory you used:
- 14254 strings out of 495212
- 282156 string characters out of 3181458
- 318661 words of memory out of 3000000
- 17267 multiletter control sequences out of 15000+200000
- 41704 words of font info for 86 fonts, out of 3000000 for 9000
+ 14313 strings out of 495212
+ 283097 string characters out of 3181458
+ 325176 words of memory out of 3000000
+ 17322 multiletter control sequences out of 15000+200000
+ 42811 words of font info for 87 fonts, out of 3000000 for 9000
  17 hyphenation exceptions out of 8191
- 55i,11n,59p,739b,937s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/home/tom/.miktex/texmfs/
-install/fonts/enc/dvips/base/8r.enc}</home/tom/.miktex/texmfs/install/fonts/typ
-e1/public/amsfonts/cm/cmex10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/
-public/amsfonts/cm/cmmi10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/pub
-lic/amsfonts/cm/cmmi7.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/
-amsfonts/cm/cmr10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsf
-onts/cm/cmr7.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/
-cm/cmsy10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmb8a.pf
-b></home/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmbi8a.pfb></home/to
-m/.miktex/texmfs/install/fonts/type1/urw/times/utmr8a.pfb></home/tom/.miktex/te
-xmfs/install/fonts/type1/urw/times/utmri8a.pfb>
-Output written on bare_conf_editing.pdf (2 pages, 211634 bytes).
+ 55i,10n,59p,739b,935s stack positions out of 5000i,500n,10000p,200000b,50000s
+{/home/tom/.miktex/texmfs/in
+stall/fonts/enc/dvips/base/8r.enc}</home/tom/.miktex/texmfs/install/fonts/type1
+/public/amsfonts/cm/cmex10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/pu
+blic/amsfonts/cm/cmmi10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/publi
+c/amsfonts/cm/cmmi7.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/am
+sfonts/cm/cmr10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfon
+ts/cm/cmr7.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm
+/cmsy10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cm
+sy7.pfb></home/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmb8a.pfb></ho
+me/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmbi8a.pfb></home/tom/.mik
+tex/texmfs/install/fonts/type1/urw/times/utmr8a.pfb></home/tom/.miktex/texmfs/i
+nstall/fonts/type1/urw/times/utmri8a.pfb>
+Output written on bare_conf_editing.pdf (4 pages, 234479 bytes).
 PDF statistics:
- 56 PDF objects out of 1000 (max. 8388607)
+ 66 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  18 words of extra memory for PDF output out of 10000 (max. 10000000)
 
