@@ -20,7 +20,8 @@ node run speeds
 
 time taken for:
 image to hough tracker
-hough tracker in to out
+hough tracker in to out (average 0.017507503940077634 seconds over about five minutes, see hough_tracker_duration_values_numbers for data)
+
 time to kinematic controller
 kinematic controller in to out
 motor response rate?

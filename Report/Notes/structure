@@ -3,13 +3,15 @@ abstract
 intro
 design process:
 problems:
-	speed of:
-		camera
-		processing
-		motors
-	torque of motors
-	how to store force
-	Initial kinematics
+	Initial kinematics 	|||
+	how to store force 	-
+	speed of:		
+		camera		|
+		processing	-
+		motors		||
+	torque of motors	-
+
+
 
 
 research:
@@ -40,14 +42,17 @@ requirements:
 
 
 solutions:
-	clamps
-	steppers
-	gearboxes
-	ps3 cam
-	laptop vs micro
-	servos
+	Motors:
+		Micro(gearbox)	|
+		Stepper		|
+	clamps			|||
+	ps3 cam			||
+	processor		-
+	servos			-
+	Passive gripper		-
+	Active gripper		-
 
-soluton
+Prototype
 	prototype steppers/arduino?
 problems:
 	Speed, torque (mainly torque), open loop (not an issue if enough torque)

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6530) (preloaded format=pdflatex 2017.12.28)  30 DEC 2017 14:43
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6530) (preloaded format=pdflatex 2017.12.28)  30 DEC 2017 18:17
 entering extended mode
 **./ROCO504-report.tex
 (ROCO504-report.tex
@@ -733,28 +733,54 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 {/home/tom/.miktex/texmfs/data/pdftex/config/pdftex.map}
 
-] [2
+]
+Underfull \hbox (badness 2073) in paragraph at lines 555--556
+ \OT1/ptm/m/it/10 1) Mi-cro mo-tors: [][] \OT1/ptm/m/n/10 The first was to use 
+high torque
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 560--562
+
+ []
+
+
+LaTeX Warning: Command \textdegree invalid in math mode on input line 563.
+
+LaTeX Font Info:    Try loading font information for TS1+ptm on input line 563.
+
+(/home/tom/.miktex/texmfs/install/tex/latex/psnfss/ts1ptm.fd
+File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
+)
+
+LaTeX Warning: Command \textdegree invalid in math mode on input line 563.
+
+Missing character: There is no ° in font cmr10!
+[2
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 707--709
+Underfull \hbox (badness 10000) in paragraph at lines 717--719
 [][]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 707--709
+Underfull \hbox (badness 10000) in paragraph at lines 717--719
 
  []
 
-[3]
-<ROCO504-overall.png, id=25, 1860.9525pt x 1742.51pt>
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [3]
+<ROCO504-overall.png, id=24, 1860.9525pt x 1742.51pt>
 File: ROCO504-overall.png Graphic file (type png)
 <use ROCO504-overall.png>
-Package pdftex.def Info: ROCO504-overall.png  used on input line 762.
+Package pdftex.def Info: ROCO504-overall.png  used on input line 772.
 (pdftex.def)             Requested size: 1860.94797pt x 1742.50577pt.
 
 Underfull \vbox (badness 5274) has occurred while \output is active []
 
-
+ [4 <./ROCO504-overall.png>]
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -766,30 +792,33 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[4 <./ROCO504-overall.png>] (ROCO504-report.aux) ) 
+[5
+
+] (ROCO504-report.aux) ) 
 Here is how much of TeX's memory you used:
- 14317 strings out of 495212
- 283130 string characters out of 3181458
- 327956 words of memory out of 3000000
- 17326 multiletter control sequences out of 15000+200000
- 42811 words of font info for 87 fonts, out of 3000000 for 9000
+ 14356 strings out of 495212
+ 283637 string characters out of 3181458
+ 329084 words of memory out of 3000000
+ 17359 multiletter control sequences out of 15000+200000
+ 44767 words of font info for 90 fonts, out of 3000000 for 9000
  17 hyphenation exceptions out of 8191
- 55i,13n,59p,811b,935s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/home/tom/.miktex/texmfs/ins
-tall/fonts/enc/dvips/base/8r.enc}</home/tom/.miktex/texmfs/install/fonts/type1/
-public/amsfonts/cm/cmex10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/pub
-lic/amsfonts/cm/cmmi10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public
-/amsfonts/cm/cmmi7.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/ams
-fonts/cm/cmr10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfont
-s/cm/cmr7.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/
-cmsy10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cms
-y7.pfb></home/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmb8a.pfb></hom
-e/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmbi8a.pfb></home/tom/.mikt
-ex/texmfs/install/fonts/type1/urw/times/utmr8a.pfb></home/tom/.miktex/texmfs/in
-stall/fonts/type1/urw/times/utmri8a.pfb>
-Output written on ROCO504-report.pdf (4 pages, 238861 bytes).
+ 55i,13n,59p,1380b,935s stack positions out of 5000i,500n,10000p,200000b,50000s
+{/home/tom/.miktex/texmfs/install/fonts/enc/dvips/base/
+8r.enc}</home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmex10.
+pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi10.pfb
+></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi7.pfb></h
+ome/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr10.pfb></home/
+tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr7.pfb></home/tom/.
+miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy10.pfb></home/tom/.mik
+tex/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy7.pfb></home/tom/.miktex/
+texmfs/install/fonts/type1/urw/times/utmb8a.pfb></home/tom/.miktex/texmfs/insta
+ll/fonts/type1/urw/times/utmbi8a.pfb></home/tom/.miktex/texmfs/install/fonts/ty
+pe1/urw/times/utmr8a.pfb></home/tom/.miktex/texmfs/install/fonts/type1/urw/time
+s/utmr8a.pfb></home/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmri8a.pf
+b>
+Output written on ROCO504-report.pdf (5 pages, 251999 bytes).
 PDF statistics:
- 66 PDF objects out of 1000 (max. 8388607)
+ 73 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  18 words of extra memory for PDF output out of 10000 (max. 10000000)
 

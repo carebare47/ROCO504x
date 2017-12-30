@@ -550,16 +550,21 @@ Fast motors were needed to allow the gripper to keep track of the target. The wo
 \subsection{Requirements}
 
 \subsection{Solutions}
-\subsubsection{Motors}\label{gearbox_sol}
-To achieve the required speed and torque, several solutions were designed. The first was to use high torque (300Ncm) encoded DC motors (E192.24.125). The maximum speed of these motors was 33rpm. In order to achieve the required gripper speed of 1.5m/s, a gearbox was needed.
+To achieve the required speed and torque, several motor solutions were designed. 
+\subsubsection{Micro motors}\label{gearbox_sol}
+The first was to use high torque (300Ncm) encoded DC motors (E192.24.125). The maximum speed of these motors was 33rpm. In order to achieve the required gripper speed of 1.5m/s, a gearbox was needed.
 \begin{equation}
 \begin{aligned}
 \frac{s}{\pi\cdot d \cdot r} = \frac{150}{\pi\cdot 10 \cdot 0.55} = 1:8.68
 \end{aligned}
 \end{equation}
-Where $d$ is the spool diameter ($10cm$), $s$ is required cord speed ($150cm/s$) and $r$ is motor speed ($0.55 \ RPM$). This ratio would result in a gearbox output speed of $149.9 cm/s$. 
+Where $d$ is the spool diameter ($10cm$), $s$ is required cord speed ($150cm/s$) and $r$ is motor speed ($0.55 \ RPM$). This ratio would result in a gearbox output speed of $149.9 cm/s$.\\ 
+\subsubsection{Stepper motors}
+Another solution was to use stepper motors. Four SST58D3820 stepper motors were acquired. These motors are specified to hold $7.3Kg.cm$, which drops to $6.5Kg.cm$ at a frequency of 1200 pulses per second (PPS). The motors step size was $1.8\textdegree$, giving a max speed of 6RPM. \begin{equation}
+\frac{1.8\cdot 1200}{360} = 6 
+\end{equation}
 \subsubsection{Clamps}
-To address the problem discussed in \ref{force_problem}, clamps were designed to lock each cord in place.
+To address the problem discussed in \ref{force_problem}, clamps were designed to lock each cord in place. Each clamp consisted of a high-friction surface suspended above a fixed plate via four springs. The cord to be clamped runs between the two surfaces. A dynamixel ax-12 servo is connected the suspended surface with a pulley. When actuated, the servo pulls the suspended surface towards the fixed plate, closing the gap and clamping the cord in place. A clamp was produced for each of the five cords, one for each corner of the frame and one for the throwing motor.
 
 \subsubsection{Camera}
 The Sony Playstation3 eye camera can be purchased second-hand for 50p. This camera can output 187 frames per second (FPS) at a resolution of 320x240, or 60 FPS at a resolution of 640x480. In addition, the camera allows for control of exposure, gain, white balance, saturation and hue shift.
@@ -614,10 +619,10 @@ X = l_3\sin(\theta_3)
 \begin{equation}
 Y = l_3\cos(\theta_3)
 \end{equation}
-\newpage
+
 Or, without trigonometry:
 
-\begin{equation}
+\begin{equation} \label{inverse_kinematics_1}
 \begin{aligned}
 &X = \left(\frac{X_{max}{}^2 + l_3{}^2 - l_4{}^2}{2*X_{max}*l_3}\right) = \frac{X_{max}}{2} + \frac{l_3{}^2 - l_4{}^2}{2*X_{max}}\\ \\
 &Y = \left(\frac{Y_{max}{}^2 + l_4{}^2 - l_1{}^2}{2*Y_{max}*l_3}\right) = \frac{Y_{max}}{2} + \frac{l_4{}^2 - l_1{}^2}{2*Y_{max}}
@@ -625,7 +630,7 @@ Or, without trigonometry:
 \end{equation}
 
 Forward Kinematics:
-\begin{equation}
+\begin{equation} \label{forward_kinematics_1}
 \begin{aligned}
 &l_1 = \sqrt{\left(X\right)^2 + \left(Y_{max}-Y\right)^2}\\
 &l_2 = \sqrt{\left(X_{max}-X\right)^2 + \left(Y_{max}-Y\right)^2}\\
@@ -634,6 +639,11 @@ Forward Kinematics:
 \end{aligned}
 \end{equation}
 \subsection{Prototype}
+\subsubsection{Hardware}
+These solutions led to the development of the initial prototype. This robot used four stepper motors to drive the gripper. Each motor was driven by a HST-8325B stepper driver with control signals generated on an teensy3.2 running the arduino firmware. 
+\subsubsection{Software}
+The teensy was using the rosserial library to recieve the targets CofM from the computer. The teensy then offset the coordinate system so that pixel 0,0 was in the centre of the image. The teensy kept track of all motor positions, and when a new CofM arrived the current gripper position was calculated from the motor positions using the forward kinematics described by equation \ref{forward_kinematics_1} in \ref{kinematic_solution_1}. The program generates motor commands designed to move the gripper so that the centre of the camera image contains the CofM of the target. This is known as visual servoing. The x and y error between the centre of the camera image and the target is calculated, generating a vector that points towards the target. This vector is translated into the change in length of each cord required to center the gripper over the tracked target using the inverse kinematics described by equation \ref{inverse_kinematics_1} in \ref{kinematic_solution_1}. The desired gripper location is then checked to see if it has left the bounds of the working area, if it has then movement in the direction of the axis which has been breached is set to zero. Finally, motor speeds are calculated from the desired changes in lengths as is described in equation \ref{motor_speed_equation} in section \ref{motor_speed_section}.
+
 \subsection{Further problems}
 \subsubsection{Gearbox}
 A gearbox ratio of 1:8.68 was chosen as can be seen in \ref{gearbox_sol}. If a 500g gripper were to be raised along either vertical wall of the workspace, the output of the gearbox raising it would experience $5Kg.cm$ of force. Transferring this force through the gearbox, a 1cm input gear would experience $43.4 Kg.cm$ of force. By making the length of each gear inversely proportional to its accumulated speed multiplier, the stress felt by the input gear could be spread out over the rest of the gears. However, as this would have more than doubled the size of our original gearbox (SIZESXXXXXXXXXXX), the decision was made to use stepper motors instead.
@@ -731,9 +741,9 @@ For the tension to remain equal on all cords during motion of the gripper, the m
 \subsubsection{Motors}
 \subsubsection{Arduino}
 \subsection{Redesign}
-\subsubsection{Motor velocities}
+\subsubsection{Motor velocities}\label{motor_speed_section}
 To address the issue raised in \ref{motor_vel_problem} a simple speed scaling system was devised. This algorithm was called once per main loop after the required changes in lengths are calculated. The algorithm takes in the requested changes in length of each cord and divides each change in length by the largest. The algorithm then scales the relative speeds of each motor by the global speed scalar.
-\begin{equation}
+\begin{equation}\label{motor_speed_equation}
 \begin{aligned}
 &\vec{l} = \begin{bmatrix}
 l_1\\l_2\\l_3\\l_4\\
@@ -804,12 +814,12 @@ The authors would like to thank...
 
 % references section
 
-% can use a bibliography generated by BibTeX as a .bbl file
+% can use a liography generated by BibTeX as a .bbl file
 % BibTeX documentation can be easily obtained at:
 % http://mirror.ctan.org/biblio/bibtex/contrib/doc/
 % The IEEEtran BibTeX style support page is at:
 % http://www.michaelshell.org/tex/ieeetran/bibtex/
-%\bibliographystyle{IEEEtran}
+\bibliographystyle{IEEEtran}
 % argument is your BibTeX string definitions and bibliography database(s)
 %\bibliography{IEEEabrv,../bib/paper}
 %
@@ -817,14 +827,36 @@ The authors would like to thank...
 % set second argument of \begin to the number of references
 % (used to reserve space for the reference number labels box)
 \begin{thebibliography}{1}
+	
 
+				\bibitem{Simpson} Homer J. Simpson. \textsl{Mmmmm...donuts}.
+				Evergreen Terrace Printing Co., Springfield, SomewhereUSA, 1998
+
+				\bibitem{rosserial} ROSserial Wiki \textsl{Mmmmm...donuts}.
+				Evergreen Terrace Printing Co., Springfield, SomewhereUSA, 1998
+				
+
+					
+@online{rosserial,
+	author = {Misc},
+	title = {Rosserial wiki},
+	date = {30/12/17},
+	url = {http://wiki.ros.org/rosserial},
+}
 \bibitem{IEEEhowto:kopka}
 H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
   0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
 
+	
+\bibitem{b1} G. Eason, B. Noble, and I. N. Sneddon, ``On certain integrals of Lipschitz-Hankel type involving products of Bessel functions,'' Phil. Trans. Roy. Soc. London, vol. A247, pp. 529--551, April 1955.
+\bibitem{b2} J. Clerk Maxwell, A Treatise on Electricity and Magnetism, 3rd ed., vol. 2. Oxford: Clarendon, 1892, pp.68--73.
+\bibitem{b3} I. S. Jacobs and C. P. Bean, ``Fine particles, thin films and exchange anisotropy,'' in Magnetism, vol. III, G. T. Rado and H. Suhl, Eds. New York: Academic, 1963, pp. 271--350.
+\bibitem{b4} K. Elissa, ``Title of paper if known,'' unpublished.
+\bibitem{b5} R. Nicole, ``Title of paper with only first word capitalized,'' J. Name Stand. Abbrev., in press.
+\bibitem{b6} Y. Yorozu, M. Hirano, K. Oka, and Y. Tagawa, ``Electron spectroscopy studies on magneto-optical media and plastic substrate interface,'' IEEE Transl. J. Magn. Japan, vol. 2, pp. 740--741, August 1987 [Digests 9th Annual Conf. Magnetics Japan, p. 301, 1982].
+\bibitem{b7} M. Young, The Technical Writer's Handbook. Mill Valley, CA: University Science, 1989.
+	
 \end{thebibliography}
-
-
 
 
 % that's all folks
