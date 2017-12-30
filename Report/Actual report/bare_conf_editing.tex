@@ -550,19 +550,17 @@ Fast motors were needed to allow the gripper to keep track of the target. The wo
 \subsection{Requirements}
 
 \subsection{Solutions}
-\subsubsection{Motors}
+\subsubsection{Motors}\label{gearbox_sol}
 To achieve the required speed and torque, several solutions were designed. The first was to use high torque (300Ncm) encoded DC motors (E192.24.125). The maximum speed of these motors was 33rpm. In order to achieve the required gripper speed of 1.5m/s, a gearbox was needed.
-\subsubsection{Clamps}
-To address the problem discussed in \ref{force_problem}, clamps were designed to lock each cord in place.
 \begin{equation}
 \begin{aligned}
-Spool\ diameter (s) = 10cm\\
-Spool\ circumference = \pi * 10 = 31.414cm\\
-Required\ speed = 150cm / s \\
-Max\ speed = 0.55RPM\\
-Goal\ speed = 10 RPM\\
+\frac{s}{\pi\cdot d \cdot r} = \frac{150}{\pi\cdot 10 \cdot 0.55} = 1:8.68
 \end{aligned}
 \end{equation}
+Where $d$ is the spool diameter ($10cm$), $s$ is required cord speed ($150cm/s$) and $r$ is motor speed ($0.55 \ RPM$). This ratio would result in a gearbox output speed of $149.9 cm/s$. 
+\subsubsection{Clamps}
+To address the problem discussed in \ref{force_problem}, clamps were designed to lock each cord in place.
+
 \subsubsection{Camera}
 The Sony Playstation3 eye camera can be purchased second-hand for 50p. This camera can output 187 frames per second (FPS) at a resolution of 320x240, or 60 FPS at a resolution of 640x480. In addition, the camera allows for control of exposure, gain, white balance, saturation and hue shift.
 \subsubsection{Kinematic solution 1} \label{kinematic_solution_1}
@@ -637,7 +635,9 @@ Forward Kinematics:
 \end{equation}
 \subsection{Prototype}
 \subsection{Further problems}
-\subsubsection{Kinematics}
+\subsubsection{Gearbox}
+A gearbox ratio of 1:8.68 was chosen as can be seen in \ref{gearbox_sol}. If a 500g gripper were to be raised along either vertical wall of the workspace, the output of the gearbox raising it would experience $5Kg.cm$ of force. Transferring this force through the gearbox, a 1cm input gear would experience $43.4 Kg.cm$ of force. By making the length of each gear inversely proportional to its accumulated speed multiplier, the stress felt by the input gear could be spread out over the rest of the gears. However, as this would have more than doubled the size of our original gearbox (SIZESXXXXXXXXXXX), the decision was made to use stepper motors instead.
+\subsubsection{Kinematics} \label{kinematic_solution_3}
 Initially the kinematic solution considered the gripper as a point. This worked for preliminary testing, but soon proved to be a problem when the limited torque of the stepper motors required equal tension on all cords at all times. This led to the development of the following kinematic model, which considered the gripper as a square. 
 
 \begin{tikzpicture}[scale=1.5]
@@ -726,16 +726,35 @@ Forward Kinematics:
 &l_4 = \sqrt{\left(X_{max}-X+\frac{l_g}{2}\right)^2 + \left(Y-\frac{l_g}{2}\right)^2}\\
 \end{aligned}
 \end{equation}
-
+\subsubsection{Motor velocities}\label{motor_vel_problem}
+For the tension to remain equal on all cords during motion of the gripper, the motors must turn at different rates. For example: if the gripper starts in the centre of the frame and moves upwards, the top two lengths will shorten and the bottom two cords will get longer. To maintain a uniform velocity of the gripper, the top two motors must slow down and the bottom two must speed up.
 \subsubsection{Motors}
 \subsubsection{Arduino}
 \subsection{Redesign}
+\subsubsection{Motor velocities}
+To address the issue raised in \ref{motor_vel_problem} a simple speed scaling system was devised. This algorithm was called once per main loop after the required changes in lengths are calculated. The algorithm takes in the requested changes in length of each cord and divides each change in length by the largest. The algorithm then scales the relative speeds of each motor by the global speed scalar.
+\begin{equation}
+\begin{aligned}
+&\vec{l} = \begin{bmatrix}
+l_1\\l_2\\l_3\\l_4\\
+\end{bmatrix}\quad
+%&x = \max\{l_1,...,l_4\}\\
+&x = \max\{l\}\\\\
+&\vec{s} = \frac{g}{x}\cdot \vec{l}\\
+%&s_1 = \frac{l_1}{x}\\
+%&s_2 = \frac{l_2}{x}\\
+%&s_3 = \frac{l_3}{x}\\
+%&s_4 = \frac{l_4}{x}\\
+\end{aligned}
+\end{equation}
+Where $g$ is the global speed scalar and $s$ is the speed of each motor.
+
 \subsection{Final solution}
 
 
 \section{Implementation}
 \subsection{Software}
-Frames enter the object tracking node at a rate of 60FPS. The object tracker performs a series of filters in different colour spaces on the image before calculating its centre of mass. This coordinate is published to the kinematic controller xxxx milliseconds after the frame enters the object tracker. Upon entering the kinematic controller, the coordinate frame is offset so that the center of the camera image is now at pixel 0,0. The required change in length of each cord is then calculated and set, and from this the required speed of each motor is calculated and set. The kinematic controller node then calculates the current gripper position in order to calculate the changes in length for the next loop.
+Frames enter the object tracking node at a rate of 60FPS. The object tracker performs a series of filters in different colour spaces on the image before calculating its centre of mass. This coordinate is published to the kinematic controller xxxx milliseconds after the frame enters the object tracker. Upon entering the kinematic controller, the coordinate frame is offset so that the center of the camera image is now at pixel 0,0. The required change in length of each cord is then calculated and set (via the method described in \ref{kinematic_solution_3}). From this the required speed of each motor is calculated and set. The kinematic controller node then calculates the current gripper position in order to calculate the changes in length for the next loop.
 Figure~\ref{fig:HighLevelDiagram} shows the high-level software flow diagram of the robot.
 \begin{figure}[htbp]
 	\centerline{%

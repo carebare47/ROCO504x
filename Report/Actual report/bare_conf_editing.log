@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6530) (preloaded format=pdflatex 2017.12.28)  30 DEC 2017 12:47
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6530) (preloaded format=pdflatex 2017.12.28)  30 DEC 2017 14:40
 entering extended mode
 **./bare_conf_editing.tex
 (bare_conf_editing.tex
@@ -745,15 +745,16 @@ Underfull \hbox (badness 10000) in paragraph at lines 707--709
 
  []
 
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-<ROCO504-overall.png, id=20, 1860.9525pt x 1742.51pt>
+[3]
+<ROCO504-overall.png, id=25, 1860.9525pt x 1742.51pt>
 File: ROCO504-overall.png Graphic file (type png)
 <use ROCO504-overall.png>
-Package pdftex.def Info: ROCO504-overall.png  used on input line 743.
+Package pdftex.def Info: ROCO504-overall.png  used on input line 762.
 (pdftex.def)             Requested size: 1860.94797pt x 1742.50577pt.
- [3]
+
+Underfull \vbox (badness 5274) has occurred while \output is active []
+
+
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -765,30 +766,28 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[4
-
- <./ROCO504-overall.png>] (bare_conf_editing.aux) ) 
+[4 <./ROCO504-overall.png>] (bare_conf_editing.aux) ) 
 Here is how much of TeX's memory you used:
- 14314 strings out of 495212
- 283112 string characters out of 3181458
- 326193 words of memory out of 3000000
- 17323 multiletter control sequences out of 15000+200000
+ 14317 strings out of 495212
+ 283166 string characters out of 3181458
+ 327956 words of memory out of 3000000
+ 17326 multiletter control sequences out of 15000+200000
  42811 words of font info for 87 fonts, out of 3000000 for 9000
  17 hyphenation exceptions out of 8191
- 55i,10n,59p,739b,935s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/home/tom/.miktex/texmfs/in
-stall/fonts/enc/dvips/base/8r.enc}</home/tom/.miktex/texmfs/install/fonts/type1
-/public/amsfonts/cm/cmex10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/pu
-blic/amsfonts/cm/cmmi10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/publi
-c/amsfonts/cm/cmmi7.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/am
-sfonts/cm/cmr10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfon
-ts/cm/cmr7.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm
-/cmsy10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cm
-sy7.pfb></home/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmb8a.pfb></ho
-me/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmbi8a.pfb></home/tom/.mik
-tex/texmfs/install/fonts/type1/urw/times/utmr8a.pfb></home/tom/.miktex/texmfs/i
-nstall/fonts/type1/urw/times/utmri8a.pfb>
-Output written on bare_conf_editing.pdf (4 pages, 234736 bytes).
+ 55i,13n,59p,814b,935s stack positions out of 5000i,500n,10000p,200000b,50000s
+{/home/tom/.miktex/texmfs/
+install/fonts/enc/dvips/base/8r.enc}</home/tom/.miktex/texmfs/install/fonts/typ
+e1/public/amsfonts/cm/cmex10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/
+public/amsfonts/cm/cmmi10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/pub
+lic/amsfonts/cm/cmmi7.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/
+amsfonts/cm/cmr10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsf
+onts/cm/cmr7.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/
+cm/cmsy10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/
+cmsy7.pfb></home/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmb8a.pfb></
+home/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmbi8a.pfb></home/tom/.m
+iktex/texmfs/install/fonts/type1/urw/times/utmr8a.pfb></home/tom/.miktex/texmfs
+/install/fonts/type1/urw/times/utmri8a.pfb>
+Output written on bare_conf_editing.pdf (4 pages, 238861 bytes).
 PDF statistics:
  66 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
