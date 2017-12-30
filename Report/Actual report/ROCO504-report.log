@@ -1,7 +1,7 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6530) (preloaded format=pdflatex 2017.12.28)  30 DEC 2017 14:40
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6530) (preloaded format=pdflatex 2017.12.28)  30 DEC 2017 14:43
 entering extended mode
-**./bare_conf_editing.tex
-(bare_conf_editing.tex
+**./ROCO504-report.tex
+(ROCO504-report.tex
 LaTeX2e <2017-04-15>
 Babel <3.15> and hyphenation patterns for 1 language(s) loaded.
 (/home/tom/.miktex/texmfs/install/tex/latex/ieeetran/IEEEtran.cls
@@ -625,8 +625,8 @@ File: tikzlibraryangles.code.tex 2013/08/28 v3.0.1a (rcs-revision 1.1)
 (/home/tom/.miktex/texmfs/install/tex/generic/pgf/frontendlayer/tikz/libraries/
 tikzlibraryquotes.code.tex
 File: tikzlibraryquotes.code.tex 2014/03/21 v3.0.1a (rcs-revision 1.4)
-) (bare_conf_editing.aux)
-\openout1 = `bare_conf_editing.aux'.
+) (ROCO504-report.aux)
+\openout1 = `ROCO504-report.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 321.
 LaTeX Font Info:    ... okay on input line 321.
@@ -715,7 +715,7 @@ Package grfext Info: Graphics extension search list:
 G,.JBIG2,.JB2,.eps]
 (grfext)             \AppendGraphicsExtensions on input line 456.
 )
-ABD: EveryShipout initializing macros (bare_conf_editing.toc
+ABD: EveryShipout initializing macros (ROCO504-report.toc
 LaTeX Font Info:    Try loading font information for U+msa on input line 2.
 
 (/home/tom/.miktex/texmfs/install/tex/latex/amsfonts/umsa.fd
@@ -727,7 +727,7 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 2.
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ))
 \tf@toc=\write4
-\openout4 = `bare_conf_editing.toc'.
+\openout4 = `ROCO504-report.toc'.
 
  [1
 
@@ -766,28 +766,28 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[4 <./ROCO504-overall.png>] (bare_conf_editing.aux) ) 
+[4 <./ROCO504-overall.png>] (ROCO504-report.aux) ) 
 Here is how much of TeX's memory you used:
  14317 strings out of 495212
- 283166 string characters out of 3181458
+ 283130 string characters out of 3181458
  327956 words of memory out of 3000000
  17326 multiletter control sequences out of 15000+200000
  42811 words of font info for 87 fonts, out of 3000000 for 9000
  17 hyphenation exceptions out of 8191
- 55i,13n,59p,814b,935s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/home/tom/.miktex/texmfs/
-install/fonts/enc/dvips/base/8r.enc}</home/tom/.miktex/texmfs/install/fonts/typ
-e1/public/amsfonts/cm/cmex10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/
-public/amsfonts/cm/cmmi10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/pub
-lic/amsfonts/cm/cmmi7.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/
-amsfonts/cm/cmr10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsf
-onts/cm/cmr7.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/
-cm/cmsy10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/
-cmsy7.pfb></home/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmb8a.pfb></
-home/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmbi8a.pfb></home/tom/.m
-iktex/texmfs/install/fonts/type1/urw/times/utmr8a.pfb></home/tom/.miktex/texmfs
-/install/fonts/type1/urw/times/utmri8a.pfb>
-Output written on bare_conf_editing.pdf (4 pages, 238861 bytes).
+ 55i,13n,59p,811b,935s stack positions out of 5000i,500n,10000p,200000b,50000s
+{/home/tom/.miktex/texmfs/ins
+tall/fonts/enc/dvips/base/8r.enc}</home/tom/.miktex/texmfs/install/fonts/type1/
+public/amsfonts/cm/cmex10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/pub
+lic/amsfonts/cm/cmmi10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public
+/amsfonts/cm/cmmi7.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/ams
+fonts/cm/cmr10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfont
+s/cm/cmr7.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/
+cmsy10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cms
+y7.pfb></home/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmb8a.pfb></hom
+e/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmbi8a.pfb></home/tom/.mikt
+ex/texmfs/install/fonts/type1/urw/times/utmr8a.pfb></home/tom/.miktex/texmfs/in
+stall/fonts/type1/urw/times/utmri8a.pfb>
+Output written on ROCO504-report.pdf (4 pages, 238861 bytes).
 PDF statistics:
  66 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
