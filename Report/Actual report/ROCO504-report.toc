@@ -20,12 +20,15 @@
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-E}2}Software}{3}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-F}}Further problems}{3}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-F}1}Gearbox}{3}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-F}2}Kinematics}{3}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-F}3}Motor velocities}{4}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-F}4}Motors}{4}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-F}5}Arduino}{4}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-F}2}Stepper Drivers}{3}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-F}3}Skipping steps}{3}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-F}4}Kinematics}{4}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-F}5}Motor velocities}{4}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-F}6}Motors}{4}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-F}7}Arduino}{4}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-G}}Redesign}{4}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-G}1}Motor velocities}{4}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-G}2}Servos}{4}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-H}}Final solution}{4}
 \contentsline {section}{\numberline {III}Implementation}{4}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-A}}Software}{4}

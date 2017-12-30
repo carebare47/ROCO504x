@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6530) (preloaded format=pdflatex 2017.12.28)  30 DEC 2017 18:17
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6530) (preloaded format=pdflatex 2017.12.28)  30 DEC 2017 19:41
 entering extended mode
 **./ROCO504-report.tex
 (ROCO504-report.tex
@@ -625,41 +625,122 @@ File: tikzlibraryangles.code.tex 2013/08/28 v3.0.1a (rcs-revision 1.1)
 (/home/tom/.miktex/texmfs/install/tex/generic/pgf/frontendlayer/tikz/libraries/
 tikzlibraryquotes.code.tex
 File: tikzlibraryquotes.code.tex 2014/03/21 v3.0.1a (rcs-revision 1.4)
-) (ROCO504-report.aux)
+)
+(/home/tom/.miktex/texmfs/install/tex/generic/pgf/frontendlayer/tikz/libraries/
+tikzlibraryshapes.code.tex
+File: tikzlibraryshapes.code.tex 2008/01/09 v3.0.1a (rcs-revision 1.1)
+
+(/home/tom/.miktex/texmfs/install/tex/generic/pgf/frontendlayer/tikz/libraries/
+tikzlibraryshapes.geometric.code.tex
+File: tikzlibraryshapes.geometric.code.tex 2008/01/09 v3.0.1a (rcs-revision 1.1
+)
+
+(/home/tom/.miktex/texmfs/install/tex/generic/pgf/libraries/shapes/pgflibrarysh
+apes.geometric.code.tex
+File: pgflibraryshapes.geometric.code.tex 2008/06/26 v3.0.1a (rcs-revision 1.1)
+
+))
+(/home/tom/.miktex/texmfs/install/tex/generic/pgf/frontendlayer/tikz/libraries/
+tikzlibraryshapes.misc.code.tex
+File: tikzlibraryshapes.misc.code.tex 2008/01/09 v3.0.1a (rcs-revision 1.1)
+
+(/home/tom/.miktex/texmfs/install/tex/generic/pgf/libraries/shapes/pgflibrarysh
+apes.misc.code.tex
+File: pgflibraryshapes.misc.code.tex 2013/07/18 v3.0.1a (rcs-revision 1.5)
+))
+(/home/tom/.miktex/texmfs/install/tex/generic/pgf/frontendlayer/tikz/libraries/
+tikzlibraryshapes.symbols.code.tex
+File: tikzlibraryshapes.symbols.code.tex 2008/01/09 v3.0.1a (rcs-revision 1.1)
+
+(/home/tom/.miktex/texmfs/install/tex/generic/pgf/libraries/shapes/pgflibrarysh
+apes.symbols.code.tex
+File: pgflibraryshapes.symbols.code.tex 2013/09/11 v3.0.1a (rcs-revision 1.6)
+))
+(/home/tom/.miktex/texmfs/install/tex/generic/pgf/frontendlayer/tikz/libraries/
+tikzlibraryshapes.arrows.code.tex
+File: tikzlibraryshapes.arrows.code.tex 2008/01/09 v3.0.1a (rcs-revision 1.1)
+
+(/home/tom/.miktex/texmfs/install/tex/generic/pgf/libraries/shapes/pgflibrarysh
+apes.arrows.code.tex
+File: pgflibraryshapes.arrows.code.tex 2008/06/26 v3.0.1a (rcs-revision 1.1)
+))
+(/home/tom/.miktex/texmfs/install/tex/generic/pgf/frontendlayer/tikz/libraries/
+tikzlibraryshapes.callouts.code.tex
+(/home/tom/.miktex/texmfs/install/tex/generic/pgf/libraries/shapes/pgflibrarysh
+apes.callouts.code.tex))
+(/home/tom/.miktex/texmfs/install/tex/generic/pgf/frontendlayer/tikz/libraries/
+tikzlibraryshapes.multipart.code.tex
+File: tikzlibraryshapes.multipart.code.tex 2008/01/09 v3.0.1a (rcs-revision 1.1
+)
+
+(/home/tom/.miktex/texmfs/install/tex/generic/pgf/libraries/shapes/pgflibrarysh
+apes.multipart.code.tex
+File: pgflibraryshapes.multipart.code.tex 2010/01/07 v3.0.1a (rcs-revision 1.2)
+
+\pgfnodepartlowerbox=\box43
+\pgfnodeparttwobox=\box44
+\pgfnodepartthreebox=\box45
+\pgfnodepartfourbox=\box46
+\pgfnodeparttwentybox=\box47
+\pgfnodepartnineteenbox=\box48
+\pgfnodeparteighteenbox=\box49
+\pgfnodepartseventeenbox=\box50
+\pgfnodepartsixteenbox=\box51
+\pgfnodepartfifteenbox=\box52
+\pgfnodepartfourteenbox=\box53
+\pgfnodepartthirteenbox=\box54
+\pgfnodeparttwelvebox=\box55
+\pgfnodepartelevenbox=\box56
+\pgfnodeparttenbox=\box57
+\pgfnodepartninebox=\box58
+\pgfnodeparteightbox=\box59
+\pgfnodepartsevenbox=\box60
+\pgfnodepartsixbox=\box61
+\pgfnodepartfivebox=\box62
+)))
+(/home/tom/.miktex/texmfs/install/tex/generic/pgf/frontendlayer/tikz/libraries/
+tikzlibraryarrows.code.tex
+File: tikzlibraryarrows.code.tex 2008/01/09 v3.0.1a (rcs-revision 1.1)
+
+(/home/tom/.miktex/texmfs/install/tex/generic/pgf/libraries/pgflibraryarrows.co
+de.tex
+File: pgflibraryarrows.code.tex 2013/09/23 v3.0.1a (rcs-revision 1.16)
+\arrowsize=\dimen183
+)) (ROCO504-report.aux)
 \openout1 = `ROCO504-report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 321.
-LaTeX Font Info:    ... okay on input line 321.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 321.
-LaTeX Font Info:    ... okay on input line 321.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 321.
-LaTeX Font Info:    ... okay on input line 321.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 321.
-LaTeX Font Info:    ... okay on input line 321.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 321.
-LaTeX Font Info:    ... okay on input line 321.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 321.
-LaTeX Font Info:    ... okay on input line 321.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 321.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 321.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 320.
+LaTeX Font Info:    ... okay on input line 320.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 320.
+LaTeX Font Info:    ... okay on input line 320.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 320.
+LaTeX Font Info:    ... okay on input line 320.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 320.
+LaTeX Font Info:    ... okay on input line 320.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 320.
+LaTeX Font Info:    ... okay on input line 320.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 320.
+LaTeX Font Info:    ... okay on input line 320.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 320.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 320.
 
 
 (/home/tom/.miktex/texmfs/install/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 321.
+LaTeX Font Info:    ... okay on input line 320.
 
 -- Lines per column: 56 (exact).
 (/home/tom/.miktex/texmfs/install/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count131
-\scratchdimen=\dimen183
-\scratchbox=\box43
+\scratchdimen=\dimen184
+\scratchbox=\box63
 \nofMPsegments=\count132
 \nofMParguments=\count133
 \everyMPshowfont=\toks36
 \MPscratchCnt=\count134
-\MPscratchDim=\dimen184
+\MPscratchDim=\dimen185
 \MPnumerator=\count135
 \makeMPintoPDFobject=\count136
 \everyMPtoPDFconversion=\toks37
@@ -734,53 +815,56 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 {/home/tom/.miktex/texmfs/data/pdftex/config/pdftex.map}
 
 ]
-Underfull \hbox (badness 2073) in paragraph at lines 555--556
+Underfull \hbox (badness 2073) in paragraph at lines 554--555
  \OT1/ptm/m/it/10 1) Mi-cro mo-tors: [][] \OT1/ptm/m/n/10 The first was to use 
 high torque
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 560--562
+Underfull \hbox (badness 10000) in paragraph at lines 559--561
 
  []
 
 
-LaTeX Warning: Command \textdegree invalid in math mode on input line 563.
+LaTeX Warning: Command \textdegree invalid in math mode on input line 562.
 
-LaTeX Font Info:    Try loading font information for TS1+ptm on input line 563.
+LaTeX Font Info:    Try loading font information for TS1+ptm on input line 562.
 
 (/home/tom/.miktex/texmfs/install/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 )
 
-LaTeX Warning: Command \textdegree invalid in math mode on input line 563.
+LaTeX Warning: Command \textdegree invalid in math mode on input line 562.
 
 Missing character: There is no ° in font cmr10!
 [2
 
-]
-Underfull \hbox (badness 10000) in paragraph at lines 717--719
+] [3]
+Underfull \hbox (badness 10000) in paragraph at lines 730--732
 [][]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 717--719
+Underfull \hbox (badness 10000) in paragraph at lines 730--732
 
  []
 
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [3]
 <ROCO504-overall.png, id=24, 1860.9525pt x 1742.51pt>
 File: ROCO504-overall.png Graphic file (type png)
 <use ROCO504-overall.png>
-Package pdftex.def Info: ROCO504-overall.png  used on input line 772.
+Package pdftex.def Info: ROCO504-overall.png  used on input line 786.
 (pdftex.def)             Requested size: 1860.94797pt x 1742.50577pt.
 
-Underfull \vbox (badness 5274) has occurred while \output is active []
+Overfull \hbox (1.65898pt too wide) in paragraph at lines 815--815
+ [][][][]\OT1/ptm/m/n/10 Calculate/set 
+ []
 
- [4 <./ROCO504-overall.png>]
+
+Overfull \hbox (1.65898pt too wide) in paragraph at lines 816--816
+ [][][][]\OT1/ptm/m/n/10 Calculate/set 
+ []
+
+[4]
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -792,31 +876,29 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[5
-
-] (ROCO504-report.aux) ) 
+[5 <./ROCO504-overall.png>] (ROCO504-report.aux) ) 
 Here is how much of TeX's memory you used:
- 14356 strings out of 495212
- 283637 string characters out of 3181458
- 329084 words of memory out of 3000000
- 17359 multiletter control sequences out of 15000+200000
+ 16808 strings out of 495212
+ 354065 string characters out of 3181458
+ 423909 words of memory out of 3000000
+ 19765 multiletter control sequences out of 15000+200000
  44767 words of font info for 90 fonts, out of 3000000 for 9000
  17 hyphenation exceptions out of 8191
- 55i,13n,59p,1380b,935s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/home/tom/.miktex/texmfs/install/fonts/enc/dvips/base/
-8r.enc}</home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmex10.
-pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi10.pfb
-></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi7.pfb></h
-ome/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr10.pfb></home/
-tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr7.pfb></home/tom/.
-miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy10.pfb></home/tom/.mik
-tex/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy7.pfb></home/tom/.miktex/
-texmfs/install/fonts/type1/urw/times/utmb8a.pfb></home/tom/.miktex/texmfs/insta
-ll/fonts/type1/urw/times/utmbi8a.pfb></home/tom/.miktex/texmfs/install/fonts/ty
-pe1/urw/times/utmr8a.pfb></home/tom/.miktex/texmfs/install/fonts/type1/urw/time
-s/utmr8a.pfb></home/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmri8a.pf
-b>
-Output written on ROCO504-report.pdf (5 pages, 251999 bytes).
+ 55i,13n,71p,1371b,938s stack positions out of 5000i,500n,10000p,200000b,50000s
+{/home/tom/.miktex/texmfs/ins
+tall/fonts/enc/dvips/base/8r.enc}</home/tom/.miktex/texmfs/install/fonts/type1/
+public/amsfonts/cm/cmex10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/pub
+lic/amsfonts/cm/cmmi10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public
+/amsfonts/cm/cmmi7.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/ams
+fonts/cm/cmr10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfont
+s/cm/cmr7.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/
+cmsy10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cms
+y7.pfb></home/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmb8a.pfb></hom
+e/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmbi8a.pfb></home/tom/.mikt
+ex/texmfs/install/fonts/type1/urw/times/utmr8a.pfb></home/tom/.miktex/texmfs/in
+stall/fonts/type1/urw/times/utmr8a.pfb></home/tom/.miktex/texmfs/install/fonts/
+type1/urw/times/utmri8a.pfb>
+Output written on ROCO504-report.pdf (5 pages, 256052 bytes).
 PDF statistics:
  73 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)

@@ -1,0 +1,98 @@
+\documentclass{article}
+
+\usepackage[latin1]{inputenc}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+\begin{document}
+\pagestyle{empty}
+
+
+% Define block styles
+\tikzstyle{decision} = [diamond, draw, fill=blue!20, 
+    text width=4.5em, text badly centered, node distance=3cm, inner sep=0pt]
+    
+\tikzstyle{block} = [rectangle, draw, 
+    text width=5em, text centered, rounded corners, minimum height=4em]
+    
+    \tikzstyle{square} = [rectangle, draw, 
+    text width=5em, text centered, minimum height=4em, minimum width=7em]
+    
+\tikzstyle{sectionb} = [rectangle, draw, dotted, minimum height=18em, minimum width=20em, distance=0cm]
+
+\tikzstyle{sectiona} = [rectangle, draw, dotted, minimum height=15em, minimum width=20em, distance=0cm]
+
+\tikzstyle{line} = [draw, -latex']
+\tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=3cm,
+    minimum height=2em]
+    
+\begin{tikzpicture}[node distance = 2cm, auto]
+    % Place nodes
+    \node [block] (init) {initialize model};
+    \node [cloud, left of=init] (expert) {expert};
+    \node [cloud, right of=init] (system) {system};
+    \node [block, below of=init] (identify) {identify candidate models};
+    \node [block, below of=identify] (evaluate) {evaluate candidate models};
+    \node [block, left of=evaluate, node distance=3cm] (update) {update model};
+    \node [decision, below of=evaluate] (decide) {is best candidate better?};
+    \node [block, below of=decide, node distance=3cm] (stop) {stop};
+    % Draw edges
+    \path [line] (init) -- (identify);
+    \path [line] (identify) -- (evaluate);
+    \path [line] (evaluate) -- (decide);
+    \path [line] (decide) -| node [near start] {yes} (update);
+    \path [line] (update) |- (identify);
+    \path [line] (decide) -- node {no}(stop);
+    \path [line,dashed] (expert) -- (init);
+    \path [line,dashed] (system) -- (init);
+    \path [line,dashed] (system) |- (evaluate);
+\end{tikzpicture}
+
+% Define block styles
+\tikzstyle{decision} = [diamond, draw, fill=blue!20, 
+text width=4.5em, text badly centered, node distance=3cm, inner sep=0pt]
+
+\tikzstyle{block} = [rectangle, draw, 
+text width=5em, text centered, rounded corners, minimum height=4em]
+
+\tikzstyle{square} = [rectangle, draw, 
+text width=5em, text centered, minimum height=4em, minimum width=7em]
+
+\tikzstyle{sectionb} = [rectangle, draw, dotted, minimum height=18em, minimum width=20em, distance=0cm]
+
+\tikzstyle{sectiona} = [rectangle, draw, dotted, minimum height=15em, minimum width=20em, distance=0cm]
+
+\tikzstyle{line} = [draw, -latex']
+\tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=3cm,
+minimum height=2em]
+
+\begin{tikzpicture}[node distance = 2cm, auto]
+% Place nodes
+\node [square] (filter) {Filtering};
+\node [block, left of=filter, node distance=3cm] (camera) {camera};
+\node [square, below of=filter] (CofM) {Centre of Mass};
+\node [square, below of=CofM, node distance=3cm] (lengthCal) {Calculate/set new lengths};
+\node [square, below of=lengthCal] (speedCal) {Calculate/set speeds};
+\node [block, left of=speedCal, node distance=3cm] (motors) {Motors};
+\node [square, below of=speedCal] (gripperPos) {Find gripper position};
+\node [sectionb, left of=speedCal, node distance =1cm] (section1) {};
+\node [sectiona, below left of=filter, node distance =1cm] (section1) {};
+% Draw edges
+\path [line] (camera) -- (filter);
+\path [line] (filter) -- (CofM);
+\path [line] (CofM) -- (lengthCal);
+%\path [line] (lengthCal) -- (gripperPos);
+\path [line] (lengthCal) -- (speedCal);
+\path [line] (speedCal) -- (gripperPos);
+\path [line] (lengthCal) -- (motors);
+\path [line] (speedCal) -- (motors);
+\path [line] (motors) -- (gripperPos);
+%\path [line] (decide) -| node [near start] {yes} (update);
+%\path [line] (update) |- (identify);
+%\path [line] (decide) -- node {no}(stop);
+%\path [line,dashed] (expert) -- (init);
+%\path [line,dashed] (system) -- (init);
+%\path [line,dashed] (system) |- (evaluate);
+\end{tikzpicture}
+
+
+\end{document}

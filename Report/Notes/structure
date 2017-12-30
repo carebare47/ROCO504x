@@ -42,6 +42,7 @@ requirements:
 
 
 solutions:
+	Visual Servoing		-
 	Motors:
 		Micro(gearbox)	|
 		Stepper		|
@@ -52,8 +53,8 @@ solutions:
 	Passive gripper		-
 	Active gripper		-
 
-Prototype
-	prototype steppers/arduino?
+Prototype			||
+
 problems:
 	Speed, torque (mainly torque), open loop (not an issue if enough torque)
 test/redev:
