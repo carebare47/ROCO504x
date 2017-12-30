@@ -4,14 +4,16 @@
 \contentsline {section}{\numberline {II}Design Process}{2}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-A}}Problem}{2}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-A}1}Inverse Kinematics}{2}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-A}2}Camera speed}{2}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-A}3}Motors}{2}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-A}2}Force storage}{2}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-A}3}Camera speed}{2}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-A}4}Motors}{2}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-B}}Research}{2}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-C}}Requirements}{2}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-D}}Solutions}{2}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-D}1}Motors}{2}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-D}2}Camera}{2}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-D}3}Kinematic solution 1}{2}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-D}2}Clamps}{2}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-D}3}Camera}{2}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-D}4}Kinematic solution 1}{2}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-E}}Prototype}{3}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-F}}Further problems}{3}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-F}1}Kinematics}{3}

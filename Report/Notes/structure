@@ -9,19 +9,34 @@ problems:
 		motors
 	torque of motors
 	how to store force
+	Initial kinematics
+
 
 research:
-	kinematic solutoin(s)
-	motors?
+	kinematic solutoin(s):
+		Verbal discussion of how we derived kinematic solution 2
+	motors?:
+		Stepper performance
+		Gearboxes
+
 
 requirements:
-	active gripper
-	passive gripper
-	throwing mechanism
-	Frame
-	Computer vision
+	active gripper:
+		Speed of closing
+		Compliance
+	passive gripper:
+		FEA/strength
+	throwing mechanism:
+		Stored force?
+			Clamps
+	Frame:
+		Materials, structure, strength
+	Computer vision:
+		Filtering, speed, tracking, distance, robustness (can we get a number for that?)
 	gripper motion?
+	Force needed to store
 	catching?
+		All of the above?
 
 
 solutions:
@@ -34,6 +49,8 @@ solutions:
 
 soluton
 	prototype steppers/arduino?
+problems:
+	Speed, torque (mainly torque), open loop (not an issue if enough torque)
 test/redev:
 	servos
 	laptop
@@ -45,8 +62,7 @@ Implementation
 	camera/opencv
 	gripper(s)
 	clamps
-	steppers?
-	arduino?
+
 
 
 

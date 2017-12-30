@@ -1,0 +1,26 @@
+Example to show how fast the robot has to move if a ball were thrown from three meters away
+
+data on tracking distance vs resolution
+
+Why does point gripper not work?
+
+frame working area
+
+Minimum gripper speed (closing/opening)
+
+nice gearbox calcs
+
+How long does the arduino node take to run?
+
+Force storage: Stepper torque, dynamixel torque, force storage to throw distance
+
+node run speeds
+
+time taken for:
+image to hough tracker
+hough tracker in to out
+time to kinematic controller
+kinematic controller in to out
+motor response rate?
+overall latency (leaving camera to motor movement)
+throw sequence	
