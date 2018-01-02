@@ -58,8 +58,8 @@ Prototype			||
 problems:
 	Speed, torque (mainly torque), open loop (not an issue if enough torque)
 test/redev:
-	servos
-	laptop
+	servos			|
+
 
 
 Implementation

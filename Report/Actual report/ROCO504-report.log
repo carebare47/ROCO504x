@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6530) (preloaded format=pdflatex 2017.12.28)  30 DEC 2017 19:41
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6530) (preloaded format=pdflatex 2017.12.28)  31 DEC 2017 15:23
 entering extended mode
 **./ROCO504-report.tex
 (ROCO504-report.tex
@@ -849,18 +849,262 @@ Underfull \hbox (badness 10000) in paragraph at lines 730--732
 
  []
 
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.766 &x = \max\[
+                 \vec{l}\]\\\\
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.766 &x = \max\[\vec{l}\]
+                          \\\\
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.766 &x = \max\[\vec{l}\]
+                          \\\\
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+
+! LaTeX Error: \begin{aligned} on input line 760 ended by \end{equation*}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.766 &x = \max\[\vec{l}\]
+                          \\\\
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.766 &x = \max\[\vec{l}\]
+                          \\\\
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.766 &x = \max\[\vec{l}\]
+                          \\\\
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \cr inserted.
+<inserted text> 
+                \cr 
+l.766 &x = \max\[\vec{l}\]
+                          \\\\
+I'm guessing that you meant to end an alignment here.
+
+! Missing { inserted.
+<inserted text> 
+                {
+l.766 &x = \max\[\vec{l}\]
+                          \\\\
+I've put in what seems to be necessary to fix
+the current column of the current alignment.
+Try to go on, since this might almost work.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.766 &x = \max\[\vec{l}\]
+                          \\\\
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.766 &x = \max\[\vec{l}\]
+                          \\\\
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Misplaced alignment tab character &.
+<recently read> &
+                 
+l.767 &
+       \vec{s} = \frac{g}{x}\cdot \vec{l}\\
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+! Misplaced \crcr.
+\endaligned ->\crcr 
+                    \egroup \restorecolumn@ \egroup 
+l.772 \end{aligned}
+                   
+I can't figure out why you would want to use a tab mark
+or \cr or \span just now. If something like a right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+! Extra }, or forgotten $.
+\endaligned ->\crcr \egroup 
+                            \restorecolumn@ \egroup 
+l.772 \end{aligned}
+                   
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+! Extra }, or forgotten $.
+\endaligned ...cr \egroup \restorecolumn@ \egroup 
+                                                  
+l.772 \end{aligned}
+                   
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+
+! LaTeX Error: \begin{equation} on input line 759 ended by \end{aligned}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.772 \end{aligned}
+                   
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.772 \end{aligned}
+                   
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Display math should end with $$.
+<to be read again> 
+                   \endgroup 
+l.772 \end{aligned}
+                   
+The `$' that I just saw supposedly matches a previous `$$'.
+So I shall assume that you typed `$$' both times.
+
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.773 \end{equation}
+                    
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+! You can't use `\eqno' in horizontal mode.
+\endmathdisplay@a ...\df@tag \@empty \else \veqno 
+                                                  \alt@tag \df@tag \fi \ifx ...
+l.773 \end{equation}
+                    
+Sorry, but I'm not programmed to handle this case;
+I'll just pretend that you didn't ask for it.
+If you're in the wrong mode, you might be able to
+return to the right one by typing `I}' or `I$' or `I\par'.
+
+
+! LaTeX Error: \begin{document} ended by \end{equation}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.773 \end{equation}
+                    
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.773 \end{equation}
+                    
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Display math should end with $$.
+<to be read again> 
+                   \endgroup 
+l.773 \end{equation}
+                    
+The `$' that I just saw supposedly matches a previous `$$'.
+So I shall assume that you typed `$$' both times.
+
+! Extra \endgroup.
+<recently read> \endgroup 
+                          
+l.773 \end{equation}
+                    
+Things are pretty mixed up, but I think the worst is over.
+
 <ROCO504-overall.png, id=24, 1860.9525pt x 1742.51pt>
 File: ROCO504-overall.png Graphic file (type png)
 <use ROCO504-overall.png>
-Package pdftex.def Info: ROCO504-overall.png  used on input line 786.
+Package pdftex.def Info: ROCO504-overall.png  used on input line 787.
 (pdftex.def)             Requested size: 1860.94797pt x 1742.50577pt.
 
-Overfull \hbox (1.65898pt too wide) in paragraph at lines 815--815
+Overfull \hbox (1.65898pt too wide) in paragraph at lines 816--816
  [][][][]\OT1/ptm/m/n/10 Calculate/set 
  []
 
 
-Overfull \hbox (1.65898pt too wide) in paragraph at lines 816--816
+Overfull \hbox (1.65898pt too wide) in paragraph at lines 817--817
  [][][][]\OT1/ptm/m/n/10 Calculate/set 
  []
 
@@ -876,29 +1120,32 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[5 <./ROCO504-overall.png>] (ROCO504-report.aux) ) 
+[5 <./ROCO504-overall.png>] (ROCO504-report.aux)
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
 Here is how much of TeX's memory you used:
  16808 strings out of 495212
  354065 string characters out of 3181458
- 423909 words of memory out of 3000000
+ 423966 words of memory out of 3000000
  19765 multiletter control sequences out of 15000+200000
  44767 words of font info for 90 fonts, out of 3000000 for 9000
  17 hyphenation exceptions out of 8191
  55i,13n,71p,1371b,938s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/home/tom/.miktex/texmfs/ins
-tall/fonts/enc/dvips/base/8r.enc}</home/tom/.miktex/texmfs/install/fonts/type1/
-public/amsfonts/cm/cmex10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/pub
-lic/amsfonts/cm/cmmi10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public
-/amsfonts/cm/cmmi7.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/ams
-fonts/cm/cmr10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfont
-s/cm/cmr7.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/
-cmsy10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cms
-y7.pfb></home/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmb8a.pfb></hom
-e/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmbi8a.pfb></home/tom/.mikt
-ex/texmfs/install/fonts/type1/urw/times/utmr8a.pfb></home/tom/.miktex/texmfs/in
-stall/fonts/type1/urw/times/utmr8a.pfb></home/tom/.miktex/texmfs/install/fonts/
-type1/urw/times/utmri8a.pfb>
-Output written on ROCO504-report.pdf (5 pages, 256052 bytes).
+{/home/tom/.miktex/texmfs/install/fonts/enc/dvips/base/8r.enc}</home/tom/.mik
+tex/texmfs/install/fonts/type1/public/amsfonts/cm/cmex10.pfb></home/tom/.miktex
+/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi10.pfb></home/tom/.miktex/te
+xmfs/install/fonts/type1/public/amsfonts/cm/cmmi7.pfb></home/tom/.miktex/texmfs
+/install/fonts/type1/public/amsfonts/cm/cmr10.pfb></home/tom/.miktex/texmfs/ins
+tall/fonts/type1/public/amsfonts/cm/cmr7.pfb></home/tom/.miktex/texmfs/install/
+fonts/type1/public/amsfonts/cm/cmsy10.pfb></home/tom/.miktex/texmfs/install/fon
+ts/type1/public/amsfonts/cm/cmsy7.pfb></home/tom/.miktex/texmfs/install/fonts/t
+ype1/urw/times/utmb8a.pfb></home/tom/.miktex/texmfs/install/fonts/type1/urw/tim
+es/utmbi8a.pfb></home/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmr8a.p
+fb></home/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmr8a.pfb></home/to
+m/.miktex/texmfs/install/fonts/type1/urw/times/utmri8a.pfb>
+Output written on ROCO504-report.pdf (5 pages, 255481 bytes).
 PDF statistics:
  73 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
