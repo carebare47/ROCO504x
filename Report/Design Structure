@@ -1,0 +1,65 @@
+Roco504 report list
+
+Requirements
+	Throwing
+		Software
+		Hardware
+	Catching
+		Software
+		Hardware
+
+Research
+	Object recognition
+		Yolo
+		Demi stuff
+		Colour
+	Tracking
+	Cable driven robots
+	Motors
+		Micromotors
+		Steppers
+		Servos
+Problem
+	Tracking
+		Object tracking
+		Visual servoing
+			Point kinematics
+			Square kinematics
+		Motor torque/speed
+			Steppers
+			Micromotors
+		Motor control
+	Throwing force
+		Motor torque/speed
+	Systems integration
+		Gripping
+		Computer vision
+		Visual servoing
+		Throwing
+	Gripping
+		Active
+		Passive
+
+Solution
+	Object tracking
+		Camera settings
+		Colour thresholding
+		Kalman filtering
+	Visual servoing
+		point kinematics
+		square kinematics
+	Throwing force
+		Clamps
+		Quick release
+		Bungee
+	Systems integration
+		ROS
+			Opencv node
+			Throw controller
+				Arduino(ROS serial)
+			Kinematics controller
+	Gripping
+		Flexi ball bag
+		Fin ray gripper
+		
+	
