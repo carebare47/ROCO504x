@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6530) (preloaded format=pdflatex 2017.12.28)  30 DEC 2017 19:32
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6530) (preloaded format=pdflatex 2017.12.28)  2 JAN 2018 15:08
 entering extended mode
 **"./tikz flowchart 504.tex"
 ("tikz flowchart 504.tex"
@@ -502,12 +502,12 @@ Package grfext Info: Graphics extension search list:
 G,.JBIG2,.JB2,.eps]
 (grfext)             \AppendGraphicsExtensions on input line 456.
 )
-Overfull \hbox (8.38892pt too wide) in paragraph at lines 57--57
+Overfull \hbox (8.38892pt too wide) in paragraph at lines 73--73
  [][][][]\OT1/cmr/m/n/10 Calculate/set 
  []
 
 
-Overfull \hbox (8.38892pt too wide) in paragraph at lines 58--58
+Overfull \hbox (8.38892pt too wide) in paragraph at lines 74--74
  [][][][]\OT1/cmr/m/n/10 Calculate/set 
  []
 
