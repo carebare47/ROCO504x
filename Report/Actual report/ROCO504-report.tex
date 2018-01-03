@@ -92,7 +92,7 @@
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{tikz}
-\usetikzlibrary{calc,patterns,angles,quotes,shapes,arrows}
+\usetikzlibrary{calc,patterns,angles,quotes,shapes,arrows, chains}
 
 
 % *** CITATION PACKAGES ***
@@ -778,10 +778,10 @@ l_1\\l_2\\l_3\\l_4\\
 \end{equation}
 Where $g$ is the global speed scalar and $s$ contains the speed of each motor.
 \subsubsection{Servos}
-Due to the points mentioned in \ref{motor_issues}, the decision was made to change the motors to Dynamixel MX-64 servos. The MX-64 can supply $0.6Kg.cm$ at 62 RPM, giving a top gripper speed of $0.32m/s$ which is considerably slower than our requirement. The MX-64 servos communicate over either a RS-485 or a TTL bus and can be daisy-chained if required. A single dynamixel servo on a bus allowed us to send 60 control packets per second. Due to the nature of the communication protocols involved in the dynamixel bus (clarify), the rate at which commands could be sent to each servo were reduced with each successive servo added to the daisy chain. Initlially, the four servos ressponsible for translating the end-effector were daisy-chained to a single dynamixel bus, resulting in a command rate of 7Hz. This was increased to 15Hz by increasing the baud rate of the servos from 57.6kb/s to 1Mb/s. The reduced control rate led to the decision to use separate busses for each time-critical motor, returning the command rate to 60Hz. A separate bus was used for all five clamps, and a final sixth bus was used to actuate the gripper as the uncertainty of the command latency to this servo was required to be as low as possible in order to successfully pre-empt and act upon the target landing in the gripper. 
+Due to the points mentioned in \ref{motor_issues}, the decision was made to change the motors to Dynamixel MX-64 servos. The MX-64 can supply $0.6Kg.cm$ at 62 RPM, giving a top gripper speed of $0.32m/s$ which is considerably slower than our requirement. The MX-64 servos communicate over either a RS-485 or a TTL bus and can be daisy-chained if required. A single dynamixel servo on a bus allowed us to send 60 control packets per second. Due to the nature of the communication protocols involved in the dynamixel bus (clarify), the rate at which commands could be sent to each servo were reduced with each successive servo added to the daisy chain. Initially, the four servos responsible for translating the end-effector were daisy-chained to a single dynamixel bus, resulting in a command rate of 7Hz. This was increased to 15Hz by increasing the baud rate of the servos from 57.6kb/s to 1Mb/s. The reduced control rate led to the decision to use separate busses for each time-critical motor, returning the command rate to 60Hz. A separate bus was used for all five clamps, and a final sixth bus was used to actuate the gripper as the uncertainty of the command latency to this servo was required to be as low as possible in order to successfully pre-empt and act upon the target landing in the gripper. 
 
 \subsubsection{Processor}
-As servos were to be used instead of stepper motors, the microcontroller was no longer required for the control of the end-effector. Software previously running on the micro (kinematics, boundary checking etc...) was ported to a C++ program a laptop using ROS on Ubuntu. 
+As servos were to be used instead of stepper motors, a microcontroller was no longer required for the control of the end-effector. Software previously running on the Teensy (forward/inverse kinematics, boundary checking etc...) was ported to a C++ program on a laptop using ROS on Ubuntu. 
 \subsection{Final solution}
 
 
@@ -808,49 +808,59 @@ Figure~\ref{fig:HighLevelDiagram} shows the high-level software flow diagram of 
 	\tikzstyle{square} = [rectangle, draw, 
 	text width=5em, text centered, minimum height=4em, minimum width=7em]
 	
-	\tikzstyle{sectionb} = [rectangle, draw, dotted, minimum height=18em, minimum width=20em, distance=0cm]
+	\tikzstyle{sectionb} = [rectangle, draw, dotted, minimum height=18em, minimum width=12em, distance=0cm]
 	
-	\tikzstyle{sectiona} = [rectangle, draw, dotted, minimum height=15em, minimum width=20em, distance=0cm]
+	\tikzstyle{sectiona} = [rectangle, draw, dotted, minimum height=12em, minimum width=12em, distance=0cm]
+	
+	\tikzstyle{label} = [rectangle, text width=5em]
 	
 	\tikzstyle{line} = [draw, -latex']
 	\tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=3cm,
 	minimum height=2em]
-	
+\begin{figure}[htbp]
+	\centering
 	\begin{tikzpicture}[node distance = 2cm,transform shape, scale=0.8]
 	% Place nodes
 	\node [square] (filter) {Filtering};
-	\node [block, left of=filter, node distance=3cm] (camera) {camera};
+	\node [block, left of=filter, node distance=3cm] (camera) {Camera};
 	\node [square, below of=filter] (CofM) {Centre of Mass};
 	\node [square, below of=CofM, node distance=3cm] (lengthCal) {Calculate/set new lengths};
 	\node [square, below of=lengthCal] (speedCal) {Calculate/set speeds};
 	\node [block, left of=speedCal, node distance=3cm] (motors) {Motors};
 	\node [square, below of=speedCal] (gripperPos) {Find gripper position};
-	\node [sectionb, left of=speedCal, node distance =1cm] (section1) {};
-	\node [sectiona, below left of=filter, node distance =1cm] (section1) {};
+	
+	\node [sectionb, right of=speedCal, node distance =0.3cm] (section2) {};
+	
+	\node [right of=filter, node distance =0.3cm] (section1b4) {};
+	
+	
+	\node [sectiona, below of=section1b4, node distance =1cm] (section1) {};
+
+	\node [label, right of=section1, node distance =3.4cm] (labelA) {Object tracker};
+	
+	\node [label, right of=section2, node distance =3.4cm] (labelA) {Kinematic Controller};
+%	\node [label={[label distance=1cm]30:Object tracker}, right of=sectiona] {node};
 	\node [right of = gripperPos] (dir1){};
-	\node [above of = dir1] (dir2){};
-		\node [above of = dir2] (dir3){};
+%	\node [join, above of = dir1] (dir2){};
+%	\node [above of = dir2] (dir3){};
+	\node [right of = speedCal] (dir4){};
 	% Draw edges
 	\path [line] (camera) -- (filter);
 	\path [line] (filter) -- (CofM);
 	\path [line] (CofM) -- (lengthCal);
-	%\path [line] (lengthCal) -- (gripperPos);
+
 	\path [line] (lengthCal) -- (speedCal);
 	\path [line] (speedCal) -- (gripperPos);
-	\path [line] (lengthCal) -- (motors);
+	\path [line] (lengthCal) -| (motors);
 	\path [line] (speedCal) -- (motors);
-	\path [line] (motors) -- (gripperPos);
-	\draw [-] (gripperPos) -- (dir1);
-	\draw [->] (dir1) -- (dir2);
-		\draw [->] (dir2) -- (dir3);
-		\draw [->] (dir3) -- (lengthCal);
-	%\path [line] (decide) -| node [near start] {yes} (update);
-	%\path [line] (update) |- (identify);
-	%\path [line] (decide) -- node {no}(stop);
-	%\path [line,dashed] (expert) -- (init);
-	%\path [line,dashed] (system) -- (init);
-	%\path [line,dashed] (system) |- (evaluate);
+	\path [line] (motors) |- (gripperPos);
+
+	\path [line] (gripperPos) -| (dir4.center) |- (lengthCal);		
+
 	\end{tikzpicture}
+		\caption{High-level software flow diagram.}
+		\label{fig:HighLevelDiagram}
+	\end{figure}
 	
 \subsection{Frame}
 \subsection{Kinematics}

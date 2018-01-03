@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6530) (preloaded format=pdflatex 2017.12.28)  3 JAN 2018 16:51
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6530) (preloaded format=pdflatex 2017.12.28)  3 JAN 2018 18:52
 entering extended mode
 **./ROCO504-report.tex
 (ROCO504-report.tex
@@ -706,7 +706,19 @@ File: tikzlibraryarrows.code.tex 2008/01/09 v3.0.1a (rcs-revision 1.1)
 de.tex
 File: pgflibraryarrows.code.tex 2013/09/23 v3.0.1a (rcs-revision 1.16)
 \arrowsize=\dimen183
-)) (ROCO504-report.aux)
+))
+(/home/tom/.miktex/texmfs/install/tex/generic/pgf/frontendlayer/tikz/libraries/
+tikzlibrarychains.code.tex
+File: tikzlibrarychains.code.tex 2013/07/15 v3.0.1a (rcs-revision 1.6)
+
+(/home/tom/.miktex/texmfs/install/tex/generic/pgf/frontendlayer/tikz/libraries/
+tikzlibrarypositioning.code.tex
+File: tikzlibrarypositioning.code.tex 2008/10/06 v3.0.1a (rcs-revision 1.7)
+)) (ROCO504-report.aux
+
+LaTeX Warning: Label `fig:HighLevelDiagram' multiply defined.
+
+)
 \openout1 = `ROCO504-report.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 320.
@@ -724,8 +736,7 @@ LaTeX Font Info:    ... okay on input line 320.
 LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 320.
 LaTeX Font Info:    Try loading font information for TS1+cmr on input line 320.
 
-
-(/home/tom/.miktex/texmfs/install/tex/latex/base/ts1cmr.fd
+ (/home/tom/.miktex/texmfs/install/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    ... okay on input line 320.
@@ -859,12 +870,12 @@ File: ROCO504-overall.png Graphic file (type png)
 Package pdftex.def Info: ROCO504-overall.png  used on input line 795.
 (pdftex.def)             Requested size: 1860.94797pt x 1742.50577pt.
 
-Overfull \hbox (1.65898pt too wide) in paragraph at lines 824--824
+Overfull \hbox (1.65898pt too wide) in paragraph at lines 827--827
  [][][][]\OT1/ptm/m/n/10 Calculate/set 
  []
 
 
-Overfull \hbox (1.65898pt too wide) in paragraph at lines 825--825
+Overfull \hbox (1.65898pt too wide) in paragraph at lines 828--828
  [][][][]\OT1/ptm/m/n/10 Calculate/set 
  []
 
@@ -882,29 +893,32 @@ Before submitting the final camera ready copy, remember to:
 
 [6
 
-] (ROCO504-report.aux) ) 
+] (ROCO504-report.aux)
+
+LaTeX Warning: There were multiply-defined labels.
+
+ ) 
 Here is how much of TeX's memory you used:
- 16820 strings out of 495212
- 354315 string characters out of 3181458
- 414517 words of memory out of 3000000
- 19774 multiletter control sequences out of 15000+200000
+ 16907 strings out of 495212
+ 356866 string characters out of 3181458
+ 419340 words of memory out of 3000000
+ 19855 multiletter control sequences out of 15000+200000
  44767 words of font info for 90 fonts, out of 3000000 for 9000
  17 hyphenation exceptions out of 8191
  55i,13n,71p,1371b,938s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/home/tom/.miktex/texmfs/install/fonts/enc/dvips/base/
-8r.enc}</home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmex10.
-pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi10.pfb
-></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi7.pfb></h
-ome/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr10.pfb></home/
-tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr7.pfb></home/tom/.
-miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy10.pfb></home/tom/.mik
-tex/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy7.pfb></home/tom/.miktex/
-texmfs/install/fonts/type1/urw/times/utmb8a.pfb></home/tom/.miktex/texmfs/insta
-ll/fonts/type1/urw/times/utmbi8a.pfb></home/tom/.miktex/texmfs/install/fonts/ty
-pe1/urw/times/utmr8a.pfb></home/tom/.miktex/texmfs/install/fonts/type1/urw/time
-s/utmr8a.pfb></home/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmri8a.pf
-b>
-Output written on ROCO504-report.pdf (6 pages, 259175 bytes).
+{/home/tom/.miktex/texmfs/install/fonts/enc/dvips/base/8r.enc}</home/tom/.mik
+tex/texmfs/install/fonts/type1/public/amsfonts/cm/cmex10.pfb></home/tom/.miktex
+/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi10.pfb></home/tom/.miktex/te
+xmfs/install/fonts/type1/public/amsfonts/cm/cmmi7.pfb></home/tom/.miktex/texmfs
+/install/fonts/type1/public/amsfonts/cm/cmr10.pfb></home/tom/.miktex/texmfs/ins
+tall/fonts/type1/public/amsfonts/cm/cmr7.pfb></home/tom/.miktex/texmfs/install/
+fonts/type1/public/amsfonts/cm/cmsy10.pfb></home/tom/.miktex/texmfs/install/fon
+ts/type1/public/amsfonts/cm/cmsy7.pfb></home/tom/.miktex/texmfs/install/fonts/t
+ype1/urw/times/utmb8a.pfb></home/tom/.miktex/texmfs/install/fonts/type1/urw/tim
+es/utmbi8a.pfb></home/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmr8a.p
+fb></home/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmr8a.pfb></home/to
+m/.miktex/texmfs/install/fonts/type1/urw/times/utmri8a.pfb>
+Output written on ROCO504-report.pdf (6 pages, 259106 bytes).
 PDF statistics:
  76 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
