@@ -1,0 +1,111 @@
+II Design Process
+
+II-C Requirements . . . . . . . . . .
+Throwing
+	software/hardware
+catching
+	software/hardware
+
+II-B Research . . . . . . . . . . . . .
+recognition
+	yolo
+	demi stuff
+	colour
+tracking
+cddr
+motors
+	micro
+	stepper
+	servo
+
+II-A Problem
+tracking
+	object tracking
+	cameras?
+	visual servoing
+		point/square kinematics
+	motor torque/speed
+		steppers
+		micromotors
+	Throwing force
+		Motor torque/speed
+	Systems integration
+		Gripping
+		Computer vision
+		Visual servoing
+		Throwing
+	Gripping
+		Active
+		Passive
+
+
+II-D Solutions . . . . . . . . . . . . .
+	Object tracking
+		Camera settings
+		Colour thresholding
+		Kalman filtering
+	Visual servoing
+		point kinematics
+		square kinematics
+	Throwing force
+		Clamps
+		Quick release
+		Bungee
+	Systems integration
+		ROS
+			Opencv node
+			Throw controller
+				Arduino(ROS serial)
+			Kinematics controller
+	Gripping
+		Flexi ball bag
+		Fin ray gripper
+		
+	
+II-D1 Micro motors . . . .
+II-D2 Stepper motors . . . .
+II-D3 Clamps . . . . . . . .
+II-D4 Camera . . . . . . . .
+II-D5 Kinematic solution 1
+
+II-E Prototype . . . . . . . . . . . . .
+II-E1 Hardware . . . . . . .
+II-E2 Software . . . . . . .
+
+II-F Further problems . . . . . . . .
+II-F1 Gearbox . . . . . . .
+II-F2 Stepper Drivers . . .
+II-F3 Skipping steps . . . .
+II-F4 Kinematics . . . . . .
+II-F5 Motor velocities . . .
+II-F6 Motors . . . . . . . .
+II-F7 Arduino . . . . . . .
+
+II-G Redesign . . . . . . . . . . . . .
+II-G1 Motor velocities . . .
+II-G2 Servos . . . . . . . .
+
+II-H Final solution . . . . . . . . . . .
+
+
+III Implementation
+
+III-A Software .
+
+III-B Frame . .
+
+III-C Kinematics
+
+III-D Grippers .
+
+III-E Clamps . . .
+
+IV Experiments
+IV-A
+Method . . . . . . . . . . . . . . . . . .
+IV-B
+Results . . . . . . . . . . . . . . . . . .
+IV-C
+Discussion . . . . . . . . . . . . . . . . 
+V Overall Discussion 5
+VI Conclusion 5

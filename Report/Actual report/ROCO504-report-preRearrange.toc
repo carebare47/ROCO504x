@@ -30,7 +30,6 @@
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-G}}Redesign}{4}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-G}1}Motor velocities}{4}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-G}2}Servos}{4}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-G}3}Processor}{5}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-H}}Final solution}{5}
 \contentsline {section}{\numberline {III}Implementation}{5}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-A}}Software}{5}

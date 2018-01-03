@@ -1,0 +1,82 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6530) (preloaded format=pdflatex 2017.12.28)  3 JAN 2018 14:57
+entering extended mode
+**./textBibtex.tex
+(textBibtex.tex
+LaTeX2e <2017-04-15>
+Babel <3.15> and hyphenation patterns for 1 language(s) loaded.
+(/home/tom/.miktex/texmfs/install/tex/latex/base/article.cls
+Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
+(/home/tom/.miktex/texmfs/install/tex/latex/base/size11.clo
+File: size11.clo 2014/09/29 v1.4h Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+(/home/tom/.miktex/texmfs/install/tex/latex/cite/cite.sty
+LaTeX Info: Redefining \cite on input line 302.
+LaTeX Info: Redefining \nocite on input line 332.
+Package: cite 2015/02/27  v 5.5
+) (textBibtex.aux)
+\openout1 = `textBibtex.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 4.
+LaTeX Font Info:    ... okay on input line 4.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 4.
+LaTeX Font Info:    ... okay on input line 4.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 4.
+LaTeX Font Info:    ... okay on input line 4.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 4.
+LaTeX Font Info:    ... okay on input line 4.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 4.
+LaTeX Font Info:    ... okay on input line 4.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 4.
+LaTeX Font Info:    ... okay on input line 4.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 9.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 9.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 9.
+
+
+LaTeX Warning: Citation `Nobody06' on page 1 undefined on input line 11.
+
+(textBibtex.bbl
+
+LaTeX Warning: Empty `thebibliography' environment on input line 24.
+
+) [1
+
+{/home/tom/.miktex/texmfs/data/pdftex/config/pdftex.map}] (textBibtex.aux)
+
+LaTeX Warning: There were undefined references.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 335 strings out of 495212
+ 4086 string characters out of 3181458
+ 48965 words of memory out of 3000000
+ 3706 multiletter control sequences out of 15000+200000
+ 7888 words of font info for 28 fonts, out of 3000000 for 9000
+ 14 hyphenation exceptions out of 8191
+ 21i,6n,20p,150b,187s stack positions out of 5000i,500n,10000p,200000b,50000s
+</home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmbx10.pfb><
+/home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmbx12.pfb></ho
+me/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr10.pfb></home/t
+om/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr12.pfb></home/tom/.
+miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr17.pfb>
+Output written on textBibtex.pdf (1 page, 50257 bytes).
+PDF statistics:
+ 26 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 500000)
+ 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+

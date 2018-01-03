@@ -1,0 +1,60 @@
+II Design Process
+
+II-A Problem
+II-A1 Inverse Kinematics .
+II-A2 Force storage . . . .
+II-A3 Camera speed . . . .
+II-A4 Motors . . . . . . . .
+
+II-B Research . . . . . . . . . . . . .
+
+II-C Requirements . . . . . . . . . .
+
+II-D Solutions . . . . . . . . . . . . .
+II-D1 Micro motors . . . .
+II-D2 Stepper motors . . . .
+II-D3 Clamps . . . . . . . .
+II-D4 Camera . . . . . . . .
+II-D5 Kinematic solution 1
+
+II-E Prototype . . . . . . . . . . . . .
+II-E1 Hardware . . . . . . .
+II-E2 Software . . . . . . .
+
+II-F Further problems . . . . . . . .
+II-F1 Gearbox . . . . . . .
+II-F2 Stepper Drivers . . .
+II-F3 Skipping steps . . . .
+II-F4 Kinematics . . . . . .
+II-F5 Motor velocities . . .
+II-F6 Motors . . . . . . . .
+II-F7 Arduino . . . . . . .
+
+II-G Redesign . . . . . . . . . . . . .
+II-G1 Motor velocities . . .
+II-G2 Servos . . . . . . . .
+
+II-H Final solution . . . . . . . . . . .
+
+
+III Implementation
+
+III-A Software .
+
+III-B Frame . .
+
+III-C Kinematics
+
+III-D Grippers .
+
+III-E Clamps . . .
+
+IV Experiments
+IV-A
+Method . . . . . . . . . . . . . . . . . .
+IV-B
+Results . . . . . . . . . . . . . . . . . .
+IV-C
+Discussion . . . . . . . . . . . . . . . . 
+V Overall Discussion 5
+VI Conclusion 5
