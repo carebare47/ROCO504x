@@ -1,7 +1,7 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6530) (preloaded format=pdflatex 2017.12.28)  4 JAN 2018 22:41
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6530) (preloaded format=pdflatex 2017.12.28)  4 JAN 2018 22:42
 entering extended mode
-**./linearised2.tex
-(linearised2.tex
+**./vectorised_kinematic_controller.tex
+(vectorised_kinematic_controller.tex
 LaTeX2e <2017-04-15>
 Babel <3.15> and hyphenation patterns for 1 language(s) loaded.
 (/home/tom/.miktex/texmfs/install/tex/latex/base/article.cls
@@ -97,8 +97,9 @@ Package: nicefrac 1998/08/04 v0.9b Nice fractions
 
 (/home/tom/.miktex/texmfs/install/tex/latex/base/ifthen.sty
 Package: ifthen 2014/09/29 v1.1c Standard LaTeX ifthen package (DPC)
-)) (linearised2.aux)
-\openout1 = `linearised2.aux'.
+))
+(vectorised_kinematic_controller.aux)
+\openout1 = `vectorised_kinematic_controller.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 5.
 LaTeX Font Info:    ... okay on input line 5.
@@ -113,6 +114,7 @@ LaTeX Font Info:    ... okay on input line 5.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 5.
 LaTeX Font Info:    ... okay on input line 5.
 LaTeX Font Info:    Try loading font information for U+msa on input line 8.
+
 (/home/tom/.miktex/texmfs/install/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
@@ -188,24 +190,24 @@ Underfull \hbox (badness 10000) in paragraph at lines 252--257
 
  []
 
-[2] [3] (linearised2.aux) ) 
+[2] [3] (vectorised_kinematic_controller.aux) ) 
 Here is how much of TeX's memory you used:
  1172 strings out of 495212
- 13522 string characters out of 3181458
+ 13722 string characters out of 3181458
  70076 words of memory out of 3000000
  4517 multiletter control sequences out of 15000+200000
  5339 words of font info for 22 fonts, out of 3000000 for 9000
  14 hyphenation exceptions out of 8191
- 27i,13n,24p,238b,186s stack positions out of 5000i,500n,10000p,200000b,50000s
-</home/tom/.miktex/texmfs/install/fonts/type1/public
-/amsfonts/cm/cmex10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/am
-sfonts/cm/cmmi10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfo
-nts/cm/cmmi7.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/
-cm/cmr10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/c
-mr7.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy10
-.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/symbols/msam
-7.pfb>
-Output written on linearised2.pdf (3 pages, 85480 bytes).
+ 27i,13n,24p,258b,186s stack positions out of 5000i,500n,10000p,200000b,50000s
+</home/tom/.miktex/texmfs/instal
+l/fonts/type1/public/amsfonts/cm/cmex10.pfb></home/tom/.miktex/texmfs/install/f
+onts/type1/public/amsfonts/cm/cmmi10.pfb></home/tom/.miktex/texmfs/install/font
+s/type1/public/amsfonts/cm/cmmi7.pfb></home/tom/.miktex/texmfs/install/fonts/ty
+pe1/public/amsfonts/cm/cmr10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/
+public/amsfonts/cm/cmr7.pfb></home/tom/.miktex/texmfs/install/fonts/type1/publi
+c/amsfonts/cm/cmsy10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/a
+msfonts/symbols/msam7.pfb>
+Output written on vectorised_kinematic_controller.pdf (3 pages, 85480 bytes).
 PDF statistics:
  40 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)

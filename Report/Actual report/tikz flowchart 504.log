@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6530) (preloaded format=pdflatex 2017.12.28)  2 JAN 2018 15:08
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6530) (preloaded format=pdflatex 2017.12.28)  4 JAN 2018 21:18
 entering extended mode
 **"./tikz flowchart 504.tex"
 ("tikz flowchart 504.tex"
@@ -421,7 +421,11 @@ File: tikzlibraryarrows.code.tex 2008/01/09 v3.0.1a (rcs-revision 1.1)
 de.tex
 File: pgflibraryarrows.code.tex 2013/09/23 v3.0.1a (rcs-revision 1.16)
 \arrowsize=\dimen151
-)) ("tikz flowchart 504.aux")
+)) ("tikz flowchart 504.aux"
+
+LaTeX Warning: Label `fig:HighLevelDiagram' multiply defined.
+
+)
 \openout1 = `"tikz flowchart 504.aux"'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 6.
@@ -501,31 +505,38 @@ Package grfext Info: Graphics extension search list:
 (grfext)             [.pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPE
 G,.JBIG2,.JB2,.eps]
 (grfext)             \AppendGraphicsExtensions on input line 456.
-)
-Overfull \hbox (8.38892pt too wide) in paragraph at lines 73--73
+
+(/usr/share/texlive/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+))
+Overfull \hbox (8.38892pt too wide) in paragraph at lines 95--95
  [][][][]\OT1/cmr/m/n/10 Calculate/set 
  []
 
 
-Overfull \hbox (8.38892pt too wide) in paragraph at lines 74--74
+Overfull \hbox (8.38892pt too wide) in paragraph at lines 96--96
  [][][][]\OT1/cmr/m/n/10 Calculate/set 
  []
 
 [1
 
-{/home/tom/.miktex/texmfs/data/pdftex/config/pdftex.map}] [2]
-("tikz flowchart 504.aux") ) 
+{/usr/share/texlive/texmf-dist/fonts/map/pdftex/updmap/pdftex.map}] [2]
+("tikz flowchart 504.aux")
+
+LaTeX Warning: There were multiply-defined labels.
+
+ ) 
 Here is how much of TeX's memory you used:
- 13846 strings out of 495212
- 304552 string characters out of 3181458
- 356549 words of memory out of 3000000
- 16912 multiletter control sequences out of 15000+200000
+ 13880 strings out of 495212
+ 305237 string characters out of 3181458
+ 360886 words of memory out of 3000000
+ 16943 multiletter control sequences out of 15000+200000
  3640 words of font info for 14 fonts, out of 3000000 for 9000
  14 hyphenation exceptions out of 8191
- 55i,6n,67p,434b,560s stack positions out of 5000i,500n,10000p,200000b,50000s
-</home/tom/.miktex/texmfs/install/fonts/type1/publi
-c/amsfonts/cm/cmr10.pfb>
-Output written on "tikz flowchart 504.pdf" (2 pages, 19924 bytes).
+ 55i,8n,67p,434b,668s stack positions out of 5000i,500n,10000p,200000b,50000s
+</home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cmr10.pfb>
+Output written on "tikz flowchart 504.pdf" (2 pages, 22311 bytes).
 PDF statistics:
  16 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6530) (preloaded format=pdflatex 2017.12.28)  3 JAN 2018 18:52
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6530) (preloaded format=pdflatex 2017.12.28)  4 JAN 2018 22:30
 entering extended mode
 **./ROCO504-report.tex
 (ROCO504-report.tex
@@ -806,7 +806,11 @@ Package grfext Info: Graphics extension search list:
 (grfext)             [.pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPE
 G,.JBIG2,.JB2,.eps]
 (grfext)             \AppendGraphicsExtensions on input line 456.
-)
+
+(/usr/share/texlive/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+))
 ABD: EveryShipout initializing macros (ROCO504-report.toc
 LaTeX Font Info:    Try loading font information for U+msa on input line 2.
 
@@ -823,7 +827,7 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
  [1
 
-{/home/tom/.miktex/texmfs/data/pdftex/config/pdftex.map}
+{/usr/share/texlive/texmf-dist/fonts/map/pdftex/updmap/pdftex.map}
 
 ]
 Underfull \hbox (badness 2073) in paragraph at lines 559--560
@@ -899,10 +903,10 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 16907 strings out of 495212
- 356866 string characters out of 3181458
- 419340 words of memory out of 3000000
- 19855 multiletter control sequences out of 15000+200000
+ 16912 strings out of 495212
+ 357090 string characters out of 3181458
+ 419389 words of memory out of 3000000
+ 19857 multiletter control sequences out of 15000+200000
  44767 words of font info for 90 fonts, out of 3000000 for 9000
  17 hyphenation exceptions out of 8191
  55i,13n,71p,1371b,938s stack positions out of 5000i,500n,10000p,200000b,50000s
