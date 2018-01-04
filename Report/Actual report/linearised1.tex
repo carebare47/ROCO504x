@@ -1,0 +1,136 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{nicefrac}
+\begin{document}
+
+
+  \[
+\begin{bmatrix}
+	\delta{x}\\
+\delta{y}
+\end{bmatrix}
+=
+\left(
+\begin{bmatrix}
+x_{in}\\
+y_{in}
+\end{bmatrix}
+-
+\begin{bmatrix}
+320 & 240
+\end{bmatrix}
+\right)
+\cdot
+\begin{bmatrix}
+\nicefrac{89.5}{640}\\
+\nicefrac{71.5}{480}
+\end{bmatrix}
+\]
+
+
+\[
+\begin{bmatrix}
+l_{(1)t}\\
+l_2\\
+l_3\\
+l_4
+\end{bmatrix}
+=MotorPositionToLength\left(
+\begin{bmatrix}
+p_{(1)t}\\
+p_2\\
+p_3\\
+p_4
+\end{bmatrix}
++ 0.3533 + tension
+\right)
++ startingLengths
+\]
+
+\[
+\begin{bmatrix}
+x_{t}\\
+y_{current}
+\end{bmatrix}
+= forward_{kinematics} \left(
+\begin{bmatrix}
+l_{(1)t}\\
+l_2\\
+l_3\\
+l_4
+\end{bmatrix}
+\right)
+\]
+Check boundaries\\
+Proportional control
+
+\[
+\begin{bmatrix}
+\delta{l_1}\\
+\delta{l_2}\\
+\delta{l_3}\\
+\delta{l_4}
+\end{bmatrix}
+= inverse{kinematics}\left(
+\begin{bmatrix}
+x_{t} + \delta{x}\\
+y_{current} + \delta{y}
+\end{bmatrix}
+\right)
+%- current
+-
+\begin{bmatrix}
+l_{(1)t}\\
+l_2\\
+l_3\\
+l_4
+\end{bmatrix}
+\]
+
+\[
+\begin{bmatrix}
+p_{(1)t+1}\\
+p_2\\
+p_3\\
+p_4
+\end{bmatrix}
+=
+motorLengthToPosition \left(
+\begin{bmatrix}
+\delta{l_1}\\
+\delta{l_2}\\
+\delta{l_3}\\
+\delta{l_4}
+\end{bmatrix}
+\right)
++ 
+\begin{bmatrix}
+p_{(1)t}\\
+p_2\\
+p_3\\
+p_4
+\end{bmatrix}
+- tension
+\]
+
+\[
+New motor position =
+motorLengthToPosition \left(
+new
+\begin{bmatrix}
+Length_1\\
+Length_2\\
+Length_3\\
+Length_4
+\end{bmatrix}
+\right)
++ current
+\begin{bmatrix}
+Length_1\\
+Length_2\\
+Length_3\\
+Length_4
+\end{bmatrix}
+- tenstion
+\]
+\end{document}

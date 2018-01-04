@@ -1,0 +1,155 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{nicefrac}
+\begin{document}
+
+
+  \[
+\begin{bmatrix}
+	\delta{x}\\
+\delta{y}
+\end{bmatrix}
+=
+\left(
+\begin{bmatrix}
+x_{in}\\
+y_{in}
+\end{bmatrix}
+-
+\begin{bmatrix}
+320 & 240
+\end{bmatrix}
+\right)
+\cdot
+\begin{bmatrix}
+\nicefrac{89.5}{640}\\
+\nicefrac{71.5}{480}
+\end{bmatrix}
+\]
+
+
+\[
+\begin{bmatrix}
+l_{(1)t}\\
+l_{(2)t}\\
+l_{(3)t}\\
+l_4
+\end{bmatrix}
+=MotorPositionToLength\left(
+\begin{bmatrix}
+p_{(1)t}\\
+p_{(2)t}\\
+p_{(3)t}\\
+p_4
+\end{bmatrix}
++ 0.3533 + tension
+\right)
++ startingLengths
+\]
+
+\[
+\begin{bmatrix}
+x_{t}\\
+y_{current}
+\end{bmatrix}
+= forward_{kinematics} \left(
+\begin{bmatrix}
+l_{(1)t}\\
+l_{(2)t}\\
+l_{(3)t}\\
+l_4
+\end{bmatrix}
+\right)
+\]
+Check boundaries\\
+Proportional control
+
+\[
+\begin{bmatrix}
+\delta{l_1}\\
+\delta{l_{(2)t}}\\
+\delta{l_{(3)t}}\\
+\delta{l_4}
+\end{bmatrix}
+= inverse{kinematics}\left(
+\begin{bmatrix}
+x_{t} + \delta{x}\\
+y_{current} + \delta{y}
+\end{bmatrix}
+\right)
+%- current
+-
+\begin{bmatrix}
+l_{(1)t}\\
+l_{(2)t}\\
+l_{(3)t}\\
+l_4
+\end{bmatrix}
+\]
+
+\[
+\begin{bmatrix}
+p_{(1)t+1}\\
+p_{(2)t+1}\\
+p_{(3)t+1}\\
+p_4
+\end{bmatrix}
+=
+motorLengthToPosition \left(
+\begin{bmatrix}
+\delta{l_1}\\
+\delta{l_{(2)t}}\\
+\delta{l_{(3)t}}\\
+\delta{l_4}
+\end{bmatrix}
+\right)
++ 
+\begin{bmatrix}
+p_{(1)t}\\
+p_{(2)t}\\
+p_{(3)t}\\
+p_4
+\end{bmatrix}
+- tension
+\\ \\ \\ \\
+\]
+\\ \\ \\
+\[
+\vec{l_t} = Pos2Len
+\left(
+\vec{p_t} + 0.3533 + tension
+\right) + startingLength
+\]
+
+\[
+(x_t,y_t) = forwardKinematics \left(
+\vec{l_t}
+\right)
+\]
+check boundaries \\
+Proportional control
+
+\[
+\vec{\delta{l_t}} = inverseKinematics \left(
+\begin{bmatrix}
+x_t\\
+y_t
+\end{bmatrix}
+ + 
+\begin{bmatrix}
+\delta{x_t}\\
+\delta{y_t}
+\end{bmatrix}
+\right)
+- \vec{l_t}
+\]
+
+
+\[
+\vec{p}_{t+1} = Len2Pos \left(
+\vec{\delta{l_t}}
+\right)
++ \vec{p_t} - tension
+\]
+
+\end{document}
