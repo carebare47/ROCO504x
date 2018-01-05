@@ -1,0 +1,14 @@
+Pi Dimensions:
+- 30 x 1.2mm top
+- ?? x 1.6mm legs
+    Where ?? is L mm
+
+Force Applied To Leg Tip:
+- n N
+
+Image Type:
+- f => Front
+- b => Back
+- s => Stress
+- d => Displacement
+- sf => Safety Factor
