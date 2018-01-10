@@ -33,3 +33,7 @@ Based off a required speed of 5.2 rps, a 10.4x multiplier gear box is required
 
 Maximum torque required to lift a mass of 0.5kg = 5kg.cm
 This would mean a torque of 50.2kg.cm(492Ncm) at the input stage of the gearbox
+
+stepper max torque sst58d320 = 9kg.cm, usable = 7kg.cm
+Dynamixel stall torque = 61kg.cm, recommended = 12kg.cm
+Micromotor nominal torque 300Ncm = 30.59kg.cm
