@@ -34,4 +34,8 @@ R.~L. Williams~II and P.~Gallina, ``Translational planar cable-direct-driven
   \url{https://doi.org/10.1023/A:1023975507009}
 \BIBentrySTDinterwordspacing
 
+\bibitem{Sorg2003VisualTA}
+M.~Sorg, ``Visual tracking and grasping of a dynamic object: from the human
+  example to an autonomous robotic system,'' 2003.
+
 \end{thebibliography}
