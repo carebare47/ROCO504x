@@ -1,0 +1,46 @@
+\contentsline {section}{\numberline {I}Introduction}{2}
+\contentsline {section}{\numberline {II}Research}{2}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-A}}Body Design}{2}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-B}}Gripper Design}{2}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-C}}Camera Setups}{2}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-D}}Object Tracking}{3}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-E}}Gripper-Object Coordination}{3}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-F}}Object Grasping}{3}
+\contentsline {section}{\numberline {III}Prototypes}{3}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-A}}Hardware}{3}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-A}1}Micro motors}{3}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-A}2}Stepper motors}{3}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-A}3}Visual Feedback Loop Hardware}{4}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-A}4}Control Software}{4}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-A}5}Force storage}{4}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-B}}Vision Algorithms}{4}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-B}1}Changing Histograms}{4}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-B}2}Optical Flow (Farneback)}{4}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-B}3}Pyramid Scaling}{5}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-B}4}YOLO}{5}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-C}}Control}{5}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-C}1}Inverse Kinematics:}{5}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-C}2}Forward Kinematics:}{5}
+\contentsline {section}{\numberline {IV}Solution}{5}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-A}}Body Design}{5}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-A}1}Servos}{5}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}}Gripper Design}{5}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}1}Soft Passive Gripper}{5}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}2}Soft Active Gripper}{5}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-C}}Camera Setup}{5}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-C}1}Camera}{5}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-C}2}Camera}{6}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-C}3}Processor}{6}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-D}}Object Tracking}{6}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-E}}Object Tracking}{6}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-F}}Gripper-Object Coordination}{6}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-F}1}Motor velocities}{6}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-G}}Software}{6}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-G}1}Kinematics}{6}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-G}2}Motor velocities}{6}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-H}}Object Grasping}{6}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-H}1}Clamps}{6}
+\contentsline {section}{\numberline {V}Results}{7}
+\contentsline {section}{\numberline {VI}Discussion}{7}
+\contentsline {section}{\numberline {VII}Conclusion}{7}
+\contentsline {section}{References}{7}

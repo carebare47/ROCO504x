@@ -1,0 +1,655 @@
+
+%% bare_conf.tex
+%% V1.4b
+%% 2015/08/26
+%% by Michael Shell
+%% See:
+%% http://www.michaelshell.org/
+%% for current contact information.
+%%
+%% This is a skeleton file demonstrating the use of IEEEtran.cls
+%% (requires IEEEtran.cls version 1.8b or later) with an IEEE
+%% conference paper.
+%%
+%% Support sites:
+%% http://www.michaelshell.org/tex/ieeetran/
+%% http://www.ctan.org/pkg/ieeetran
+%% and
+%% http://www.ieee.org/
+
+%%*************************************************************************
+%% Legal Notice:
+%% This code is offered as-is without any warranty either expressed or
+%% implied; without even the implied warranty of MERCHANTABILITY or
+%% FITNESS FOR A PARTICULAR PURPOSE! 
+%% User assumes all risk.
+%% In no event shall the IEEE or any contributor to this code be liable for
+%% any damages or losses, including, but not limited to, incidental,
+%% consequential, or any other damages, resulting from the use or misuse
+%% of any information contained here.
+%%
+%% All comments are the opinions of their respective authors and are not
+%% necessarily endorsed by the IEEE.
+%%
+%% This work is distributed under the LaTeX Project Public License (LPPL)
+%% ( http://www.latex-project.org/ ) version 1.3, and may be freely used,
+%% distributed and modified. A copy of the LPPL, version 1.3, is included
+%% in the base LaTeX documentation of all distributions of LaTeX released
+%% 2003/12/01 or later.
+%% Retain all contribution notices and credits.
+%% ** Modified files should be clearly indicated as such, including  **
+%% ** renaming them and changing author support contact information. **
+%%*************************************************************************
+
+
+% *** Authors should verify (and, if needed, correct) their LaTeX system  ***
+% *** with the testflow diagnostic prior to trusting their LaTeX platform ***
+% *** with production work. The IEEE's font choices and paper sizes can   ***
+% *** trigger bugs that do not appear when using other class files.       ***                          ***
+% The testflow support page is at:
+% http://www.michaelshell.org/tex/testflow/
+
+
+
+\documentclass[conference]{IEEEtran}
+% Some Computer Society conferences also require the compsoc mode option,
+% but others use the standard conference format.
+%
+% If IEEEtran.cls has not been installed into the LaTeX system files,
+% manually specify the path to it like:
+% \documentclass[conference]{../sty/IEEEtran}
+
+
+
+
+
+% Some very useful LaTeX packages include:
+% (uncomment the ones you want to load)
+
+
+% *** MISC UTILITY PACKAGES ***
+%
+%\usepackage{ifpdf}
+% Heiko Oberdiek's ifpdf.sty is very useful if you need conditional
+% compilation based on whether the output is pdf or dvi.
+% usage:
+% \ifpdf
+%   % pdf code
+% \else
+%   % dvi code
+% \fi
+% The latest version of ifpdf.sty can be obtained from:
+% http://www.ctan.org/pkg/ifpdf
+% Also, note that IEEEtran.cls V1.7 and later provides a builtin
+% \ifCLASSINFOpdf conditional that works the same way.
+% When switching from latex to pdflatex and vice-versa, the compiler may
+% have to be run twice to clear warning/error messages.
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{graphicx}
+\usepackage{gensymb}
+\usepackage{textcomp}
+%	\usepackage[strings]{underscore}
+\usepackage{tikz}
+\usetikzlibrary{calc,patterns,angles,quotes,shapes,arrows, chains}
+
+
+% *** CITATION PACKAGES ***
+%
+%\usepackage{cite}
+% cite.sty was written by Donald Arseneau
+% V1.6 and later of IEEEtran pre-defines the format of the cite.sty package
+% \cite{} output to follow that of the IEEE. Loading the cite package will
+% result in citation numbers being automatically sorted and properly
+% "compressed/ranged". e.g., [1], [9], [2], [7], [5], [6] without using
+% cite.sty will become [1], [2], [5]--[7], [9] using cite.sty. cite.sty's
+% \cite will automatically add leading space, if needed. Use cite.sty's
+% noadjust option (cite.sty V3.8 and later) if you want to turn this off
+% such as if a citation ever needs to be enclosed in parenthesis.
+% cite.sty is already installed on most LaTeX systems. Be sure and use
+% version 5.0 (2009-03-20) and later if using hyperref.sty.
+% The latest version can be obtained at:
+% http://www.ctan.org/pkg/cite
+% The documentation is contained in the cite.sty file itself.
+
+
+
+
+
+
+% *** GRAPHICS RELATED PACKAGES ***
+%
+\ifCLASSINFOpdf
+% \usepackage[pdftex]{graphicx}
+% declare the path(s) where your graphic files are
+% \graphicspath{{../pdf/}{../jpeg/}}
+% and their extensions so you won't have to specify these with
+% every instance of \includegraphics
+% \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
+\else
+% or other class option (dvipsone, dvipdf, if not using dvips). graphicx
+% will default to the driver specified in the system graphics.cfg if no
+% driver is specified.
+% \usepackage[dvips]{graphicx}
+% declare the path(s) where your graphic files are
+% \graphicspath{{../eps/}}
+% and their extensions so you won't have to specify these with
+% every instance of \includegraphics
+% \DeclareGraphicsExtensions{.eps}
+\fi
+% graphicx was written by David Carlisle and Sebastian Rahtz. It is
+% required if you want graphics, photos, etc. graphicx.sty is already
+% installed on most LaTeX systems. The latest version and documentation
+% can be obtained at: 
+% http://www.ctan.org/pkg/graphicx
+% Another good source of documentation is "Using Imported Graphics in
+% LaTeX2e" by Keith Reckdahl which can be found at:
+% http://www.ctan.org/pkg/epslatex
+%
+% latex, and pdflatex in dvi mode, support graphics in encapsulated
+% postscript (.eps) format. pdflatex in pdf mode supports graphics
+% in .pdf, .jpeg, .png and .mps (metapost) formats. Users should ensure
+% that all non-photo figures use a vector format (.eps, .pdf, .mps) and
+% not a bitmapped formats (.jpeg, .png). The IEEE frowns on bitmapped formats
+% which can result in "jaggedy"/blurry rendering of lines and letters as
+% well as large increases in file sizes.
+%
+% You can find documentation about the pdfTeX application at:
+% http://www.tug.org/applications/pdftex
+
+
+
+
+
+% *** MATH PACKAGES ***
+%
+%\usepackage{amsmath}
+% A popular package from the American Mathematical Society that provides
+% many useful and powerful commands for dealing with mathematics.
+%
+% Note that the amsmath package sets \interdisplaylinepenalty to 10000
+% thus preventing page breaks from occurring within multiline equations. Use:
+%\interdisplaylinepenalty=2500
+% after loading amsmath to restore such page breaks as IEEEtran.cls normally
+% does. amsmath.sty is already installed on most LaTeX systems. The latest
+% version and documentation can be obtained at:
+% http://www.ctan.org/pkg/amsmath
+
+
+
+
+
+% *** SPECIALIZED LIST PACKAGES ***
+%
+%\usepackage{algorithmic}
+% algorithmic.sty was written by Peter Williams and Rogerio Brito.
+% This package provides an algorithmic environment fo describing algorithms.
+% You can use the algorithmic environment in-text or within a figure
+% environment to provide for a floating algorithm. Do NOT use the algorithm
+% floating environment provided by algorithm.sty (by the same authors) or
+% algorithm2e.sty (by Christophe Fiorio) as the IEEE does not use dedicated
+% algorithm float types and packages that provide these will not provide
+% correct IEEE style captions. The latest version and documentation of
+% algorithmic.sty can be obtained at:
+% http://www.ctan.org/pkg/algorithms
+% Also of interest may be the (relatively newer and more customizable)
+% algorithmicx.sty package by Szasz Janos:
+% http://www.ctan.org/pkg/algorithmicx
+
+
+
+
+% *** ALIGNMENT PACKAGES ***
+%
+%\usepackage{array}
+% Frank Mittelbach's and David Carlisle's array.sty patches and improves
+% the standard LaTeX2e array and tabular environments to provide better
+% appearance and additional user controls. As the default LaTeX2e table
+% generation code is lacking to the point of almost being broken with
+% respect to the quality of the end results, all users are strongly
+% advised to use an enhanced (at the very least that provided by array.sty)
+% set of table tools. array.sty is already installed on most systems. The
+% latest version and documentation can be obtained at:
+% http://www.ctan.org/pkg/array
+
+
+% IEEEtran contains the IEEEeqnarray family of commands that can be used to
+% generate multiline equations as well as matrices, tables, etc., of high
+% quality.
+
+
+
+
+% *** SUBFIGURE PACKAGES ***
+%\ifCLASSOPTIONcompsoc
+%  \usepackage[caption=false,font=normalsize,labelfont=sf,textfont=sf]{subfig}
+%\else
+%  \usepackage[caption=false,font=footnotesize]{subfig}
+%\fi
+% subfig.sty, written by Steven Douglas Cochran, is the modern replacement
+% for subfigure.sty, the latter of which is no longer maintained and is
+% incompatible with some LaTeX packages including fixltx2e. However,
+% subfig.sty requires and automatically loads Axel Sommerfeldt's caption.sty
+% which will override IEEEtran.cls' handling of captions and this will result
+% in non-IEEE style figure/table captions. To prevent this problem, be sure
+% and invoke subfig.sty's "caption=false" package option (available since
+% subfig.sty version 1.3, 2005/06/28) as this is will preserve IEEEtran.cls
+% handling of captions.
+% Note that the Computer Society format requires a larger sans serif font
+% than the serif footnote size font used in traditional IEEE formatting
+% and thus the need to invoke different subfig.sty package options depending
+% on whether compsoc mode has been enabled.
+%
+% The latest version and documentation of subfig.sty can be obtained at:
+% http://www.ctan.org/pkg/subfig
+
+
+
+
+% *** FLOAT PACKAGES ***
+%
+%\usepackage{fixltx2e}
+% fixltx2e, the successor to the earlier fix2col.sty, was written by
+% Frank Mittelbach and David Carlisle. This package corrects a few problems
+% in the LaTeX2e kernel, the most notable of which is that in current
+% LaTeX2e releases, the ordering of single and double column floats is not
+% guaranteed to be preserved. Thus, an unpatched LaTeX2e can allow a
+% single column figure to be placed prior to an earlier double column
+% figure.
+% Be aware that LaTeX2e kernels dated 2015 and later have fixltx2e.sty's
+% corrections already built into the system in which case a warning will
+% be issued if an attempt is made to load fixltx2e.sty as it is no longer
+% needed.
+% The latest version and documentation can be found at:
+% http://www.ctan.org/pkg/fixltx2e
+
+
+%\usepackage{stfloats}
+% stfloats.sty was written by Sigitas Tolusis. This package gives LaTeX2e
+% the ability to do double column floats at the bottom of the page as well
+% as the top. (e.g., "\begin{figure*}[!b]" is not normally possible in
+% LaTeX2e). It also provides a command:
+%\fnbelowfloat
+% to enable the placement of footnotes below bottom floats (the standard
+% LaTeX2e kernel puts them above bottom floats). This is an invasive package
+% which rewrites many portions of the LaTeX2e float routines. It may not work
+% with other packages that modify the LaTeX2e float routines. The latest
+% version and documentation can be obtained at:
+% http://www.ctan.org/pkg/stfloats
+% Do not use the stfloats baselinefloat ability as the IEEE does not allow
+% \baselineskip to stretch. Authors submitting work to the IEEE should note
+% that the IEEE rarely uses double column equations and that authors should try
+% to avoid such use. Do not be tempted to use the cuted.sty or midfloat.sty
+% packages (also by Sigitas Tolusis) as the IEEE does not format its papers in
+% such ways.
+% Do not attempt to use stfloats with fixltx2e as they are incompatible.
+% Instead, use Morten Hogholm'a dblfloatfix which combines the features
+% of both fixltx2e and stfloats:
+%
+% \usepackage{dblfloatfix}
+% The latest version can be found at:
+% http://www.ctan.org/pkg/dblfloatfix
+
+
+
+
+% *** PDF, URL AND HYPERLINK PACKAGES ***
+%
+%\usepackage{url}
+% url.sty was written by Donald Arseneau. It provides better support for
+% handling and breaking URLs. url.sty is already installed on most LaTeX
+% systems. The latest version and documentation can be obtained at:
+% http://www.ctan.org/pkg/url
+% Basically, \url{my_url_here}.
+
+
+
+
+% *** Do not adjust lengths that control margins, column widths, etc. ***
+% *** Do not use packages that alter fonts (such as pslatex).         ***
+% There should be no need to do such things with IEEEtran.cls V1.6 and later.
+% (Unless specifically asked to do so by the journal or conference you plan
+% to submit to, of course. )
+
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+
+\begin{document}
+	%
+	% paper title
+	% Titles are generally capitalized except for words such as a, an, and, as,
+	% at, but, by, for, in, nor, of, on, or, the, to and up, which are usually
+	% not capitalized unless they are the first or last word of the title.
+	% Linebreaks \\ can be used within to get better formatting as desired.
+	% Do not put math or special symbols in the title.
+	%\title{Bare Demo of IEEEtran.cls\\ for IEEE Conferences}
+	\tableofcontents
+	\title{ROCO504\\ Catch-bot}
+	
+	% author names and affiliations
+	% use a multiple column layout for up to three different
+	% affiliations
+	\author{\IEEEauthorblockN{Tom Queen}
+		\IEEEauthorblockA{School of Computing,\\ Electronics and Mathematics\\
+			Plymouth University\\
+			Plymouth, Devon PL4 8AA \\
+			Email: xxxx}
+		\and
+		\IEEEauthorblockN{Daniel Gregory-Turner}
+		\IEEEauthorblockA{School of Computing,\\ Electronics and Mathematics\\
+			Plymouth University\\
+			Plymouth, Devon PL4 8AA \\
+			Email: xxxx}
+		\and
+		\IEEEauthorblockN{Demetrius Zaibo}
+		\IEEEauthorblockA{School of Computing,\\ Electronics and Mathematics\\
+			Plymouth University\\
+			Plymouth, Devon PL4 8AA \\
+			Email: xxxx}}
+	
+	% conference papers do not typically use \thanks and this command
+	% is locked out in conference mode. If really needed, such as for
+	% the acknowledgment of grants, issue a \IEEEoverridecommandlockouts
+	% after \documentclass
+	
+	% for over three affiliations, or if they all won't fit within the width
+	% of the page, use this alternative format:
+	% 
+	%\author{\IEEEauthorblockN{Michael Shell\IEEEauthorrefmark{1},
+	%Homer Simpson\IEEEauthorrefmark{2},
+	%James Kirk\IEEEauthorrefmark{3}, 
+	%Montgomery Scott\IEEEauthorrefmark{3} and
+	%Eldon Tyrell\IEEEauthorrefmark{4}}
+	%\IEEEauthorblockA{\IEEEauthorrefmark{1}School of Electrical and Computer Engineering\\
+	%Georgia Institute of Technology,
+	%Atlanta, Georgia 30332--0250\\ Email: see http://www.michaelshell.org/contact.html}
+	%\IEEEauthorblockA{\IEEEauthorrefmark{2}Twentieth Century Fox, Springfield, USA\\
+	%Email: homer@thesimpsons.com}
+	%\IEEEauthorblockA{\IEEEauthorrefmark{3}Starfleet Academy, San Francisco, California 96678-2391\\
+	%Telephone: (800) 555--1212, Fax: (888) 555--1212}
+	%\IEEEauthorblockA{\IEEEauthorrefmark{4}Tyrell Inc., 123 Replicant Street, Los Angeles, California 90210--4321}}
+	
+	
+	
+	
+	% use for special paper notices
+	%\IEEEspecialpapernotice{(Invited Paper)}
+	
+	
+	
+	
+	% make the title area
+	\maketitle
+	
+	% As a general rule, do not put math, special symbols or citations
+	% in the abstract
+\begin{abstract}
+The abstract goes here.
+\end{abstract}
+\section{Introduction}
+This article discusses the development and construction of a Translational Planar 4-cable Cable-Direct-Driven Robot (CDDR), using soft robotics practices, and its applications in catching and throwing. 
+\section{Research}
+The problem of designing and implementing a catching robot is not new, and although a thorough analysis of design considerations for catching robots in general is out of the scope of this article a brief summary of related issues will be outlined. The interested reader should reference [article reference 1] for a more detailed analysis.
+\subsection{Body Design}
+Body design determines the shape of the overall robot, setting many project constraints such as the available workspace, control complexity and physical capabilities of the robot. There are numerous possible designs such as robot arms, as used by [article reference 2], [article reference 3] and [article reference 4], or frame-based robots, as used by [article reference 5], [article reference 6] and [article reference 7]. Due to project time constraints a simple 2-axis frame based 4-cable CDDR was designed as the main body.
+CDDRs are a type of parallel manipulator wherein the end-effector link is supported in parallel by $n$ cables with $n$ tensioning motors ~\cite{CDDR:description}. CDDRs can be made lighter, stiffer, safer and more economical than traditional serial robots~\cite{WilliamsII2003} since their primary structure consists of lightweight, high load-bearing cables. More complex Cable-driven parallel robots can be designed to move in six Degrees of Freedom (DoF) in three dimensional spaces, but these are beyond the scope of this article. 
+Fast motors were needed to allow the gripper to keep track of the target. The working area of the frame measured XXXX 90cm by 75cm. If the gripper was initialised to the centre of the frame and a ball was thrown from three meters away, then the robot would have 0.7 seconds to move from centre to the corner of the working area. PROOF
+\subsection{Gripper Design}
+Gripper design refers to the end effector which grasps the thrown object and constrains the design in what objects can be caught and how said objects can be manipulated. Gripper designs can be distinguished between 2 pairs of classes, passive verses active and soft verses hard.
+In the first pairing, passive grippers provide no means of control within the gripper itself which can simplify design and control considerations but limits future capabilities. Active grippers increase the design and control complexity by adding actuation, or modifiable gripper characteristics, to perform a wider variety of tasks.
+Hard grippers are constructed out of rigid, inflexible, materials. These grippers are commonplace within industry where they work with known objects that are strong enough to not break under high stresses. Outside of the industrial setting, however, they are less applicable. This is where soft grippers, that can deform and spread the gripper forces over a larger surface area, find more usage.
+For a brief overview of the many varieties of gripper design, the interested reader is referred to [article references 9 – 20].
+\subsection{Camera Setups}
+Camera setups typically provide a trade-off between system complexity and control complexity. More cameras, or ones with higher frame rates and resolutions, allow for better object tracking but come at the cost of additional processing and control requirements.
+There are three common camera setups. XXXXBULLETSXXXXX. The simplest setup for control is the eye-in-hand approach, where a camera is mounted inside the gripper, providing a direct feedback loop so long as motion blur doesn’t become an issue.
+The most reliable setup for object tracking involves placing multiple cameras around the room in fixed, known locations. From this the ball position and trajectory can be easily modelled in 3D space, but at the expense of a complex setup and a significantly higher processor demand.
+A middle ground to the previous two is to use “head” mounted cameras, or rather, cameras mounted to a fixed known location on the robots body. This typically means that the target cannot be tracked in 3D space as easily, but may present more reliable results that the eye-in-hand solution. 
+\subsection{Object Tracking}
+Object tracking consumes the majority of processor resources in such projects. Accuracy, false positives and false negatives determine the reliability of a system. Cameras are typically the sensor(s) of choice for robot catching systems due to the flexibility, and often ease, that detection algorithms can provide. Computer vision provides numerous methods of feature detection, a small sample of such techniques include:
+{Colour thresholding}, whereby a colour range of interest is selected and a binary image is produced. Position is estimated using the centre of mass, or via structural analysis.
+{Structural analysis} looks at the edges and corners in a given image in an attempt to detect predefined shapes.
+{Statistical transformations} convert an image, or set of images, into fuzzy regions of interest. Blob detection, Farneback optical flow and convolution are examples of such methods.
+{Depth maps}, generated from multiple images or through special hardware, provide a form of 3D representation of the environment, allowing other simpler algorithms to detect moving objects, and the 3-dimensional direction of motion.
+\subsection{Gripper-Object Coordination}
+Gripper-object coordination is the main control algorithm used in the catching process and defines the efficacy and efficiency of the system. It is usually broken down into numerous input and output controllers. Input controllers relate the sensory data to desired movements of the machine, and output controllers relate this desired motion into actuator commands.
+For vision based sensors there are two methods of providing this feedback. If the camera is inside the gripper then visual servoing is used, where an offset from the centre of the camera image directly translates to a desired velocity vector. Other systems employ predictive feedback, which predicts a possible location the object will intersect the robot and provides this as a target location for the gripper.
+Given an input which directly relates to spatial coordinates or movements, the system can then convert these into actual movements. At its simplest this involves the use of forwards and inverse kinematics, where forward kinematics provides an internal representation of the current system state, and inverse kinematics provide the actuator positions to attain the desired system state. For more complex systems other parameters, including the system centre of mass and force storage, may need to be taken into account. 
+\subsection{Object Grasping}
+Object grasping refers to post-catch manipulation of the object. More manipulability often implies more complex gripper designs. For instance [article reference 9] use a high speed 3-fingered robotic hand to perform a wide variety of tasks, however, this approach is over-engineered if all that is required of the robot is to catch, a task a standard household bin can perform with the right aim.
+For the purposes of the project presented in this article the two tasks of interest are the catching and throwing of an object.
+\section{Prototypes}
+Throughout the project a lot of time was spent attempting to get a setup which could physically meet the aims of the project. To this end several design iterations occurred.
+\subsection{Hardware}
+To achieve the required speed and torque several motor solutions were evaluated. 
+\subsubsection{Micro motors}\label{gearbox_sol}
+The first was to use high torque ($300Ncm$) encoded DC motors (E192.24.125). The maximum speed of these motors was 33rpm. In order to achieve the required gripper speed of 1.5m/s a gearbox was needed.
+\begin{equation}\begin{aligned} \frac{s}{\pi\cdot d \cdot r} = \frac{150}{\pi\cdot 10 \cdot 0.55} = 1:8.68 \end{aligned}\end{equation}
+Where $d$ is the spool diameter ($10cm$), $s$ is required cord speed ($150cm/s$) and $r$ is motor speed ($0.55 \ RPM$). This ratio would result in a maximum cord velocity of $149.9 cm/s$.\\ 
+Two motor setups were prototyped. The first involved using Micromotors E192-2S attached to a custom $1:20$ speed-ratio gearbox. Given the high torque output from the motors this should have provided enough speed and torque to move the gripper. However, even after many gearbox design iterations design flaws kept occurring, ranging from gear slippage to material failure. As such, it was determined that an alternative approach may yield better results.
+A gearbox ratio of 1:8.68 was chosen as can be seen in \ref{gearbox_sol}. If a 500g gripper were to be raised along either vertical wall of the workspace, the output of the gearbox raising it would experience $5Kg.cm$ of force. Transferring this force through the gearbox, a 1cm input gear would experience $43.4 Kg.cm$ of force. By making the length of each gear inversely proportional to its accumulated speed multiplier, the stress felt by the input gear could be spread out over the rest of the gears. However, as this would have more than doubled the size of our original gearbox (SIZESXXXXXXXXXXX), the decision was made to use stepper motors instead.
+\subsubsection{Stepper motors}
+Another solution was to use stepper motors. Four SST58D3820 stepper motors were acquired. These motors are specified to hold $7.3Kg.cm$, which drops to $6.5Kg.cm$ at a frequency of 1200 pulses per second (PPS). In full step mode the stepper shaft rotates $1.8\degree$ per step giving a max speed of 6RPS and thus a maximum cord velocity of $188.5cm/s$.
+\begin{equation}\begin{aligned}\frac{1.8\cdot 1200}{360} = 6 RPS\end{aligned}\end{equation}
+\begin{equation}\begin{aligned}6\cdot\pi\cdot 10 = 188.49cm/s\end{aligned}\end{equation}
+The second prototype involved the use of SST58D3820 stepper motors from an old ER1 robot from Evolution Robotics. After a small amount of reverse engineering the motors were tested with their original motor driver which, unfortunately, did not appear to provide enough current to meet the motors torque limit; because of this the TB6600 motor driver was selected instead. What was not discovered until quite late in the project, after several control algorithms had been tested, was that the acquired stepper drivers performed significantly worse than their specifications. Without any encoders closed loop control was not possible causing the actual gripper position to drift wildly from the internally recorded gripper position over a short span of time. After further consideration the stepper motors were also abandoned.
+Four TB6600 were purchased to drive the SST58D3820 stepper motors. The TB6600 is designed to deliver up to 3.5A RMS. The drivers current can be limited down to 0.8A RMS in eight steps. The performance in the SST58D3820 datasheet is rated for when the motors are being supplied with 2.0A per phase. From this we can see that the stepper motor requires 250mA per phase more than the driver can provide. 
+An issue arose 
+drivers were connected to the stepper motors and the current to the driver was measured, the stepper driver 
+Skipping steps:
+The prototype was assembled with SST58D3820 stepper motors and TB6600 drivers. When the robot was switched on the motors could barely hold the weight of the gripper when stationary. An experiment was performed where commands were sent to the robot instructing the gripper to move to the top corner and then return to the centre, with cord lengths measured before and after. It was found that requesting any movement of the gripper resulted in the stepper motors skipping steps, often resulting in the gripper dropping tens of centimetres over short movements. Further investigation showed that the stepper drivers were drawing minimal current, and would overheat and shutdown if their current limit was set to more than half of what they were rated for. Even with a current limit set at 2.0A RMS, each stepper never drew more than 1.0A. This issue could have been partly mitigated if the motors were encoded.
+\subsubsection{Visual Feedback Loop Hardware}
+The first camera used to prototype various algorithms was a standard USB webcam. It quickly became apparent that objects moving at speed would either present unacceptable amounts of motion blur, or low frame-rates and high latency would not give the control system long enough to react. To resolve these issues  a high FPS camera was selected. 
+\subsubsection{Control Software}\label{initial_kinematics}
+Initially it was thought that the commands to each motor could be generated by looking directly at the returned X and Y coordinates of the tracked objects. To move the gripper upwards, the top two motors should rotate clockwise and the bottom two anticlockwise. To move the gripper to the left, the two left motors should rotate clockwise and the right two anticlockwise. This led to the following kinematic solution:
+\begin{equation}\begin{aligned}
+&M1 = Y - X \\
+&M2 = Y + X\\
+&M3 = -Y -X\\
+&M4 = -Y + X\\
+\end{aligned}\end{equation}
+For high torque motors, elastic cords and a closed loop between the tracked object and the gripper, this approximation may have been functional. However, it would not have been accurate, slack cords would be common and it would unnecessarily load the motors. When using stepper motors with low-current drivers, this solution caused the steppers to skip if the gripper was directed more than a few centimetres from the centre of the working area. 
+This led to re-evaluation of the kinematic solution as can be seen in section \ref{kinematic_solution_1}.
+
+A Teensy 3.2 was configured to use the rosserial library to receive the targets CofM from the computer. The teensy then offset the coordinate system so that pixel 0,0 was in the centre of the image. The teensy kept track of all motor positions, and when a new CofM arrived the current gripper position was calculated from the motor positions using the forward kinematics described by equation \ref{forward_kinematics_1} in \ref{kinematic_solution_1}. The program generates motor commands designed to move the gripper so that the centre of the camera image contains the CofM of the target. This is known as visual servoing. The x and y error between the centre of the camera image and the target is calculated, generating a vector that points towards the target. This vector is translated into the change in length of each cord required to center the gripper over the tracked target using the inverse kinematics described by equation \ref{inverse_kinematics_1} in \ref{kinematic_solution_1}. The desired gripper location is checked to see if it has left the bounds of the working area. If it has, movement in the direction of the axis which has been breached is set to zero. Finally, motor speeds are calculated from the desired changes in lengths as is described in equation \ref{motor_speed_equation} in section \ref{motor_speed_section}.
+\subsubsection{Force storage} \label{force_problem}
+\subsection{Vision Algorithms}
+An ideal object tracking algorithm would be algorithmically simple, quick to process, and be rugged against the various error sources vision systems encounter, whilst reliably detecting the location of the unknown object with some metric of how far away it is.
+Several algorithms were attempted and one failed to achieve this somewhat ambitious target. Some may still be feasible but given the time-frames available they were considered too complex. The four attempted algorithms will be briefly summarised below.
+\subsubsection{Changing Histograms}
+The first method was intended to provide a metric to identify interesting objects for further analysis. Histograms, using various colour channels, can be used to define how much of an image is dedicated to a given colour and light intensity. As an object approaches a camera it becomes larger, and thus consumed more of the image which should manifest as a positive rate of change over relevant histogram sections.
+Two issues prevented this algorithm from being used within the project. The first is that lateral motion of an object coming in or out of view would flag as an incoming object, which could be resolved by explicitly checking for these boundary conditions. The second issue being that as an object travels the lighting over the object changes and distributes itself inconsistently across the histogram. This is more prevalent indoors, and using a camera with fixed settings may have improved the situation.
+\subsubsection{Optical Flow (Farneback)}
+Optical flow can break up the motion between two frames of an image into lateral and vertical movements. As an object increases in size between images its motion can be used to create an outline around the object. This method was hampered due to interference from horizontal and vertical movements, where methods to reduce this became too complex to implement within the projects timeframe.
+\subsubsection{Pyramid Scaling}
+The third method revolved around how smaller objects would show up less on lower resolution images (or in images with a larger blur applied). This method is equivalent to using a variety of difference of Gaussians (DoGs) to detect edges and attempting to determine the size of an object between the DoGs. The main issue with this method was, again, lateral motion hiding the depth information.
+\subsubsection{YOLO}
+As a final method the You Only Look Once (YOLO) neural-network based object detection system was implemented to detect a small sample of objects. This method was hampered again by hardware capabilities as, even with YOLO-Tiny, a maximum of 7 frames per second were achieved which was considered too slow for the projects application. 
+\subsection{Control} \label{kinematic_solution_1}
+To address the issues discussed in \ref{initial_kinematics}, the following kinematic model was produced. Since no rotational motions and no moment resistanceS are required at the end-effector, our kinematic model can be simplified to assume that all cables meet at a point ~\cite{WilliamsII2003} within the end-effector.
+\begin{figure}INSERT FIGURE HERE (robot catcher)\end{figure}
+\subsubsection{Inverse Kinematics:}
+\begin{equation}
+\cos(\theta_3) = \frac{X_{max}{}^2 + l_3{}^2 - l_4{}^2}{2*X_{max}*l_3}
+\end{equation}
+\begin{equation}
+X = l_3\sin(\theta_3)
+\end{equation}
+\begin{equation}
+Y = l_3\cos(\theta_3)
+\end{equation}
+Or, without trigonometry:
+\begin{equation} \label{inverse_kinematics_1}
+\begin{aligned}
+&X = \left(\frac{X_{max}{}^2 + l_3{}^2 - l_4{}^2}{2*X_{max}*l_3}\right) = \frac{X_{max}}{2} + \frac{l_3{}^2 - l_4{}^2}{2*X_{max}}\\ \\
+&Y = \left(\frac{Y_{max}{}^2 + l_4{}^2 - l_1{}^2}{2*Y_{max}*l_3}\right) = \frac{Y_{max}}{2} + \frac{l_4{}^2 - l_1{}^2}{2*Y_{max}}
+\end{aligned}
+\end{equation}
+\subsubsection{Forward Kinematics:}
+\begin{equation} \label{forward_kinematics_1}
+\begin{aligned}
+&l_1 = \sqrt{\left(X\right)^2 + \left(Y_{max}-Y\right)^2}\\
+&l_2 = \sqrt{\left(X_{max}-X\right)^2 + \left(Y_{max}-Y\right)^2}\\
+&l_3 = \sqrt{\left(X\right)^2 + \left(Y\right)^2}\\
+&l_4 = \sqrt{\left(X_{max}-X\right)^2 + \left(Y\right)^2}\\
+\end{aligned}
+\end{equation}
+\section{Solution}
+\subsection{Body Design}
+\subsubsection{Servos}
+Due to the points mentioned in \ref{motor_issues} the decision was made to change the motors to Dynamixel MX-64 servos. The MX-64 can supply $60Kg.cm$ at 62 RPM, giving a top gripper speed of $0.32m/s$ which is considerably slower than our requirement. The MX-64 servos communicate over either an RS-485 or a TTL bus and can be daisy-chained if required. Due to the nature of the communication protocols involved in the dynamixel bus (clarify), the rate at which commands could be sent to each servo were reduced with each successive servo added to the daisy chain. Initially the four servos responsible for translating the end-effector were daisy-chained to a single dynamixel bus resulting in a command rate of 7Hz. This was increased to 15Hz by increasing the baud rate of the servos from 57.6kb/s to 1Mb/s. The reduced control rate led to the decision to use separate busses for each time-critical motor resulting in a command rate per motor of 60Hz. Another bus was used for all five clamps, and a final sixth bus was used to actuate the gripper as the uncertainty of the command latency to this servo was required to be as low as possible in order to successfully pre-empt and act upon the target landing in the gripper. 
+
+\subsection{Gripper Design}
+Due to the complexities of gripper design, two distinct grippers were constructed.
+\subsubsection{Soft Passive Gripper}
+A soft passive gripper design was created due to the simplicity and speed of manufacture. Figure [figure 2] shows an image of the finished gripper.
+Being 3D printed from PLA meant a prototype could be rapidly made and tested for functionality. With legs detachable from the gripper frame, several different designs and configurations could be tested. The legs went through multiple designs iterations, improved by finite element analysis (FEA) models. Stresses and deflections of the system were modelled using a static force of 1N applied uniformly over the catching face.
+
+Several designs were tested, varying the number and thickness of the struts. ABS, rubber (as an analogue to NinjaFlex) and PLA (after importing the material properties [article reference 8]) materials were tested. Figure [figure 3, 3mm] shows the FEA results for the finalised design.
+
+Due to the FEA iterative design process the legs worked as expected on the first print, with only minor design modifications to attach to the frame necessary. The object to be caught was initially a stress-ball which was used to generate requirements for the passive gripper. This was eventually replaced with a tennis ball, which meant the legs were sometimes too weak to capture it. 
+\subsubsection{Soft Active Gripper}
+The soft active gripper design has the potential to guarantee that objects (if caught) won’t slip out, and can more readily accommodate a larger variety of objects. Figure [figure 4] shows an image of the finished gripper.
+
+The design, which is predominantly a replica of FESTO’s Fin Gripper [article reference 21], was selected due to its tried and tested nature and overall simplicity. 
+
+\subsection{Camera Setup}
+\subsubsection{Camera}
+The Sony Playstation3 eye camera can be purchased second-hand for 50p. This camera can output 187 frames per second (FPS) at a resolution of 320x240, or 60 FPS at a resolution of 640x480. In addition, the camera allows for control of exposure, gain, white balance, saturation and hue shift.
+\subsubsection{Camera}
+The finalised camera setup incorporated a single PS3-Eye camera in an eye-in-hand configuration. The PS3-Eye was selected due to several useful characteristics:
+187fps at 320x240 resolution
+Software-modifiable camera properties
+Lightweight after removing the casing
+£0.50 at time of purchase
+Owing to the high frame rate, motion blur became less of a concern when using the eye-in-hand configuration, which allowed for a simplified control algorithm. The camera can be seen attached to the active gripper in Figure [figure 4].
+\subsubsection{Processor}
+As servos were to be used instead of stepper motors, a microcontroller was no longer required for the control of the end-effector. Software previously running on the Teensy (forward/inverse kinematics, boundary checking etc...) was ported to a C++ program on a laptop running ROS on Ubuntu. 
+
+\subsection{Object Tracking}
+\subsection{Object Tracking}
+The final object tracking algorithm could reliably track a red tennis ball up to 4 meters away. To achieve this QV4L2 was used to customise the camera parameters, specifically:
+Maximise the saturation
+Shift the hue by 45 degrees
+Turn off auto-gain, auto-white-balance and auto-exposure
+Manually adjusting the brightness for the given environment
+OpenCV in C++ was also used to:
+Auto-calibrate threshold parameters based on an initial selection 
+Threshold raw images in the HSV colour space
+Erode the resulting binary image to remove false positives
+Find the centre of mass of the eroded image to approximate the balls location
+Figure [figure 5] shows an example setup of the image processing algorithm, including the raw and thresholded images. Although this algorithm provided reliable results it has several significant limitations.
+Heavily optimised to find a single colour
+Environment must be free of the selected colour
+There is no camera calibration, introducing non-linear errors into the balls location
+
+\subsection{Gripper-Object Coordination}
+\subsubsection{Motor velocities}\label{motor_speed_section}
+To address the issue raised in \ref{motor_vel_problem} a simple speed scaling system was devised. This algorithm was called once per main loop after the required changes in lengths are calculated. The algorithm takes in the requested changes in length of each cord and divides each change in length by the largest. The relative speeds of each motor are then scaled by the global speed scalar.
+\begin{equation}\label{motor_speed_equation}\begin{aligned}
+&\vec{l} = \begin{bmatrix}
+l_1\\l_2\\l_3\\l_4\\\end{bmatrix}\quad
+%&x = \max\{l_1,...,l_4\}\\
+&x = \max\left(\vec{l}\right)\\\\&x = \max\vec{l}\\\\
+&\vec{s} = \frac{g}{x}\cdot \vec{l}\\
+%&s_1 = \frac{l_1}{x}\\%&s_2 = \frac{l_2}{x}\\%&s_3 = \frac{l_3}{x}\\%&s_4 = \frac{l_4}{x}\\
+\end{aligned}\end{equation}
+Where  is the global speed scalar and  contains the speed of each motor.
+\subsection{Software}
+Frames enter the object tracking node at a rate of 60FPS. The object tracker performs a series of filters in different colour spaces on the image before calculating its centre of mass. This coordinate is published to the kinematic controller 17.5ms after the frame enters the object tracker. Upon entering the kinematic controller, the coordinate frame is offset so that the center of the camera image is now at pixel 0,0. The required change in length of each cord is then calculated and set (via the method described in \ref{kinematic_solution_3}). From the desired changes in length, the required speed of each motor is calculated and set. The kinematic controller node then calculates the current gripper position in order to calculate the changes in length for the next loop.
+Figure~\ref{fig:HighLevelDiagram} shows the high-level software flow diagram of the robot.
+\begin{figure}INSERT FIGURES HERE (high level software flow diagrams)\end{figure}
+\subsubsection{Kinematics} \label{kinematic_solution_3}
+Initially the kinematic solution considered the gripper as a point. This worked for preliminary testing, but soon proved to be a problem when the limited torque of the stepper motors required equal tension on all cords at all times. This led to the development of the following kinematic model, which considered the gripper as a square. 
+\begin{figure}INSERT FIGURE HERE (square gripper)\end{figure}
+\subsubsection{Motor velocities}\label{motor_vel_problem}
+For the tension to remain equal on all cords during motion of the gripper, the motors must turn at different rates. For example: if the gripper starts in the centre of the frame and moves upwards, the top two lengths will shorten and the bottom two cords will get longer. To maintain a uniform velocity of the gripper, the top two motors must slow down and the bottom two must speed up. For gripper trajectories constrained to the center of one axis this isn't much of a problem, but for trajectories traversing multiple axis xxxxxxxxxxx
+
+\subsection{Object Grasping}
+\subsubsection{Clamps}
+To address the problem discussed in \ref{force_problem}, clamps were designed to lock each cord in place. Each clamp consisted of a high-friction surface suspended above a fixed plate via four springs. The cord to be clamped runs between the two surfaces. A dynamixel AX-12 servo is connected the suspended surface with a pulley. When actuated, the servo pulls the suspended surface towards the fixed plate, closing the gap and clamping the cord in place. When released, the four springs push the suspended surface away from the fixed plate, quickly releasing the clamped cord. A clamp was produced for each of the five cords, one for each corner of the frame and one for the throwing motor.
+
+
+
+
+
+\section{Results}
+\section{Discussion}
+\section{Conclusion}
+\section*{Acknowledgment}
+The authors would like to thank your mum.
+
+
+The authors would like to thank...
+
+
+
+
+
+% trigger a \newpage just before the given reference
+% number - used to balance the columns on the last page
+% adjust value as needed - may need to be readjusted if
+% the document is modified later
+%\IEEEtriggeratref{8}
+% The "triggered" command can be changed if desired:
+%\IEEEtriggercmd{\enlargethispage{-5in}}
+
+% references section
+
+% can use a liography generated by BibTeX as a .bbl file
+% BibTeX documentation can be easily obtained at:
+% http://mirror.ctan.org/biblio/bibtex/contrib/doc/
+% The IEEEtran BibTeX style support page is at:
+% http://www.michaelshell.org/tex/ieeetran/bibtex/
+\bibliographystyle{IEEEtran}
+% argument is your BibTeX string definitions and bibliography database(s)
+%\bibliography{IEEEabrv,../bib/paper}
+%
+% <OR> manually copy in the resultant .bbl file
+% set second argument of \begin to the number of references
+% (used to reserve space for the reference number labels box)
+\bibliography{ROCO504}{}
+\bibliographystyle{IEEEtran}
+
+\begin{thebibliography}{30}
+	
+	
+	\bibitem{Simpson} Homer J. Simpson. \textsl{Mmmmm...donuts}.
+	Evergreen Terrace Printing Co., Springfield, SomewhereUSA, 1998
+	
+	\bibitem{rosserial} ROSserial Wiki \textsl{Mmmmm...donuts}.
+	Evergreen Terrace Printing Co., Springfield, SomewhereUSA, 1998
+	
+	
+	
+	@online{rosserial,
+		author = {Misc},
+		title = {Rosserial wiki},
+		date = {30/12/17},
+		url = {http://wiki.ros.org/rosserial},
+	}
+	\bibitem{IEEEhowto:kopka}
+	H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
+	0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
+	
+	
+	\bibitem{b1} G. Eason, B. Noble, and I. N. Sneddon, ``On certain integrals of Lipschitz-Hankel type involving products of Bessel functions,'' Phil. Trans. Roy. Soc. London, vol. A247, pp. 529--551, April 1955.
+	\bibitem{b2} J. Clerk Maxwell, A Treatise on Electricity and Magnetism, 3rd ed., vol. 2. Oxford: Clarendon, 1892, pp.68--73.
+	\bibitem{b3} I. S. Jacobs and C. P. Bean, ``Fine particles, thin films and exchange anisotropy,'' in Magnetism, vol. III, G. T. Rado and H. Suhl, Eds. New York: Academic, 1963, pp. 271--350.
+	\bibitem{b4} K. Elissa, ``Title of paper if known,'' unpublished.
+	\bibitem{b5} R. Nicole, ``Title of paper with only first word capitalized,'' J. Name Stand. Abbrev., in press.
+	\bibitem{b6} Y. Yorozu, M. Hirano, K. Oka, and Y. Tagawa, ``Electron spectroscopy studies on magneto-optical media and plastic substrate interface,'' IEEE Transl. J. Magn. Japan, vol. 2, pp. 740--741, August 1987 [Digests 9th Annual Conf. Magnetics Japan, p. 301, 1982].
+	\bibitem{b7} M. Young, The Technical Writer's Handbook. Mill Valley, CA: University Science, 1989.
+	
+	
+\end{thebibliography}
+
+
+% that's all folks
+\end{document}
+
+
