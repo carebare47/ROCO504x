@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6530) (preloaded format=pdflatex 2017.12.28)  10 JAN 2018 20:12
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6530) (preloaded format=pdflatex 2017.12.28)  10 JAN 2018 21:19
 entering extended mode
 **./ROCO504-report.tex
 (ROCO504-report.tex
@@ -864,23 +864,23 @@ Missing character: There is no ‚ in font ptmr7t!
 Missing character: There is no Ä in font ptmr7t!
 Missing character: There is no ù in font ptmr7t!
 
-Underfull \hbox (badness 2073) in paragraph at lines 596--597
+Underfull \hbox (badness 2073) in paragraph at lines 595--596
  \OT1/ptm/m/it/10 1) Mi-cro mo-tors: [][] \OT1/ptm/m/n/10 The first was to use 
 high torque
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 601--603
+Underfull \hbox (badness 10000) in paragraph at lines 600--602
 
  []
 
 [3] [4]
-Underfull \hbox (badness 10000) in paragraph at lines 800--802
+Underfull \hbox (badness 10000) in paragraph at lines 799--801
 [][]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 800--802
+Underfull \hbox (badness 10000) in paragraph at lines 799--801
 
  []
 
@@ -891,27 +891,25 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 <ROCO504-overall.png, id=31, 1860.9525pt x 1742.51pt>
 File: ROCO504-overall.png Graphic file (type png)
 <use ROCO504-overall.png>
-Package pdftex.def Info: ROCO504-overall.png  used on input line 860.
+Package pdftex.def Info: ROCO504-overall.png  used on input line 859.
 (pdftex.def)             Requested size: 1860.94797pt x 1742.50577pt.
 
 [6]
+Overfull \hbox (1.65898pt too wide) in paragraph at lines 891--891
+ [][][][]\OT1/ptm/m/n/10 Calculate/set 
+ []
+
+
 Overfull \hbox (1.65898pt too wide) in paragraph at lines 892--892
  [][][][]\OT1/ptm/m/n/10 Calculate/set 
  []
 
-
-Overfull \hbox (1.65898pt too wide) in paragraph at lines 893--893
- [][][][]\OT1/ptm/m/n/10 Calculate/set 
- []
-
 Missing character: There is no ‚ in font ptmr7t!
 Missing character: There is no Ä in font ptmr7t!
 Missing character: There is no ô in font ptmr7t!
 Missing character: There is no ‚ in font ptmr7t!
 Missing character: There is no Ä in font ptmr7t!
 Missing character: There is no ô in font ptmr7t!
-Missing character: There is no ¬ in font ptmr7t!
-Missing character: There is no £ in font ptmr7t!
 [7 <./ROCO504-overall.png>] (ROCO504-report.bbl)
 
 ** Conference Paper **
@@ -932,7 +930,7 @@ LaTeX Warning: There were multiply-defined labels.
 Here is how much of TeX's memory you used:
  16966 strings out of 495212
  357806 string characters out of 3181458
- 420486 words of memory out of 3000000
+ 420618 words of memory out of 3000000
  19907 multiletter control sequences out of 15000+200000
  46023 words of font info for 94 fonts, out of 3000000 for 9000
  17 hyphenation exceptions out of 8191
@@ -949,7 +947,7 @@ ype1/urw/times/utmb8a.pfb></home/tom/.miktex/texmfs/install/fonts/type1/urw/tim
 es/utmbi8a.pfb></home/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmr8a.p
 fb></home/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmr8a.pfb></home/to
 m/.miktex/texmfs/install/fonts/type1/urw/times/utmri8a.pfb>
-Output written on ROCO504-report.pdf (8 pages, 274052 bytes).
+Output written on ROCO504-report.pdf (8 pages, 274372 bytes).
 PDF statistics:
  84 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
