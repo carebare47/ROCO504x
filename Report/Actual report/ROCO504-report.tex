@@ -90,6 +90,7 @@
 \usepackage{algorithmic}
 \usepackage{algorithm}
 \usepackage{graphicx}
+\usepackage{gensymb}
 \usepackage{textcomp}
 \usepackage{tikz}
 \usetikzlibrary{calc,patterns,angles,quotes,shapes,arrows, chains}
@@ -554,7 +555,7 @@ CDDRs are a type of parallel manipulator wherein the end-effector link is suppor
 \subsection{Requirements}
 
 \subsection{Solutions}
-To achieve the required speed and torque, several motor solutions were designed. 
+To achieve the required speed and torque several motor solutions were evaluated. 
 \subsubsection{Micro motors}\label{gearbox_sol}
 The first was to use high torque ($300Ncm$) encoded DC motors (E192.24.125). The maximum speed of these motors was 33rpm. In order to achieve the required gripper speed of 1.5m/s a gearbox was needed.
 \begin{equation}
@@ -564,7 +565,7 @@ The first was to use high torque ($300Ncm$) encoded DC motors (E192.24.125). The
 \end{equation}
 Where $d$ is the spool diameter ($10cm$), $s$ is required cord speed ($150cm/s$) and $r$ is motor speed ($0.55 \ RPM$). This ratio would result in a maximum cord velocity of $149.9 cm/s$.\\ 
 \subsubsection{Stepper motors}
-Another solution was to use stepper motors. Four SST58D3820 stepper motors were acquired. These motors are specified to hold $7.3Kg.cm$, which drops to $6.5Kg.cm$ at a frequency of 1200 pulses per second (PPS). The motors step size was $1.8\textdegree$, giving a max speed of 6RPS and thus a maximum cord velocity of $188.5cm/s$. \begin{equation}
+Another solution was to use stepper motors. Four SST58D3820 stepper motors were acquired. These motors are specified to hold $7.3Kg.cm$, which drops to $6.5Kg.cm$ at a frequency of 1200 pulses per second (PPS). In full step mode the stepper shaft rotates $1.8\degree$ per step giving a max speed of 6RPS and thus a maximum cord velocity of $188.5cm/s$. \begin{equation}
 \begin{aligned}
 \frac{1.8\cdot 1200}{360} = 6 RPS
 \end{aligned}
@@ -652,19 +653,19 @@ Forward Kinematics:
 \end{equation}
 \subsection{Prototype}
 \subsubsection{Hardware}
-These solutions led to the development of the initial prototype. This robot used four stepper motors to drive the gripper. Each motor was driven by a HST-8325B stepper driver with control signals generated on a teensy3.2 running the arduino firmware. 
+These solutions led to the development of the initial prototype. This robot used four stepper motors to drive the gripper. Each motor was driven by a TB6600 stepper driver with control signals generated on a Teensy 3.2 running the arduino firmware. 
 \subsubsection{Software}
-The teensy was using the rosserial library to receive the targets CofM from the computer. The teensy then offset the coordinate system so that pixel 0,0 was in the centre of the image. The teensy kept track of all motor positions, and when a new CofM arrived the current gripper position was calculated from the motor positions using the forward kinematics described by equation \ref{forward_kinematics_1} in \ref{kinematic_solution_1}. The program generates motor commands designed to move the gripper so that the centre of the camera image contains the CofM of the target. This is known as visual servoing. The x and y error between the centre of the camera image and the target is calculated, generating a vector that points towards the target. This vector is translated into the change in length of each cord required to center the gripper over the tracked target using the inverse kinematics described by equation \ref{inverse_kinematics_1} in \ref{kinematic_solution_1}. The desired gripper location is checked to see if it has left the bounds of the working area. If it has, movement in the direction of the axis which has been breached is set to zero. Finally, motor speeds are calculated from the desired changes in lengths as is described in equation \ref{motor_speed_equation} in section \ref{motor_speed_section}.
+The Teensy was using the rosserial library to receive the targets CofM from the computer. The teensy then offset the coordinate system so that pixel 0,0 was in the centre of the image. The teensy kept track of all motor positions, and when a new CofM arrived the current gripper position was calculated from the motor positions using the forward kinematics described by equation \ref{forward_kinematics_1} in \ref{kinematic_solution_1}. The program generates motor commands designed to move the gripper so that the centre of the camera image contains the CofM of the target. This is known as visual servoing. The x and y error between the centre of the camera image and the target is calculated, generating a vector that points towards the target. This vector is translated into the change in length of each cord required to center the gripper over the tracked target using the inverse kinematics described by equation \ref{inverse_kinematics_1} in \ref{kinematic_solution_1}. The desired gripper location is checked to see if it has left the bounds of the working area. If it has, movement in the direction of the axis which has been breached is set to zero. Finally, motor speeds are calculated from the desired changes in lengths as is described in equation \ref{motor_speed_equation} in section \ref{motor_speed_section}.
 \subsection{Further problems}
 \subsubsection{Gearbox}
 A gearbox ratio of 1:8.68 was chosen as can be seen in \ref{gearbox_sol}. If a 500g gripper were to be raised along either vertical wall of the workspace, the output of the gearbox raising it would experience $5Kg.cm$ of force. Transferring this force through the gearbox, a 1cm input gear would experience $43.4 Kg.cm$ of force. By making the length of each gear inversely proportional to its accumulated speed multiplier, the stress felt by the input gear could be spread out over the rest of the gears. However, as this would have more than doubled the size of our original gearbox (SIZESXXXXXXXXXXX), the decision was made to use stepper motors instead.
 \subsubsection{Stepper Drivers}
-Four HST-8325B were purchased to drive the SST58D3820 stepper motors. The HST-8325B is designed to deliver up to 3.5A RMS. The drivers current can be limited down to 0.8A RMS in eight steps. The performance in the SST58D3820 datasheet is rated for when the motors are being supplied with 2.0A per phase. From this we can see that the stepper motor requires 250mA per phase more than the driver can provide. 
+Four TB6600 were purchased to drive the SST58D3820 stepper motors. The TB6600 is designed to deliver up to 3.5A RMS. The drivers current can be limited down to 0.8A RMS in eight steps. The performance in the SST58D3820 datasheet is rated for when the motors are being supplied with 2.0A per phase. From this we can see that the stepper motor requires 250mA per phase more than the driver can provide. 
 An issue arose 
 
 drivers were connected to the stepper motors and the current to the driver was measured, the stepper driver 
 \subsubsection{Skipping steps}\label{motor_issues}
-The prototype was assembled with SST58D3820 stepper motors and HST-8325B drivers. When the robot was switched on the motors could barely hold the weight of the gripper when stationary. An experiment was performed where commands were sent to the robot instructing the gripper to move to the top corner and then return to the centre, with cord lengths measured before and after. It was found that requesting any movement of the gripper resulted in the stepper motors skipping steps, often resulting in the gripper dropping tens of centimetres over short movements. Further investigation showed that the stepper drivers were drawing minimal current, and would overheat and shutdown if their current limit was set to more than half of what they were rated for. Even with a current limit set at 2.0A RMS, each stepper never drew more than 1.0A. This issue could have been partly mitigated if the motors were encoded.
+The prototype was assembled with SST58D3820 stepper motors and TB6600 drivers. When the robot was switched on the motors could barely hold the weight of the gripper when stationary. An experiment was performed where commands were sent to the robot instructing the gripper to move to the top corner and then return to the centre, with cord lengths measured before and after. It was found that requesting any movement of the gripper resulted in the stepper motors skipping steps, often resulting in the gripper dropping tens of centimetres over short movements. Further investigation showed that the stepper drivers were drawing minimal current, and would overheat and shutdown if their current limit was set to more than half of what they were rated for. Even with a current limit set at 2.0A RMS, each stepper never drew more than 1.0A. This issue could have been partly mitigated if the motors were encoded.
 \subsubsection{Kinematics} \label{kinematic_solution_3}
 Initially the kinematic solution considered the gripper as a point. This worked for preliminary testing, but soon proved to be a problem when the limited torque of the stepper motors required equal tension on all cords at all times. This led to the development of the following kinematic model, which considered the gripper as a square. 
 
@@ -755,7 +756,7 @@ Forward Kinematics:
 \end{aligned}
 \end{equation}
 \subsubsection{Motor velocities}\label{motor_vel_problem}
-For the tension to remain equal on all cords during motion of the gripper, the motors must turn at different rates. For example: if the gripper starts in the centre of the frame and moves upwards, the top two lengths will shorten and the bottom two cords will get longer. To maintain a uniform velocity of the gripper, the top two motors must slow down and the bottom two must speed up.
+For the tension to remain equal on all cords during motion of the gripper, the motors must turn at different rates. For example: if the gripper starts in the centre of the frame and moves upwards, the top two lengths will shorten and the bottom two cords will get longer. To maintain a uniform velocity of the gripper, the top two motors must slow down and the bottom two must speed up. For gripper trajectories constrained to the center of one axis this isn't much of a problem, but for trajectories traversing multiple axis xxxxxxxxxxx
 \subsubsection{Motors}
 \subsubsection{Arduino}
 \subsection{Redesign}
@@ -778,10 +779,10 @@ l_1\\l_2\\l_3\\l_4\\
 \end{equation}
 Where $g$ is the global speed scalar and $s$ contains the speed of each motor.
 \subsubsection{Servos}
-Due to the points mentioned in \ref{motor_issues}, the decision was made to change the motors to Dynamixel MX-64 servos. The MX-64 can supply $0.6Kg.cm$ at 62 RPM, giving a top gripper speed of $0.32m/s$ which is considerably slower than our requirement. The MX-64 servos communicate over either a RS-485 or a TTL bus and can be daisy-chained if required. A single dynamixel servo on a bus allowed us to send 60 control packets per second. Due to the nature of the communication protocols involved in the dynamixel bus (clarify), the rate at which commands could be sent to each servo were reduced with each successive servo added to the daisy chain. Initially, the four servos responsible for translating the end-effector were daisy-chained to a single dynamixel bus, resulting in a command rate of 7Hz. This was increased to 15Hz by increasing the baud rate of the servos from 57.6kb/s to 1Mb/s. The reduced control rate led to the decision to use separate busses for each time-critical motor, returning the command rate to 60Hz. A separate bus was used for all five clamps, and a final sixth bus was used to actuate the gripper as the uncertainty of the command latency to this servo was required to be as low as possible in order to successfully pre-empt and act upon the target landing in the gripper. 
+Due to the points mentioned in \ref{motor_issues} the decision was made to change the motors to Dynamixel MX-64 servos. The MX-64 can supply $0.6Kg.cm$ at 62 RPM, giving a top gripper speed of $0.32m/s$ which is considerably slower than our requirement. The MX-64 servos communicate over either an RS-485 or a TTL bus and can be daisy-chained if required. Due to the nature of the communication protocols involved in the dynamixel bus (clarify), the rate at which commands could be sent to each servo were reduced with each successive servo added to the daisy chain. Initially the four servos responsible for translating the end-effector were daisy-chained to a single dynamixel bus resulting in a command rate of 7Hz. This was increased to 15Hz by increasing the baud rate of the servos from 57.6kb/s to 1Mb/s. The reduced control rate led to the decision to use separate busses for each time-critical motor resulting in a command rate per motor of 60Hz. Another bus was used for all five clamps, and a final sixth bus was used to actuate the gripper as the uncertainty of the command latency to this servo was required to be as low as possible in order to successfully pre-empt and act upon the target landing in the gripper. 
 
 \subsubsection{Processor}
-As servos were to be used instead of stepper motors, a microcontroller was no longer required for the control of the end-effector. Software previously running on the Teensy (forward/inverse kinematics, boundary checking etc...) was ported to a C++ program on a laptop using ROS on Ubuntu. 
+As servos were to be used instead of stepper motors, a microcontroller was no longer required for the control of the end-effector. Software previously running on the Teensy (forward/inverse kinematics, boundary checking etc...) was ported to a C++ program on a laptop running ROS on Ubuntu. 
 \subsection{Final solution}
 
 
@@ -873,11 +874,8 @@ Figure~\ref{fig:HighLevelDiagram} shows the high-level software flow diagram of 
 \subsection{Discussion}
 \section{Overall Discussion}
 
-
+~\cite{Sorg2003VisualTA}
 \section{Conclusion}
-The conclusion goes here.
-
-
 
 
 % conference papers do not normally have an appendix

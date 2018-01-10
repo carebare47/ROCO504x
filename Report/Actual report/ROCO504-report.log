@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6530) (preloaded format=pdflatex 2017.12.28)  4 JAN 2018 22:30
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6530) (preloaded format=pdflatex 2017.12.28)  10 JAN 2018 18:06
 entering extended mode
 **./ROCO504-report.tex
 (ROCO504-report.tex
@@ -235,6 +235,9 @@ File: pdftex.def 2017/12/07 v1.0i Graphics/color driver for pdftex
 ))
 \Gin@req@height=\dimen135
 \Gin@req@width=\dimen136
+)
+(/home/tom/.miktex/texmfs/install/tex/latex/was/gensymb.sty
+Package: gensymb 2003/07/02 v1.0 (WaS)
 )
 (/home/tom/.miktex/texmfs/install/tex/latex/base/textcomp.sty
 Package: textcomp 2017/04/05 v2.0i Standard LaTeX package
@@ -721,25 +724,25 @@ LaTeX Warning: Label `fig:HighLevelDiagram' multiply defined.
 )
 \openout1 = `ROCO504-report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 320.
-LaTeX Font Info:    ... okay on input line 320.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 320.
-LaTeX Font Info:    ... okay on input line 320.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 320.
-LaTeX Font Info:    ... okay on input line 320.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 320.
-LaTeX Font Info:    ... okay on input line 320.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 320.
-LaTeX Font Info:    ... okay on input line 320.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 320.
-LaTeX Font Info:    ... okay on input line 320.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 320.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 320.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 321.
+LaTeX Font Info:    ... okay on input line 321.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 321.
+LaTeX Font Info:    ... okay on input line 321.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 321.
+LaTeX Font Info:    ... okay on input line 321.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 321.
+LaTeX Font Info:    ... okay on input line 321.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 321.
+LaTeX Font Info:    ... okay on input line 321.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 321.
+LaTeX Font Info:    ... okay on input line 321.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 321.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 321.
 
  (/home/tom/.miktex/texmfs/install/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 320.
+LaTeX Font Info:    ... okay on input line 321.
 
 -- Lines per column: 56 (exact).
 (/home/tom/.miktex/texmfs/install/tex/context/base/supp-pdf.mkii
@@ -811,6 +814,18 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
+\symgns@font=\mathgroup6
+LaTeX Font Info:    Overwriting symbol font `gns@font' in version `bold'
+(Font)                  TS1/ptm/m/n --> TS1/ptm/bx/n on input line 321.
+Package gensymb Info: Math companion symbols declared on input line 321.
+LaTeX Info: Redefining \degree on input line 321.
+LaTeX Info: Redefining \celsius on input line 321.
+Package gensymb Info: Using text companion symbols for \degree, \celsius and \p
+erthousand on input line 321.
+LaTeX Info: Redefining \ohm on input line 321.
+Package gensymb Info: Using \textohm for \ohm on input line 321.
+Package gensymb Info: Using \textmu for \micro on input line 321.
+
 ABD: EveryShipout initializing macros (ROCO504-report.toc
 LaTeX Font Info:    Try loading font information for U+msa on input line 2.
 
@@ -821,6 +836,11 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 2.
 
 (/home/tom/.miktex/texmfs/install/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+LaTeX Font Info:    Try loading font information for TS1+ptm on input line 2.
+
+(/home/tom/.miktex/texmfs/install/tex/latex/psnfss/ts1ptm.fd
+File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 ))
 \tf@toc=\write4
 \openout4 = `ROCO504-report.toc'.
@@ -830,37 +850,25 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 {/usr/share/texlive/texmf-dist/fonts/map/pdftex/updmap/pdftex.map}
 
 ]
-Underfull \hbox (badness 2073) in paragraph at lines 559--560
+Underfull \hbox (badness 2073) in paragraph at lines 560--561
  \OT1/ptm/m/it/10 1) Mi-cro mo-tors: [][] \OT1/ptm/m/n/10 The first was to use 
 high torque
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 564--566
+Underfull \hbox (badness 10000) in paragraph at lines 565--567
 
  []
 
-
-LaTeX Warning: Command \textdegree invalid in math mode on input line 567.
-
-LaTeX Font Info:    Try loading font information for TS1+ptm on input line 567.
-
-(/home/tom/.miktex/texmfs/install/tex/latex/psnfss/ts1ptm.fd
-File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
-)
-
-LaTeX Warning: Command \textdegree invalid in math mode on input line 567.
-
-Missing character: There is no ° in font cmr10!
 [2
 
 ] [3]
-Underfull \hbox (badness 10000) in paragraph at lines 735--737
+Underfull \hbox (badness 10000) in paragraph at lines 736--738
 [][]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 735--737
+Underfull \hbox (badness 10000) in paragraph at lines 736--738
 
  []
 
@@ -871,19 +879,23 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 <ROCO504-overall.png, id=28, 1860.9525pt x 1742.51pt>
 File: ROCO504-overall.png Graphic file (type png)
 <use ROCO504-overall.png>
-Package pdftex.def Info: ROCO504-overall.png  used on input line 795.
+Package pdftex.def Info: ROCO504-overall.png  used on input line 796.
 (pdftex.def)             Requested size: 1860.94797pt x 1742.50577pt.
-
-Overfull \hbox (1.65898pt too wide) in paragraph at lines 827--827
- [][][][]\OT1/ptm/m/n/10 Calculate/set 
- []
-
 
 Overfull \hbox (1.65898pt too wide) in paragraph at lines 828--828
  [][][][]\OT1/ptm/m/n/10 Calculate/set 
  []
 
-(ROCO504-report.bbl) [5 <./ROCO504-overall.png>]
+
+Overfull \hbox (1.65898pt too wide) in paragraph at lines 829--829
+ [][][][]\OT1/ptm/m/n/10 Calculate/set 
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+(ROCO504-report.bbl [5 <./ROCO504-overall.png>])
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -903,11 +915,11 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 16912 strings out of 495212
- 357090 string characters out of 3181458
- 419389 words of memory out of 3000000
- 19857 multiletter control sequences out of 15000+200000
- 44767 words of font info for 90 fonts, out of 3000000 for 9000
+ 16963 strings out of 495212
+ 357768 string characters out of 3181458
+ 418476 words of memory out of 3000000
+ 19904 multiletter control sequences out of 15000+200000
+ 46023 words of font info for 94 fonts, out of 3000000 for 9000
  17 hyphenation exceptions out of 8191
  55i,13n,71p,1371b,938s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/home/tom/.miktex/texmfs/install/fonts/enc/dvips/base/8r.enc}</home/tom/.mik
@@ -922,7 +934,7 @@ ype1/urw/times/utmb8a.pfb></home/tom/.miktex/texmfs/install/fonts/type1/urw/tim
 es/utmbi8a.pfb></home/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmr8a.p
 fb></home/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmr8a.pfb></home/to
 m/.miktex/texmfs/install/fonts/type1/urw/times/utmri8a.pfb>
-Output written on ROCO504-report.pdf (6 pages, 259106 bytes).
+Output written on ROCO504-report.pdf (6 pages, 259490 bytes).
 PDF statistics:
  76 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
