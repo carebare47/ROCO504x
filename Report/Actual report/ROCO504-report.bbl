@@ -38,4 +38,16 @@ R.~L. Williams~II and P.~Gallina, ``Translational planar cable-direct-driven
 M.~Sorg, ``Visual tracking and grasping of a dynamic object: from the human
   example to an autonomous robotic system,'' 2003.
 
+\bibitem{forpheus}
+\BIBentryALTinterwordspacing
+Omron.com, ``Overview of forpheus technologies,'' 2017. [Online]. Available:
+  \url{https://www.omron.com/innovation/forpheus\_technology.html}
+\BIBentrySTDinterwordspacing
+
+\bibitem{festofin}
+\BIBentryALTinterwordspacing
+Festo, ``Bionictripod with fingripper,'' 2009. [Online]. Available:
+  \url{https://www.festo.com/cms/en\_corp/9779.htm}
+\BIBentrySTDinterwordspacing
+
 \end{thebibliography}
