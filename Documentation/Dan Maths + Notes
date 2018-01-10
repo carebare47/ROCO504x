@@ -1,0 +1,35 @@
+Throwing force
+
+Throwing force capable from motor rotation
+	Numbers required: 
+		Motor speeds
+
+Throwing force capable with bungee without clamps
+	Motor stall torques
+
+Throwing force capable with clamps
+	Throwing motor torque
+	Maximum extension of bungee = 106cm
+	Force/extension of bungee, extension = 106-50.25
+
+Vision: Kalman filter
+In an attempt to keep an idea of the thrown objects trajectory should the camera system lose track of the object we implemented a 2d kalman filter. We found that whilst this would give an acceptable prediction of object position in the camera feed, in reality the object was often lost before its maximum height was reached. This meant that the prediction from the kaman filter would continue vertically, making the solution inappropriate for our purpose. In future work as it is possible to estimate the velocity of a ball of known size from its circumference in the camera feed it is would be possible to combine this with our 2d kaman filter to acquire a 3d estimate of trajectory.
+
+False positive correction/checking
+As simple colour thresholding can be susceptible to false positives, we implemented a base shape check by drawing a box around acquired contours and ensuring the ratio between perpendicular sides was reasonable. Should this still give false positive readings a weighting was set by the centre of the current contour compared to the centre of the previous contour. This worked well as long as the object was not lost while a false positive contour was detected.
+
+Required speed of motors calculator
+	Based on throw velocity of 5m/s at a 45 degree angle
+	Time of flight = 0.721048s
+	Distance = 2.54929m
+	Max height = 0.637323
+Work space of catcher = 1.145m
+Diameter of spool = 10cm = 0.1m
+Circumference of spool = 31.4159cm = 0.314159m
+Required travel speed from corner to corner based off example = 1.6357m/s
+Rotations per second = 5.2rps = 312rpm
+
+Based off a required speed of 5.2 rps, a 10.4x multiplier gear box is required
+
+Maximum torque required to lift a mass of 0.5kg = 5kg.cm
+This would mean a torque of 50.2kg.cm(492Ncm) at the input stage of the gearbox
