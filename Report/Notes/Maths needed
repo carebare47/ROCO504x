@@ -1,17 +1,22 @@
+DONE - DEMI'S PICTURE DOESN'T CALCULATE WHERE BALL LANDS (AT 2.5M)
 Example to show how fast the robot has to move if a ball were thrown from three meters away
 
 data on tracking distance vs resolution (and expoure times)
 
+DONE
 Why does point gripper not work?
 
-frame working area
+DONE (0.64M^2)
+frame working area - 0.64 square meters (0.895 * 0.715)
 
 Minimum gripper speed (closing/opening)
 
+DONE
 nice gearbox calcs
 
 How long does the arduino node take to run?
 
+DONE
 Force storage: Stepper torque, dynamixel torque, force storage to throw distance
 
 Speed service call duration
