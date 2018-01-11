@@ -1,0 +1,74 @@
+Abstract
+Introduction
+
+Design Process:
+	Research
+	Methodology
+
+Implementation
+	Theorised solutions
+		Inc. Vision & untested ideas
+	Prototype
+		Analysis of theoretical solutions
+	Redesign
+	Final Prototype
+Experiments
+	Object detection
+	Gripper position control
+	catching
+	throwing
+	latencies/timing
+Summary
+Conclusion
+References
+
+To do:
+Restructure
+Write & draw throw sequence
+Experiments
+	Write up
+	another experiement
+Diagrams
+Pictures
+video?
+methodology
+intro
+summary
+conclusion
+
+Required speed of motors calculator
+	Based on throw velocity of 5m/s at a 45 degree angle
+	Time of flight = 0.721048s
+	Distance = 2.54929m
+	Max height = 0.637323
+Work space of catcher = 1.145m
+Diameter of spool = 10cm = 0.1m
+Circumference of spool = 31.4159cm = 0.314159m
+Required travel speed from corner to corner based off example = 1.6357m/s
+Rotations per second = 5.2rps = 312rpm
+
+Based off a required speed of 5.2 rps, a 10.4x multiplier gear box is required
+
+Maximum torque required to lift a mass of 0.5kg = 5kg.cm
+This would mean a torque of 50.2kg.cm(492Ncm) at the input stage of the gearbox
+
+stepper max torque sst58d320 = 9kg.cm, usable = 7kg.cm
+
+
+
+New mapping:
+Prototype(Motors) += Further problems (stepper drivers) += experiment
+solutions -> Prototype
+Further problems (Gearbox) -> Prototype (Motors)
+Further problems (skipping steps) -> experiment
+IMplementation += control diagrams
+
+
+
+
+
+
+
+
+
+
