@@ -1,12 +1,16 @@
 This is BibTeX, Version 0.99dThe top-level auxiliary file: ROCO504-report-reorganised.aux
 The style file: IEEEtran.bst
-Illegal, another \bibstyle command---line 87 of file ROCO504-report-reorganised.aux
+Illegal, another \bibstyle command---line 104 of file ROCO504-report-reorganised.aux
  : \bibstyle
  :          {IEEEtran}
 I'm skipping whatever remains of this command
 Database file #1: ROCO504.bib
 Warning--entry type for "forpheus" isn't style-file defined
 --line 120 of file ROCO504.bib
+Repeated entry---line 128 of file ROCO504.bib
+ : @inproceedings{6385963
+ :                       ,
+I'm skipping whatever remains of this entry
 Repeated entry---line 165 of file ROCO504.bib
  : @website{forpheus
  :                  ,
@@ -21,6 +25,7 @@ I'm skipping whatever remains of this entry
 -- http://www.michaelshell.org/tex/ieeetran/bibtex/
 -- See the "IEEEtran_bst_HOWTO.pdf" manual for usage information.
 Warning--empty booktitle in Sorg2003VisualTA
+Warning--missing school in malzahn2014modeling
 
 Done.
-(There were 3 error messages)
+(There were 4 error messages)

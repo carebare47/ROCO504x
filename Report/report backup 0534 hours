@@ -714,14 +714,13 @@ Section \ref{research} of this document discusses the background research, linki
 	\subsubsection{Optical Flow (Farneback)}
 	Optical flow can break up the motion between two frames of an image into lateral and vertical movements. As an object increases in size between images its motion can be used to create an outline around the object. This method was hampered due to interference from horizontal and vertical movements, where methods to reduce this became too complex to implement within the projects timeframe.
 	
-	\subsubsection{Kalman fiter}
-	To protect against the object being obscured when moving towards the gripper a 2D kalman filter was implemented. It was found that, whilst an acceptable prediction of object position was calculated, the object was often lost before its maximum height was reached. This resulted in the prediction from the kaman filter continuing vertically, making the solution inappropriate for our purpose. In future work as it is possible to estimate the velocity of a ball of known size from its circumference in the camera feed it is would be possible to combine this with our 2d kalman filter to acquire a 3d estimate of trajectory. If an algorithm was produced to detect the ball had reached its maximum height and had begun falling, the predictive features of the kalman filter could be used to help with latency issues and slow motors.
-	
 	\subsubsection{Pyramid Scaling}
 	The third method revolved around how smaller objects would show up less on lower resolution images (or in images with a larger blur applied). This method is equivalent to using a variety of difference of Gaussians (DoGs) to detect edges and attempting to determine the size of an object between the DoGs. The main issue with this method was, again, lateral motion hiding the depth information.
 	
 	\subsubsection{YOLO}
-	As a final method the You Only Look Once (YOLO) neural-network based object detection system was implemented to detect a small sample of objects. This method was hampered again by hardware capabilities as, even with YOLO-Tiny, a maximum of 7 frames per second were achieved which was considered too slow for the projects application.\subsection{Further problems}\subsubsection{Kinematics}\label{kinematic_solution_3}
+	As a final method the You Only Look Once (YOLO) neural-network based object detection system was implemented to detect a small sample of objects. This method was hampered again by hardware capabilities as, even with YOLO-Tiny, a maximum of 7 frames per second were achieved which was considered too slow for the projects application. 
+	\subsection{Further problems}
+	\subsubsection{Kinematics} \label{kinematic_solution_3}
 	Initially the kinematic solution considered the gripper as a point. This worked for preliminary testing, but soon proved to be a problem when the limited torque of the stepper motors required equal tension on all cords at all times. This led to the development of the following kinematic model, which considered the gripper as a square. 
 	
 	\begin{tikzpicture}[scale=1.5]
@@ -817,18 +816,35 @@ Section \ref{research} of this document discusses the background research, linki
 	\subsubsection{Motor velocities}\label{motor_vel_problem}
 	For the tension to remain equal on all cords during motion of the gripper, the motors must turn at different rates. For example: if the gripper starts in the centre of the frame and moves upwards, the top two lengths will shorten and the bottom two cords will get longer. To maintain a uniform velocity of the gripper, the top two motors must slow down and the bottom two must speed up. For gripper trajectories constrained to the centre of one axis this isn't much of a problem, but for trajectories traversing multiple axis the motors pull against each other resulting in steps being skipped and tension lost.
 
-
-
+	\subsubsection{Motor velocities}\label{motor_speed_section}
+	To address the issue raised in \ref{motor_vel_problem} a simple speed scaling system was devised. This algorithm was called once per main loop after the required changes in lengths are calculated. The algorithm takes in the requested changes in length of each cord and divides each change in length by the largest. The relative speeds of each motor are then scaled by the global speed scalar.
+	\begin{equation}\label{motor_speed_equation}
+	\begin{aligned}
+	&\vec{l} = \begin{bmatrix}
+	l_1\\l_2\\l_3\\l_4\\
+	\end{bmatrix}\quad
+	%&x = \max\{l_1,...,l_4\}\\
+	&x = \max\left(\vec{l}\right)\\\\
+	&x = \max\vec{l}\\\\
+	&\vec{s} = \frac{g}{x}\cdot \vec{l}\\
+	%&s_1 = \frac{l_1}{x}\\
+	%&s_2 = \frac{l_2}{x}\\
+	%&s_3 = \frac{l_3}{x}\\git sat
+	%&s_4 = \frac{l_4}{x}\\
+	\end{aligned}
+	\end{equation}
+	Where $g$ is the global speed scalar and $s$ contains the speed of each motor. 
+	\subsubsection{Servos and multi-threading}
+	Due to the points mentioned in \ref{motor_issues} the decision was made to change the motors to Dynamixel MX-64 servos. The MX-64 can supply $60Kg.cm$ at 62 RPM, giving a top gripper speed of $0.32m/s$ which is considerably slower than our requirement. The MX-64 servos communicate over either an RS-485 or a TTL bus and can be daisy-chained if required. Due to the nature of the communication protocols involved in the dynamixel bus (clarify), the rate at which commands could be sent to each servo were reduced with each successive servo added to the daisy chain. Initially the four servos responsible for translating the end-effector were daisy-chained to a single dynamixel bus resulting in a command rate of 7Hz. This was increased to 15Hz by increasing the baud rate of the servos from 57.6kb/s to 1Mb/s. The reduced control rate led to the decision to use separate busses for each time-critical motor resulting in a command rate per motor of 60Hz. Another bus was used for all five clamps, and a final sixth bus was used to actuate the gripper as the uncertainty of the command latency to this servo was required to be as low as possible in order to successfully pre-empt and act upon the target landing in the gripper. 
+	
+	When a change in servo speed is requested, the dynamixel driver blocks the process thread that requested the change. The driver waits for a response from the motor before it allows the thread to continue. This reduced the rate at which motor instructions left the kinematic controller program to 10Hz. Creating four additional process threads for each of the speed-set service calls brought the loop rate back to to 60Hz.
+	
+	\subsubsection{Processor}
+	As servos were to be used instead of stepper motors, a microcontroller was no longer required for the control of the end-effector. Software previously running on the Teensy (forward/inverse kinematics, boundary checking etc...) was ported to a C++ program on a laptop running ROS on Ubuntu. 
 
 	
 	
 	\section{Implementation}
-	\begin{figure}\label{fullPicture}
-		\centering
-		
-		\includegraphics[scale=0.23]{finished_robot.jpg}
-		\caption{The final prototype}
-	\end{figure}
 	\subsection{Software}
 	Frames enter the object tracking node at a rate of 60FPS. The object tracker performs a series of filters in different colour spaces on the image before calculating its centre of mass. This coordinate is published to the kinematic controller 17.5ms after the frame enters the object tracker. Upon entering the kinematic controller, the coordinate frame is offset so that the center of the camera image is now at pixel 0,0. The required change in length of each cord is then calculated and set (via the method described in \ref{kinematic_solution_3}). From the desired changes in length, the required speed of each motor is calculated and set. The kinematic controller node then calculates the current gripper position in order to calculate the changes in length for the next loop.
 	Figure~\ref{fig:HighLevelDiagram} shows the high-level software flow diagram of the robot.
@@ -899,32 +915,6 @@ Section \ref{research} of this document discusses the background research, linki
 		\label{fig:HighLevelDiagram}
 	\end{figure}
 	
-		\subsection{Motor velocities}\label{motor_speed_section}
-		To address the issue raised in \ref{motor_vel_problem} a simple speed scaling system was devised. This algorithm was called once per main loop after the required changes in lengths are calculated. The algorithm takes in the requested changes in length of each cord and divides each change in length by the largest. The relative speeds of each motor are then scaled by the global speed scalar.
-		\begin{equation}\label{motor_speed_equation}
-		\begin{aligned}
-		&\vec{l} = \begin{bmatrix}
-		l_1\\l_2\\l_3\\l_4\\
-		\end{bmatrix}\quad
-		%&x = \max\{l_1,...,l_4\}\\
-		&x = \max\left(\vec{l}\right)\\\\
-		&x = \max\vec{l}\\\\
-		&\vec{s} = \frac{g}{x}\cdot \vec{l}\\
-		%&s_1 = \frac{l_1}{x}\\
-		%&s_2 = \frac{l_2}{x}\\
-		%&s_3 = \frac{l_3}{x}\\git sat
-		%&s_4 = \frac{l_4}{x}\\
-		\end{aligned}
-		\end{equation}
-		Where $g$ is the global speed scalar and $s$ contains the speed of each motor. 
-		\subsection{Servos and multi-threading}
-		Due to the points mentioned in \ref{motor_issues} the decision was made to change the motors to Dynamixel MX-64 servos. The MX-64 can supply $60Kg.cm$ at 62 RPM, giving a top gripper speed of $0.32m/s$ which is considerably slower than our requirement. The MX-64 servos communicate over either an RS-485 or a TTL bus and can be daisy-chained if required. Due to the nature of the communication protocols involved in the dynamixel bus (clarify), the rate at which commands could be sent to each servo were reduced with each successive servo added to the daisy chain. Initially the four servos responsible for translating the end-effector were daisy-chained to a single dynamixel bus resulting in a command rate of 7Hz. This was increased to 15Hz by increasing the baud rate of the servos from 57.6kb/s to 1Mb/s. The reduced control rate led to the decision to use separate busses for each time-critical motor resulting in a command rate per motor of 60Hz. Another bus was used for all five clamps, and a final sixth bus was used to actuate the gripper as the uncertainty of the command latency to this servo was required to be as low as possible in order to successfully pre-empt and act upon the target landing in the gripper. 
-		
-		When a change in servo speed is requested, the dynamixel driver blocks the process thread that requested the change. The driver waits for a response from the motor before it allows the thread to continue. This reduced the rate at which motor instructions left the kinematic controller program to 10Hz. Creating four additional process threads for each of the speed-set service calls brought the loop rate back to to 60Hz.
-		
-		\subsection{Processor}
-		As servos were to be used instead of stepper motors, a microcontroller was no longer required for the control of the end-effector. Software previously running on the Teensy (forward/inverse kinematics, boundary checking etc...) was ported to a C++ program on a laptop running ROS on Ubuntu. 
-
 \subsection{Throw Sequence}
 Once a ball is caught, the internal state machine switches to throwing mode. The first step here is to either aim where to throw the ball, or to centre the gripper to shoot forwards. This is then followed by tensioning the four outer motors, calibrating how far the ball should be thrown, and clamping their respective cables to store the energy.
 
@@ -936,22 +926,16 @@ The firing sequence consists of pulling the gripper, using the back motor, a set
 	A soft passive gripper design was created due to the simplicity and speed of manufacture. Figure [figure 2] shows an image of the finished gripper.
 	Being 3D printed from PLA meant a prototype could be rapidly made and tested for functionality. With legs detachable from the gripper frame, several different designs and configurations could be tested. The legs went through multiple designs iterations, improved by finite element analysis (FEA) models. Stresses and deflections of the system were modelled using a static force of 1N applied uniformly over the catching face.
 	
-	Several designs were tested, varying the number and thickness of the struts. ABS, rubber (as an analogue to NinjaFlex) and PLA (after importing the material properties ~\cite{CRF3:CRF3126}) materials were tested. Figure \ref{fea1}figure 3, 3mm] shows the FEA results for the finalised design.
-	
-	\begin{figure}\label{fea1}
-		\centering
-		\includegraphics[scale=0.15]{fea1.png}
-		\caption{Finite Element Analysis of one leg of the passive gripper}
-	\end{figure}
+	Several designs were tested, varying the number and thickness of the struts. ABS, rubber (as an analogue to NinjaFlex) and PLA (after importing the material properties ~\cite{CRF3:CRF3126}) materials were tested. Figure [figure 3, 3mm] shows the FEA results for the finalised design.
 	
 	Due to the FEA iterative design process the legs worked as expected on the first print, with only minor design modifications to attach to the frame necessary. The object to be caught was initially a stress-ball which was used to generate requirements for the passive gripper. This was eventually replaced with a tennis ball, which meant the legs were sometimes too weak to capture it. 
 	\subsubsection{Soft Active Gripper}
 	The soft active gripper design has the potential to guarantee that objects (if caught) won’t slip out, and can more readily accommodate a larger variety of objects. Figure [figure 4] shows an image of the finished gripper.
 	
-	The design, which is predominantly a replica of FESTO’s Fin Gripper~\cite{festofin}, was selected due to its tried and tested nature and overall simplicity. A CAD model of the design was edited to add a means of actuating the gripper, three methods were considered; first was a slider-crank mechanism however this was decided against due to the size of the mechanism that would be needed to the shaft that actuates the gripper, second the gripper was redsigned to add a rack-pinion gear to each finger to enable actuation however this was decided against as this would have required three dynamixel motors with large gears to actuate the each finger at an acceptable speed. The final design altered the shaft which actuates the gripper to be used as a rack gear which could then be actuated by a single dynamixel motor.
+	The design, which is predominantly a replica of FESTO’s Fin Gripper~\cite{festofin}, was selected due to its tried and tested nature and overall simplicity. 
 	
 	
-
+	\subsection{Clamps}
 	
 	\subsection{Camera}\label{camera}
 	The finalised camera setup incorporated a single PS3-Eye camera in an eye-in-hand configuration. The PS3-Eye was selected due to several useful characteristics:
@@ -968,10 +952,39 @@ The firing sequence consists of pulling the gripper, using the back motor, a set
 	Owing to the high frame rate, motion blur became less of a concern when using the eye-in-hand configuration, which allowed for a simplified control algorithm. The camera can be seen attached to the active gripper in Figure [figure 4].
 	
 	\subsection{Object Tracking}
-	The final object tracking algorithm could reliably track a red tennis ball up to 4 meters away. It was found that colour thresholding was the only solution to object tracking which could be developed within the time frame of the project, whilst also providing reliable, high speed object recognition. An object is selected by clicking on the centre of the object in the camera feed. An average value for hue, saturate and variance (HSV) is then found from pixels surrounding the point selected. Using the HSV values, a minimum and maximum value is created by offsetting the average values by a predefined amount. These HSV values are then used to create a binary thresholded image which is dilated to remove image noise which appear as black speckles. Contour detection is performed on the binary image, the output contours are then ran through OpenCVs minEnclosingRect function which will create the minimum rectangle which encloses the entire contour. To remove some unwanted contours, the difference of height and width of each created rectangle are compared and the contour is rejected if the difference is too large. With the remaining contours, a difference between the previously accepted objects CofM and the CofM of each contour is taken. The difference is used to find the distance between the previously accepted objects CofM and the contours CofM, the contour with the smallest distance is then accepted to be the object and published to the kinematic controller.
+	The final object tracking algorithm could reliably track a red tennis ball up to 4 meters away. To achieve this:
+	\begin{itemize}
+		\item QV4L2 was used to customise the camera parameters, specifically:
+		\begin{itemize}
+			\item Maximise the saturation
+			\item Shift the hue by 45 degrees
+			
+			\item Turn off auto-gain, auto-white-balance and auto-exposure
+			
+			\item Manually adjusting the brightness for the given environment
+		\end{itemize}
 		
+		\item OpenCV in C++ was used to:
+		\begin{itemize}
+			\item Auto-calibrate threshold parameters based on an initial selection 
+			
+			\item Threshold raw images in the HSV colour space
+			
+			\item Erode the resulting binary image to remove false positives
+			
+			\item Find the centre of mass of the eroded image to approximate the balls location
+		\end{itemize}
+	\end{itemize}
+	Figure [figure 5] shows an example setup of the image processing algorithm, including the raw and thresholded images. Although this algorithm provided reliable results it has several significant limitations.
+	\begin{itemize}
+		\item Heavily optimised to find a single colour
+		
+		\item Environment must be free of the selected colour
+		
+		\item There is no camera calibration, introducing non-linear errors into the balls location
+	\end{itemize}
 	\section{Experiments}\label{experiments}
-	\subsection{Stepper Driver Performance}\label{stepperReliability}
+	\subsection{Stepper Driver Performance}
 	\subsubsection{Method}
 	To assess the performance of the TB-6600, an experiment was performed where commands were sent to the robot instructing the gripper to move to the top corner and then return to the centre with cord lengths measured before and after. 
 	\subsubsection{Results}
@@ -1066,5 +1079,6 @@ The firing sequence consists of pulling the gripper, using the back motor, a set
 	
 	% that's all folks
 \end{document}
+
 
 
