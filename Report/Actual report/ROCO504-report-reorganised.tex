@@ -441,10 +441,10 @@ For a robot to throw an object kinetic energy needs to be added to the system. T
 In order for a gripper to track a target, a low latency high FPS camera and fast motors will be needed. Section \ref{motorSpeedRequired} describes motor speed requirements and \ref{camera} describes the camera which was selected for this task.
 
 \subsection{Research}\label{research}
-The problem of designing and implementing a catching robot is not new, and although a thorough analysis of design considerations for catching robots in general is out of the scope of this article a brief summary of related issues will be outlined. The interested reader should reference~\cite{Sorg2003VisualTA} for a more detailed analysis.
+The problem of designing and implementing a catching robot is not new, and although a thorough analysis of design considerations for catching robots in general is out of the scope of this article a brief summary of related issues will be outlined. The interested reader should read~\cite{Sorg2003VisualTA} for a more detailed analysis.
 
 \subsubsection{Body Design}
-Body design determines the shape of the overall robot, setting many project constraints such as the available workspace, control complexity and physical capabilities of the robot. There are numerous possible designs such as robot arms, as used by ~\cite{6810147}, ~\cite{malzahn2014modeling} and ~\cite{5980073}, or frame-based robots, as used by ~\cite{6385963}, ~\cite{forpheus} and [article reference 7]. Due to project time constraints, a simple 2-axis frame based 4-cable CDDR was designed as the main body.
+Body design determines the shape of the overall robot, setting many project constraints such as the available workspace, control complexity and physical capabilities of the robot. There are numerous possible designs such as robot arms, as used by ~\cite{6810147}, ~\cite{malzahn2014modeling} and ~\cite{5980073}, or frame-based robots, as used by ~\cite{6385963}, and ~\cite{forpheus}. Due to project time constraints, a simple 2-axis frame based 4-cable CDDR was designed as the main body.
 
 \subsubsection{Cable-Direct-Driven Robots}
 Cable-Direct-Driven Robots (or CDDRs) are a type of parallel manipulator wherein the end-effector link is supported in parallel by $n$ cables with $n$ tensioning motors ~\cite{CDDR:description}. CDDRs can be made lighter, stiffer, safer and more economical than traditional serial robots~\cite{WilliamsII2003} since their primary structure consists of lightweight, high load-bearing cables. More complex Cable-driven parallel robots can be designed to move in six Degrees of Freedom (DoF) in three-dimensional space, but these are beyond the scope of this article. 
@@ -453,7 +453,6 @@ Cable-Direct-Driven Robots (or CDDRs) are a type of parallel manipulator wherein
 Gripper design refers to the end effector which grasps the thrown object and constrains the design in what objects can be caught and how said objects can be manipulated. Gripper designs can be distinguished between 2 pairs of classes, passive verses active and soft verses hard.
 In the first pairing, passive grippers provide no means of control within the gripper itself which can simplify design and control considerations but limits future capabilities. Active grippers increase the design and control complexity by adding actuation, or modifiable gripper characteristics, to perform a wider variety of tasks.
 Hard grippers are constructed out of rigid, inflexible, materials. These grippers are commonplace within industry where they work with known objects that are strong enough to not break under high stresses. Outside of the industrial setting, however, they are less applicable. This is where soft grippers which can deform and spread the gripper forces over a larger surface area find more usage.
-For a brief overview of the many varieties of gripper design, the interested reader is referred to [article references 9 – 20].
 
 \subsubsection{Camera Setups}
 Camera setups typically provide a trade-off between system complexity and control complexity. More cameras, or ones with higher frame rates and resolutions, allow for better object tracking but come at the cost of additional processing and control requirements.
@@ -921,7 +920,7 @@ The robot does not perform as originally designed. The main issue is the speed o
 From the experiments performed it is clear that the object tracking and gripper-object coordination challenges were successfully solved throughout this project. It is also clear that, even with a functioning system, there is still much work left to be done. This section shall briefly review each of the 6 challenges, outlining successes and areas of further development.
 
 \subsection{Body Design}
-Although the system does function (reference to video of robot moving etc.), experiment E clearly shows that it is non-functional. There is no single root cause, however, experiment A indicates that motor selection and power is, and has been, a continuous issue throughout this project. As such, a clear design improvement would be an improved motor and motor driver setup.
+Although the system does function, experiment E clearly shows that it is non-functional. There is no single root cause, however, experiment A indicates that motor selection and power is, and has been, a continuous issue throughout this project. As such, a clear design improvement would be an improved motor and motor driver setup.
 Also noted in the methodology of experiment E is how the robot is tilted during the experiment. This was because it was observed to have an improved reliability at this angle. Hence, another improvement and test set would involve a built-in mechanism to alter the robots inclination and determine usability at various levels.
 
 \subsection{Gripper Design}

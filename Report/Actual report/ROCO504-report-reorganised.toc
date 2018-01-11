@@ -26,7 +26,7 @@
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-E}3}Kalman filter}{5}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-E}4}Pyramid Scaling}{5}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-E}5}YOLO}{5}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-F}}Further problems}{6}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-F}}Further problems}{5}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-F}1}Kinematics}{6}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-F}2}Skipping steps}{6}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-F}3}Motor velocities}{6}

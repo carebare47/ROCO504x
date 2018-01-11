@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6530) (preloaded format=pdflatex 2017.12.28)  11 JAN 2018 07:22
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6530) (preloaded format=pdflatex 2017.12.28)  11 JAN 2018 07:25
 entering extended mode
 **./ROCO504-report-reorganised.tex
 (ROCO504-report-reorganised.tex
@@ -850,9 +850,6 @@ Underfull \hbox (badness 10000) in paragraph at lines 450--451
 rect-Driven
  []
 
-Missing character: There is no ‚ in font ptmr7t!
-Missing character: There is no Ä in font ptmr7t!
-Missing character: There is no ì in font ptmr7t!
 [2
 
 ]
@@ -869,25 +866,26 @@ Missing character: There is no ù in font ptmr7t!
 <exploded_gripper.png, id=22, 740.7675pt x 847.165pt>
 File: exploded_gripper.png Graphic file (type png)
 <use exploded_gripper.png>
-Package pdftex.def Info: exploded_gripper.png  used on input line 524.
+Package pdftex.def Info: exploded_gripper.png  used on input line 523.
 (pdftex.def)             Requested size: 125.9288pt x 144.01614pt.
- [4 <./exploded_gripper.png>] [5]
-Underfull \hbox (badness 10000) in paragraph at lines 623--694
+ [4 <./exploded_gripper.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 622--693
 
  []
 
+[5]
 <finished_robot.jpg, id=34, 963.6pt x 722.7pt>
 File: finished_robot.jpg Graphic file (type jpg)
 <use finished_robot.jpg>
-Package pdftex.def Info: finished_robot.jpg  used on input line 730.
+Package pdftex.def Info: finished_robot.jpg  used on input line 729.
 (pdftex.def)             Requested size: 192.71658pt x 144.53743pt.
 
-Overfull \hbox (1.65898pt too wide) in paragraph at lines 765--765
+Overfull \hbox (1.65898pt too wide) in paragraph at lines 764--764
  [][][][]\OT1/ptm/m/n/10 Calculate/set 
  []
 
 
-Overfull \hbox (1.65898pt too wide) in paragraph at lines 766--766
+Overfull \hbox (1.65898pt too wide) in paragraph at lines 765--765
  [][][][]\OT1/ptm/m/n/10 Calculate/set 
  []
 
@@ -895,7 +893,7 @@ Overfull \hbox (1.65898pt too wide) in paragraph at lines 766--766
 <fea1.png, id=38, 1260.71pt x 383.4325pt>
 File: fea1.png Graphic file (type png)
 <use fea1.png>
-Package pdftex.def Info: fea1.png  used on input line 844.
+Package pdftex.def Info: fea1.png  used on input line 843.
 (pdftex.def)             Requested size: 189.09834pt x 57.51239pt.
  [7 <./fea1.png>]
 Missing character: There is no ‚ in font ptmr7t!
@@ -938,7 +936,7 @@ Before submitting the final camera ready copy, remember to:
 Here is how much of TeX's memory you used:
  16955 strings out of 495212
  357995 string characters out of 3181458
- 426846 words of memory out of 3000000
+ 426703 words of memory out of 3000000
  19904 multiletter control sequences out of 15000+200000
  37891 words of font info for 75 fonts, out of 3000000 for 9000
  17 hyphenation exceptions out of 8191
@@ -955,7 +953,7 @@ me/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmb8a.pfb></home/tom/.mikt
 ex/texmfs/install/fonts/type1/urw/times/utmbi8a.pfb></home/tom/.miktex/texmfs/i
 nstall/fonts/type1/urw/times/utmr8a.pfb></home/tom/.miktex/texmfs/install/fonts
 /type1/urw/times/utmri8a.pfb>
-Output written on ROCO504-report-reorganised.pdf (10 pages, 594047 bytes).
+Output written on ROCO504-report-reorganised.pdf (10 pages, 593881 bytes).
 PDF statistics:
  89 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
