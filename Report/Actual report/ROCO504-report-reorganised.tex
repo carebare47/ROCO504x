@@ -418,14 +418,7 @@ Section \ref{research} of this document discusses the background research, linki
 
 	
 	\hfill January 4, 2018
-	
-	\subsection{Subsection Heading Here}
-	Subsection text here.
-	
-	
-	\subsubsection{Subsubsection Heading Here}
-	Subsubsection text here.
-	
+
 	
 	% An example of a floating figure using the graphicx package.
 	% Note that \label must occur AFTER (or within) \caption.
@@ -1016,7 +1009,28 @@ The firing sequence consists of pulling the gripper, using the back motor, a set
 	
 
 	\section{Overall Discussion}\label{overall}
-	The programs written to control the rob
+Overall Discussion:
+From the experiments performed, it is clear that the object tracking and gripper-object coordination challenges were successfully solved throughout this project. It is also clear that, even with a functioning system, there is still much work left to be done. This section shall breifly review each of the 6 challenges, outlining successes and areas of further development.
+
+Body Design:
+Although the system does function (reference to video of robot moving etc.), experiment E clearly shows that it is non functional. There is no single root cause, however, experiment A indicates that motor selection and powering is, and has been, a continous issue throughout this project. As such, a clear design improvement would be an improved motor and motor driver setup.
+Also noted in the methodology of experiment E is how the robot is tilted during the experiment. This was because it was observed to have an improved reliability at this angle. Hence, another improvement and test set would involve a built-in mechanism to alter the robots inclination, and determine usability at various levels.
+
+Gripper Design:
+Although an experiment was not explicitly created to test the gripper functionality, it was observed that both passive and active grippers functioned reliably as intended. The passive gripper had an issue of the ball passing straight through it when thrown at a high enough velocity, so a recommended improvement would be incorporating netting toward the back to prevent this.
+Further developments in gripper design would involve creating and testing hard versus soft gripper designs.
+
+Camera Setup:
+The camera setup worked with reasonable success. Given the high fps and resolution of the camera, objects were reliably trackable even in the eye-in-hand configuration. However, Experiment D provides insight into the main failure of this setup, camera latency. This is a difficult issue to resolve with standard USB 2.0 based cameras. A recommended improvement would be sourcing a camera using the USB 3.0 protocol, or investing in other communication systems to resolve this issue.
+
+Object Tracking:
+Experiment B indicates that the tracking algorithm requires little processing to go from a raw input to a tracked object. However, this setup is limited to balls of known colour, preferrably red. This is a huge limitation on the systems capabilities. As such, further development would involve trialing various different tracking algorithms to allow a wider range of objects to be detected. Testing under more lighting conditions and environments, to ruggedise against related errors, would also help improve the system.
+
+Gripper-Object Coordination:
+Via the use of encoded motors in the MX-64's, and a reliable tracking algorithm, the system control was successful. Experiment A demonstrates the necessity for the motor encoders, however, other alternatives could be devised to alleviate this requirement and enable a wider range of motors to be selected for improved body design. One such method would be to use distance sensors on the gripper to determine its x-y coordinate.
+
+Object Grasping:
+The scope of this project did not allow for complex gripper designs, so advanced object manipulation has not been accomplished. Having said this, although the throwing mechanism is untested, it does function. Improvements to this setup would involve accurate mathematical models to determine the distance and trajectory of a thrown object, as well as determining a control algorithm to throw in a desired direction.
 		
 	\section{Conclusion}
 	This document has outlined the development process for a CDDR catching and throwing robot. The resulting system used under-specified components due to the originally sourced motors underperforming and budget constraints. A reliable control system with positional and object location feedback was presented. Two successful gripper designs were created for the purpose and were functionally analysed.

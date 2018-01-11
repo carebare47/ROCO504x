@@ -1,6 +1,4 @@
 \contentsline {section}{\numberline {I}Introduction}{2}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {I-A}}Subsection Heading Here}{2}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {I-A}1}Subsubsection Heading Here}{2}
 \contentsline {section}{\numberline {II}Design Process}{2}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-A}}Problem}{2}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-A}1}Inverse Kinematics}{2}
@@ -9,13 +7,13 @@
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-B}}Research}{2}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-B}1}Body Design}{2}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-B}2}Cable-Direct-Driven Robots}{2}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-B}3}Gripper Design}{3}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-B}3}Gripper Design}{2}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-B}4}Camera Setups}{3}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-B}5}Object Tracking}{3}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-B}6}Gripper-Object Coordination}{3}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-B}7}Object Grasping}{3}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-B}8}Motors}{3}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-C}}Methodology}{4}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-C}}Methodology}{3}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-D}}Prototypes}{4}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-D}1}Motors}{4}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-D}2}Camera}{4}
@@ -26,28 +24,28 @@
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-E}1}Changing Histograms}{5}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-E}2}Optical Flow (Farneback)}{5}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-E}3}Kalman fiter}{5}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-E}4}Pyramid Scaling}{6}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-E}4}Pyramid Scaling}{5}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-E}5}YOLO}{6}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-F}}Further problems}{6}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-F}1}Kinematics}{6}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-F}2}Skipping steps}{6}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-F}3}Motor velocities}{6}
-\contentsline {section}{\numberline {III}Implementation}{7}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-A}}Software}{7}
+\contentsline {section}{\numberline {III}Implementation}{6}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-A}}Software}{6}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-B}}Motor velocities}{7}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-C}}Servos and multi-threading}{7}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-D}}Processor}{7}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-E}}Throw Sequence}{7}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-F}}Grippers}{8}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-F}1}Soft Passive Gripper}{8}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-F}}Grippers}{7}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-F}1}Soft Passive Gripper}{7}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-F}2}Soft Active Gripper}{8}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-G}}Camera}{8}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-H}}Object Tracking}{8}
-\contentsline {section}{\numberline {IV}Experiments}{9}
-\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-A}}Stepper Driver Performance}{9}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-A}1}Method}{9}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-A}2}Results}{9}
-\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-A}3}Discussion}{9}
+\contentsline {section}{\numberline {IV}Experiments}{8}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-A}}Stepper Driver Performance}{8}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-A}1}Method}{8}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-A}2}Results}{8}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-A}3}Discussion}{8}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}}Object tracking program rate}{9}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}1}Method}{9}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}2}Results}{9}
@@ -65,5 +63,5 @@
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-E}2}Results}{9}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-E}3}Discussion}{9}
 \contentsline {section}{\numberline {V}Overall Discussion}{9}
-\contentsline {section}{\numberline {VI}Conclusion}{9}
+\contentsline {section}{\numberline {VI}Conclusion}{10}
 \contentsline {section}{References}{10}
