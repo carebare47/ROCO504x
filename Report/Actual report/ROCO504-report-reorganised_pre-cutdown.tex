@@ -443,11 +443,10 @@ In order for a gripper to track a target, a low latency high FPS camera and fast
 \subsection{Research}\label{research}
 The problem of designing and implementing a catching robot is not new, and although a thorough analysis of design considerations for catching robots in general is out of the scope of this article a brief summary of related issues will be outlined. The interested reader should read~\cite{Sorg2003VisualTA} for a more detailed analysis.
 
-\subsubsection{Body Design}
+\subsubsection{Cable Direct Driven Robots (CDDRs)}
 Body design determines the shape of the overall robot, setting many project constraints such as the available workspace, control complexity and physical capabilities of the robot. There are numerous possible designs such as robot arms, as used by ~\cite{6810147}, ~\cite{malzahn2014modeling} and ~\cite{5980073}, or frame-based robots, as used by ~\cite{6385963}, and ~\cite{forpheus}. Due to project time constraints, a simple 2-axis frame based 4-cable CDDR was designed as the main body.
 
-\subsubsection{Cable-Direct-Driven Robots}
-Cable-Direct-Driven Robots (or CDDRs) are a type of parallel manipulator wherein the end-effector link is supported in parallel by $n$ cables with $n$ tensioning motors ~\cite{CDDR:description}. CDDRs can be made lighter, stiffer, safer and more economical than traditional serial robots~\cite{WilliamsII2003} since their primary structure consists of lightweight, high load-bearing cables. More complex Cable-driven parallel robots can be designed to move in six Degrees of Freedom (DoF) in three-dimensional space, but these are beyond the scope of this article. 
+CDDRs are a type of parallel manipulator wherein the end-effector link is supported in parallel by $n$ cables with $n$ tensioning motors ~\cite{CDDR:description}. CDDRs can be made lighter, stiffer, safer and more economical than traditional serial robots~\cite{WilliamsII2003} since their primary structure consists of lightweight, high load-bearing cables. More complex Cable-driven parallel robots can be designed to move in six Degrees of Freedom (DoF) in three-dimensional space, but these are beyond the scope of this article. 
 
 \subsubsection{Gripper Design}
 Gripper design refers to the end effector which grasps the thrown object and constrains the design in what objects can be caught and how said objects can be manipulated. Gripper designs can be distinguished between 2 pairs of classes, passive verses active and soft verses hard.
@@ -473,7 +472,7 @@ Object tracking consumes the majority of processor resources in such projects. A
 \subsubsection{Gripper-Object Coordination}
 is the main control algorithm used in the catching process and defines the efficacy and efficiency of the system. It is usually broken down into numerous input and output controllers. Input controllers relate the sensory data to desired movements of the machine, and output controllers relate this desired motion into actuator commands.
 
-Vision-based sensors can be used for visual servoing is, where an offset from the centre of the camera image directly translates to a velocity vector. Other systems employ predictive feedback, which predict possible locations the object will intersect the robot and provides this as a target location for the gripper.
+Vision-based sensors can be used for visual servoing, where an offset from the centre of the camera image directly translates to a velocity vector. Other systems employ predictive feedback, which predict possible locations the object will intersect the robot and provides this as a target location for the gripper.
 
 The system can convert an input which directly relates to a desired gripper position into actual movements. This involves the use of kinematics, where forward kinematics provides an internal representation of the current system state, and inverse kinematics provide the actuator positions to attain the desired system state. For more complex systems, other parameters including the centre of mass and force storage may need to be taken into account. 
 
@@ -485,7 +484,7 @@ For the purposes of the project presented in this article the two tasks of inter
 Fast motors were needed for the gripper to move quickly enough to catch an object. Our motor speed requirements were based off an object thrown from $2.5m$ away. The object would be thrown at a velocity of $5m/s$ at an angle of $45\degree$. The time of flight would be $721ms$ and the maximum height of the object would be $0.637m$. Worst case, the gripper would have to travel from corner to corner across the centre of the frame, resulting in a minimum travel speed of $1.635m/s$. If a spool diameter of $10cm$ was used, the required motor speed is $5.2\ RPS$ or $312\ RPM$.
 
 \subsection{Methodology}
-Given the problem breakdown discovered in the research, it was decided to split development into three sections; the first focussing on the frame design and hardware; the second looking into gripper designs and the control system including visual feedback.
+Given the problem breakdown discovered in the research, it was decided to split development into three sections; the first focussing on the frame design and hardware; the second looking into gripper designs and the third; control system including visual feedback.
 
 For each section, many conceptual designs would be explored and analysed. Afterwards, all ideas would be reviewed and the most achievable and functional designs selected. Some of the analysis involved creating prototypes as there was insufficient information to make a practical decision otherwise.
 
@@ -524,79 +523,11 @@ To address the problem discussed in \ref{force_problem}, clamps were designed to
 	\caption{Exploded view of clamp}
 \end{figure}        
 \subsubsection{Kinematic solution 1} \label{kinematic_solution_1}
-To address the issues discussed in \ref{initial_kinematics}, the following kinematic model was produced. Since no rotational motions and no moment resistances are required at the end-effector, our kinematic model can be simplified to assume that all cables meet at a point ~\cite{WilliamsII2003} in the centre of our end-effector.
-\begin{figure}
-	\centering
-	
-	\begin{tikzpicture}[scale=1.1]
-	
-	\draw (0,0) -- (4,0) node[midway,below] {$X_{max}$} -- (4,4) -- (0,4) -- cycle node[midway,below,sloped] {$Y_{max}$}  ;
-	
-	\coordinate (M1) at (0,4);
-	\coordinate (M2) at (4,4);
-	\coordinate (M3) at (0,0);
-	\coordinate (M4) at (4,0);
-	\coordinate[label=right:{$\ (X,Y)$}] (c) at (1.4, 1.8);
-	\draw (c) -- (0,0) node[midway,above] {$l_3$} ;
-	\draw (c) -- (0,4) node[midway,above] {$l_1$} ;
-	\draw (c) -- (4,0) node[midway,above] {$l_4$} ;
-	\draw (c) -- (4,4) node[midway,above] {$l_2$} ;
-	%\draw ()
-	\fill[red] (c) circle (2pt);
-	
-	
-	\draw[fill=white] (M3) circle (0.3cm) node[text=black] {M3};
-	
-	\draw[fill=white] (M1) circle (0.3cm) node[text=black] {M1};
-	
-	\draw[fill=white] (M4) circle (0.3cm) node[text=black] {M4};
-	
-	\draw[fill=white] (M2) circle (0.3cm) node[text=black] {M2};
-	
-	\pic [draw, angle radius=0.8cm, ->, "$\theta_1$", angle eccentricity=1.3] {angle = M3--M1--c};
-	
-	\pic [draw, angle radius=0.8cm, ->, "$\theta_2$", angle eccentricity=1.3] {angle = M1--M2--c};
-	
-	\pic [draw, angle radius=0.8cm, ->, "$\theta_4$", angle eccentricity=1.3] {angle = M2--M4--c};
-	
-	\pic [draw, angle radius=0.8cm, ->, "$\theta_3$", angle eccentricity=1.3] {angle = M4--M3--c};
-	
-	\end{tikzpicture}
-	\caption{Kinematic diagram with point gripper} \label{fig:K_diag_1}
-\end{figure}
-
-Inverse Kinematics:
-\begin{equation}
-\cos(\theta_3) = \frac{X_{max}{}^2 + l_3{}^2 - l_4{}^2}{2*X_{max}*l_3}
-\end{equation}
-\begin{equation}
-X = l_3\cos(\theta_3)
-\end{equation}
-\begin{equation}
-Y = l_3\sin(\theta_3)
-\end{equation}
-
-Or, without trigonometry:
-
-\begin{equation} \label{inverse_kinematics_1}
-\begin{aligned}
-&X = \left(\frac{X_{max}{}^2 + l_3{}^2 - l_4{}^2}{2*X_{max}*l_3}\right) = \frac{X_{max}}{2} + \frac{l_3{}^2 - l_4{}^2}{2*X_{max}}\\ \\
-&Y = \left(\frac{Y_{max}{}^2 + l_4{}^2 - l_1{}^2}{2*Y_{max}*l_3}\right) = \frac{Y_{max}}{2} + \frac{l_4{}^2 - l_1{}^2}{2*Y_{max}}
-\end{aligned}
-\end{equation}
-
-Forward Kinematics:
-\begin{equation} \label{forward_kinematics_1}
-\begin{aligned}
-&l_1 = \sqrt{\left(X\right)^2 + \left(Y_{max}-Y\right)^2}\\
-&l_2 = \sqrt{\left(X_{max}-X\right)^2 + \left(Y_{max}-Y\right)^2}\\
-&l_3 = \sqrt{\left(X\right)^2 + \left(Y\right)^2}\\
-&l_4 = \sqrt{\left(X_{max}-X\right)^2 + \left(Y\right)^2}\\
-\end{aligned}
-\end{equation}
+To address the issues discussed in II-A1, a kinematic model similar to the one described in \ref{real_kinematics} was produced. Since no rotational motions and no moment resistances are required
+at the end-effector, this kinematic model was simplified to assume that all cables meet at a point ~\cite{WilliamsII2003} in the centre of the end-effector.
 
 \subsubsection{Control Software}
-A Teensy 3.2 was configured to use the rosserial library to receive the targets CofM from the computer. The teensy then offset the coordinate system so that pixel 0,0 was in the centre of the image. The teensy kept track of all motor positions, and when a new CofM arrived the current gripper position was calculated from the motor positions using the forward kinematics. The x and y error between the centre of the camera image and the target is calculated, generating a vector that points towards the target, also known as visual servoing. This vector is translated into the change in length of each cord required to centre the gripper over the tracked target using the inverse kinematics \ref{inverse_kinematics_1} in \ref{kinematic_solution_1}. The desired gripper location is checked to see if it has left the bounds of the working area. If it has,motion along the axis which has been breached is set to zero. Finally, motor speeds are calculated from the desired changes in lengths as is described in \ref{motor_speed_equation} \ref{motor_speed_section}.
+A Teensy 3.2 was configured to use the rosserial library to receive the targets CofM from the computer. The teensy then offset the coordinate system so that pixel (0,0) was in the centre of the image. The teensy kept track of all motor positions, and when a new CofM arrived the current gripper position was calculated from the motor positions using the forward kinematics. The x and y error between the centre of the camera image and the target is calculated, generating a vector that points towards the target, also known as visual servoing. This vector is translated into the change in length of each cord required to centre the gripper over the tracked target using the inverse kinematics \ref{real_kinematics} in \ref{kinematic_solution_3}. The desired gripper location is checked to see if it has left the bounds of the working area. If it has,motion along the axis which has been breached is set to zero. Finally, motor speeds are calculated from the desired changes in lengths as is described in \ref{motor_speed_equation} \ref{motor_speed_section}.
 
 \subsection{Vision Algorithms}
 An ideal object tracking algorithm would be algorithmically simple, quick to process, and be rugged against the various error sources vision systems encounter, whilst reliably detecting the location of the unknown object with some metric of how far away it is. Several algorithms were attempted to achieve this somewhat ambitious target. The four attempted algorithms will be briefly summarised below.
@@ -618,7 +549,7 @@ The third method revolved around how smaller objects would show up less on lower
 \subsubsection{YOLO}
 As a final method the You Only Look Once (YOLO) neural-network based object detection system was implemented to detect a small sample of objects. This method was hampered again by hardware capabilities as, even with YOLO-Tiny, a maximum of 7 frames per second were achieved which was considered too slow for the projects application.\subsection{Further problems}\subsubsection{Kinematics}\label{kinematic_solution_3}
 Initially the kinematic solution considered the gripper as a point. This worked for preliminary testing, but soon proved to be a problem when the limited torque of the stepper motors required equal tension on all cords at all times. This led to the development of the following kinematic model, which considered the gripper as a square. 
-\begin{figure}
+\begin{figure}\label{real_kinematics}
 	\centering
 \begin{tikzpicture}[scale=1.1]
 
@@ -713,7 +644,7 @@ Forward Kinematics:
 The prototype was assembled with SST58D3820 stepper motors and TB6600 drivers. The TB6600 is designed to deliver up to 3.5A RMS. The drivers current can be limited down to 0.8A RMS in eight steps. Performance in the SST58D3820 datasheet is rated for when the motors are being supplied with 2.0A per phase. From this, we can see that the stepper motor requires 250mA per phase more than the driver can provide. When the robot was switched on the motors could barely hold the weight of the gripper when stationary. Experiment \ref{stepperReliability} was performed with the results showing that the stepper driver would not be suitable for this robot. This issue could have been partly mitigated if the motors were encoded.
 
 \subsubsection{Motor velocities}\label{motor_vel_problem}
-For the tension to remain equal on all cords during motion of the gripper, the motors must turn at different rates. For example: if the gripper starts in the centre of the frame and moves upwards, the top two lengths will shorten and the bottom two cords will get longer. To maintain a uniform velocity of the gripper, the top two motors must slow down and the bottom two must speed up. For gripper trajectories constrained to the centre of one axis this isn't much of a problem, but for trajectories traversing multiple axis the motors pull against each other resulting in steps being skipped and tension lost.
+For the tension to remain equal on all cords during motion of the gripper, the motors must turn at different rates. For example: if the gripper starts in the centre of the frame and moves upwards, the top two lengths will shorten and the bottom two cords will get longer. For gripper trajectories constrained to the centre of one axis this isn't much of a problem, but for trajectories traversing multiple axis the motors pull against each other resulting in steps being skipped and tension lost.
 
 
 
@@ -728,7 +659,7 @@ For the tension to remain equal on all cords during motion of the gripper, the m
 	\caption{The final prototype}
 \end{figure}
 \subsection{Software}
-Frames enter the object tracking node at a rate of 60FPS. The object tracker performs a series of filters in different colour spaces on the image before calculating its centre of mass. This coordinate is published to the kinematic controller 17.5ms after the frame enters the object tracker. Upon entering the kinematic controller, the coordinate frame is offset so that the centre of the camera image is now at pixel 0,0. The required change in length of each cord is then calculated and set (via the method described in \ref{kinematic_solution_3}). From the desired changes in length, the required speed of each motor is calculated and set. The kinematic controller node then calculates the current gripper position in order to calculate the changes in length for the next loop.
+Frames enter the object tracking node at a rate of 60FPS. The object tracker performs a series of filters in different colour spaces on the image before calculating its centre of mass. This coordinate is published to the kinematic controller 17.5ms after the frame enters the object tracker. Upon entering the kinematic controller, the coordinate frame is offset so that the centre of the camera image is now at pixel (0,0). The required change in length of each cord is then calculated and set (via the method described in \ref{kinematic_solution_3}). From the desired changes in length, the required speed of each motor is calculated and set. The kinematic controller node then calculates the current gripper position in order to calculate the changes in length for the next loop.
 Figure~\ref{fig:HighLevelDiagram} shows the high-level software flow diagram of the robot.
 
 
@@ -798,7 +729,7 @@ minimum height=2em]
 \end{figure}
 
 \subsection{Motor velocities}\label{motor_speed_section}
-To address the issue raised in \ref{motor_vel_problem} a simple speed scaling system was devised. This algorithm was called once per main loop after the required changes in lengths are calculated. The algorithm takes in the requested changes in length of each cord and divides each change in length by the largest. The relative speeds of each motor are then scaled by the global speed scalar.
+To address the issue \ref{motor_vel_problem}, a simple speed scaling system was devised. This algorithm was called once per main loop after the required changes in lengths are calculated. The algorithm takes in the requested changes in length of each cord and divides each change in length by the largest. The relative speeds of each motor are then scaled by the global speed scalar.
 \begin{equation}\label{motor_speed_equation}
 \begin{aligned}
 &\vec{l} = \begin{bmatrix}
@@ -816,7 +747,7 @@ l_1\\l_2\\l_3\\l_4\\
 \end{equation}
 Where $g$ is the global speed scalar and $s$ contains the speed of each motor. 
 \subsection{Servos and multi-threading}
-Due to the points mentioned in \ref{motor_issues} the decision was made to change the motors to Dynamixel MX-64 servos. The MX-64 can supply $60Kg.cm$ at 62 RPM, giving a top gripper speed of $0.32m/s$ which is considerably slower than our requirement. The MX-64 servos communicate over either an RS-485 or a TTL bus and can be daisy-chained if required. Due to the nature of the communication protocols involved in the dynamixel bus (clarify), the rate at which commands could be sent to each servo were reduced with each successive servo added to the daisy chain. Initially the four servos responsible for translating the end-effector were daisy-chained to a single dynamixel bus resulting in a command rate of 7Hz. This was increased to 15Hz by increasing the baud rate of the servos from 57.6kb/s to 1Mb/s. The reduced control rate led to the decision to use separate busses for each time-critical motor resulting in a command rate per motor of 60Hz. Another bus was used for all five clamps, and a final sixth bus was used to actuate the gripper as the uncertainty of the command latency to this servo was required to be as low as possible in order to successfully pre-empt and act upon the target landing in the gripper. 
+Due to the points mentioned in \ref{motor_issues} the decision was made to change the motors to Dynamixel MX-64 servos. The MX-64 can supply $60Kg.cm$ at 62 RPM, giving a top gripper speed of $0.32m/s$ which is considerably slower than our requirement. The MX-64 servos communicate over either an RS-485 or a TTL bus and can be daisy-chained if required. Due to the nature of the communication protocols involved in the dynamixel bus, the rate at which commands could be sent to each servo were reduced with each successive servo added to the daisy chain. Initially the four servos responsible for translating the end-effector were daisy-chained to a single dynamixel bus resulting in a command rate of 7Hz. This was increased to 15Hz by increasing the baud rate of the servos from 57.6kb/s to 1Mb/s. The reduced control rate led to the decision to use separate busses for each time-critical motor resulting in a command rate per motor of 60Hz. Another bus was used for all five clamps, and a final sixth bus was used to actuate the gripper as the uncertainty of the command latency to this servo was required to be as low as possible in order to successfully pre-empt and act upon the target landing in the gripper. 
 
 When a change in servo speed is requested, the dynamixel driver blocks the process thread that requested the change. The driver waits for a response from the motor before it allows the thread to continue. This reduced the rate at which motor instructions left the kinematic controller program to 10Hz. Creating four additional process threads for each of the speed-set service calls brought the loop rate back to 60Hz.
 
@@ -834,10 +765,9 @@ The firing sequence consists of pulling the gripper, using the back motor, a set
 \subsection{Grippers}
 Due to the complexities of gripper design, two distinct grippers were constructed.
 \subsubsection{Soft Passive Gripper}
-A soft passive gripper design was created due to the simplicity and speed of manufacture. Figure [figure 2] shows an image of the finished gripper.
-Being 3D printed from PLA meant a prototype could be rapidly made and tested for functionality. With legs detachable from the gripper frame, several different designs and configurations could be tested. The legs went through multiple designs iterations, improved by finite element analysis (FEA) models. Stresses and deflections of the system were modelled using a static force of 1N applied uniformly over the catching face.
+A soft passive gripper design was created due to the simplicity and speed of manufacture. With legs detachable from the gripper frame, several different designs and configurations could be tested. The legs went through multiple designs iterations, improved by finite element analysis (FEA) models. Stresses and deflections of the system were modelled using a static force of 1N applied uniformly over the catching face.
 
-Several designs were tested, varying the number and thickness of the struts. ABS, rubber (as an analogue to NinjaFlex) and PLA (after importing the material properties ~\cite{CRF3:CRF3126}) materials were tested. Figure \ref{fea1}figure 3, 3mm] shows the FEA results for the finalised design.
+Throughout FEA iterations the number and thickness of the struts was varied. ABS, rubber (as an analogue to NinjaFlex) and PLA (after importing the material properties ~\cite{CRF3:CRF3126}) materials were tested. Figure \ref{fea1}figure 3, 3mm] shows the FEA results for the finalised design.
 
 \begin{figure}\label{fea1}
 	\centering
@@ -850,7 +780,7 @@ Due to the FEA iterative design process the legs worked as expected on the first
 The soft active gripper design has the potential to guarantee that objects (if caught) won’t slip out, and can more readily accommodate a larger variety of objects. Figure \ref{active_gripper} shows an image of the finished gripper.
 \begin{figure}\label{active_gripper}
 \centering
-\includegraphics[scale=0.24]{active_gripper.png}
+\includegraphics[scale=0.21]{active_gripper.png}
 \caption{Active Gripper}
 \end{figure}
 The design, which is predominantly a replica of FESTO’s Fin Gripper~\cite{festofin}, was selected due to its tried and tested nature and overall simplicity. A CAD model of the design was edited to add a means of actuating the gripper, three methods were considered; first was a slider-crank mechanism, however, this was decided against due to the size of the mechanism that would be needed to actuate the gripper. Second, the gripper was redesigned to add a rack-pinion gear to each finger to enable actuation. This was decided against as this would have required three extra dynamixel motors with large gears to actuate each finger at an acceptable speed. The final design altered the shaft which actuates the gripper to be used as a rack gear which could then be actuated by a single dynamixel motor.
