@@ -26,9 +26,9 @@ or
 ```
 sudo apt-get install ros-kinetic-dynamixel-motor --y
 ```
-Install webcam drivers, QV4L2 and usb support:
+Install webcam drivers, QV4L2, usb support and uvcdynctrl (used to allow the tracking program to setup the camera feed):
 ```
-sudo apt-get install v4l-* qv4l2 libusb-dev
+sudo apt-get install v4l-* qv4l2 libusb-dev uvcdynctrl
 ```
 Clone this repository to catkin_ws/src and build:
 ```
