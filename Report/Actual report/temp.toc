@@ -40,7 +40,8 @@
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-G}2}Motor velocities}{6}
 \contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-H}}Object Grasping}{6}
 \contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-H}1}Clamps}{6}
-\contentsline {section}{\numberline {V}Results}{7}
-\contentsline {section}{\numberline {VI}Discussion}{7}
+\contentsline {section}{\numberline {V}Results}{6}
+\contentsline {section}{\numberline {VI}Discussion}{6}
 \contentsline {section}{\numberline {VII}Conclusion}{7}
+\contentsline {section}{References}{7}
 \contentsline {section}{References}{7}

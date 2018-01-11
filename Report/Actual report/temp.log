@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6530) (preloaded format=pdflatex 2017.12.28)  10 JAN 2018 22:39
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6530) (preloaded format=pdflatex 2017.12.28)  10 JAN 2018 22:52
 entering extended mode
 **./temp.tex
 (temp.tex
@@ -847,14 +847,6 @@ File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 {/usr/share/texlive/texmf-dist/fonts/map/pdftex/updmap/pdftex.map}
 
 ]
-
-LaTeX Warning: Citation `CDDR:description' on page 2 undefined on input line 40
-0.
-
-
-LaTeX Warning: Citation `WilliamsII2003' on page 2 undefined on input line 400.
-
-
 Missing character: There is no â in font ptmr7t!
 Missing character: There is no € in font ptmr7t!
 Missing character: There is no “ in font ptmr7t!
@@ -867,7 +859,7 @@ Missing character: There is no œ in font ptmr7t!
 Missing character: There is no â in font ptmr7t!
 Missing character: There is no € in font ptmr7t!
 Missing character: There is no  in font ptmr7t!
-[2
+ [2
 
 ]
 Underfull \hbox (badness 2073) in paragraph at lines 430--431
@@ -876,10 +868,6 @@ high torque
  []
 
 [3] [4]
-
-LaTeX Warning: Citation `WilliamsII2003' on page 5 undefined on input line 473.
-
-
 
 LaTeX Warning: Reference `motor_issues' on page 5 undefined on input line 504.
 
@@ -897,8 +885,7 @@ Missing character: There is no £ in font ptmr7t!
 LaTeX Warning: Reference `fig:HighLevelDiagram' on page 6 undefined on input li
 ne 564.
 
-[6]
-No file temp.bbl.
+[6] (temp.bbl)
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -918,10 +905,10 @@ LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 16579 strings out of 495212
- 349893 string characters out of 3181458
- 413944 words of memory out of 3000000
- 19525 multiletter control sequences out of 15000+200000
+ 16592 strings out of 495212
+ 350141 string characters out of 3181458
+ 413959 words of memory out of 3000000
+ 19536 multiletter control sequences out of 15000+200000
  44945 words of font info for 93 fonts, out of 3000000 for 9000
  17 hyphenation exceptions out of 8191
  55i,13n,71p,1375b,252s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -936,7 +923,7 @@ ts/type1/urw/times/utmb8a.pfb></home/tom/.miktex/texmfs/install/fonts/type1/urw
 /times/utmbi8a.pfb></home/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmr
 8a.pfb></home/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmr8a.pfb></hom
 e/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmri8a.pfb>
-Output written on temp.pdf (7 pages, 155908 bytes).
+Output written on temp.pdf (7 pages, 157048 bytes).
 PDF statistics:
  74 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)

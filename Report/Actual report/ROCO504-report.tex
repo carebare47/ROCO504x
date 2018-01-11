@@ -552,11 +552,12 @@ In order to track the target quickly, a low latency high FPS camera was needed.
 Fast motors were needed to allow the gripper to keep track of the target. The working area of the frame measured XXXX 90cm by 75cm. If the gripper was initialised to the centre of the frame and a ball was thrown from three meters away, then the robot would have 0.7 seconds to move from center to the corner of the working area. PROOF
 \subsection{Research}
 The problem of designing and implementing a catching robot is not new, and although a thorough analysis of design considerations for catching robots in general is out of the scope of this article a brief summary of related issues will be outlined. The interested reader should reference [article reference 1] for a more detailed analysis.
-\subsubsection{CDDR}
-CDDRs are a type of parallel manipulator wherein the end-effector link is supported in parallel by $n$ cables with $n$ tensioning motors ~\cite{CDDR:description}. CDDRs can be made lighter, stiffer, safer and more economical than traditional serial robots~\cite{WilliamsII2003} since their primary structure consists of lightweight, high load-bearing cables. More complex Cable-driven parallel robots can be designed to move in six Degrees of Freedom (DoF) in three dimensional space, but these are beyond the scope of this article. 
 
 \subsubsection{Body Design}
 Body design determines the shape of the overall robot, setting many project constraints such as the available workspace, control complexity and physical capabilities of the robot. There are numerous possible designs such as robot arms, as used by [article reference 2], [article reference 3] and [article reference 4], or frame-based robots, as used by [article reference 5], [article reference 6] and [article reference 7]. Due to project time constraints a simple 2-axis frame based 4-cable CDDR was designed as the main body.
+
+\subsubsection{Cable-Direct-Driven Robots}
+Cable-Direct-Driven Robots (or CDDRs) are a type of parallel manipulator wherein the end-effector link is supported in parallel by $n$ cables with $n$ tensioning motors ~\cite{CDDR:description}. CDDRs can be made lighter, stiffer, safer and more economical than traditional serial robots~\cite{WilliamsII2003} since their primary structure consists of lightweight, high load-bearing cables. More complex Cable-driven parallel robots can be designed to move in six Degrees of Freedom (DoF) in three dimensional space, but these are beyond the scope of this article. 
 
 \subsubsection{Gripper Design}
 Gripper design refers to the end effector which grasps the thrown object and constrains the design in what objects can be caught and how said objects can be manipulated. Gripper designs can be distinguished between 2 pairs of classes, passive verses active and soft verses hard.
@@ -566,10 +567,12 @@ For a brief overview of the many varieties of gripper design, the interested rea
 
 \subsubsection{Camera Setups}
 Camera setups typically provide a trade-off between system complexity and control complexity. More cameras, or ones with higher frame rates and resolutions, allow for better object tracking but come at the cost of additional processing and control requirements.
-There are three common camera setups.XXXXBULLETSXXXXX. The simplest setup for control is the eye-in-hand approach, where a camera is mounted inside the gripper, providing a direct feedback loop so long as motion blur doesn’t become an issue.
-The most reliable setup for object tracking involves placing multiple cameras around the room in fixed, known locations. From this the ball position and trajectory can be easily modelled in 3D space, but at the expense of a complex setup and a significantly higher processor demand.
-A middle ground to the previous two is to use “head” mounted cameras, or rather, cameras mounted to a fixed known location on the robots body. This typically means that the target cannot be tracked in 3D space as easily, but may present more reliable results that the eye-in-hand solution. 
-
+There are three common camera setups.
+\begin{itemize}
+	\item The simplest setup for control is the eye-in-hand approach, where a camera is mounted inside the gripper, providing a direct feedback loop so long as motion blur doesn’t become an issue.
+	\item The most reliable setup for object tracking involves placing multiple cameras around the room in fixed, known locations. From this the ball position and trajectory can be easily modelled in 3D space, but at the expense of a complex setup and a significantly higher processor demand.
+	\item A middle ground to the previous two is to use “head” mounted cameras, or rather, cameras mounted to a fixed known location on the robots body. This typically means that the target cannot be tracked in 3D space as easily, but may present more reliable results that the eye-in-hand solution. 
+\end{itemize}
 \subsubsection{Object Tracking}
 Object tracking consumes the majority of processor resources in such projects. Accuracy, false positives and false negatives determine the reliability of a system. Cameras are typically the sensor(s) of choice for robot catching systems due to the flexibility, and often ease, that detection algorithms can provide. Computer vision provides numerous methods of feature detection, a small sample of such techniques include:
 \begin{itemize}
@@ -692,9 +695,9 @@ Throughout the project a lot of time was spent attempting to get a setup which c
 \subsubsection{Motors}
 Two motor setups were prototyped. The first involved using Micromotors E192-2S attached to a custom $1:20$ speed-ratio gearbox. Given the high torque output from the motors this should have provided enough speed and torque to move the gripper. However, even after many gearbox design iterations design flaws kept occurring, ranging from gear slippage to material failure. As such, it was determined that an alternative approach may yield better results.
 
-The second prototype involved the use of SST58D3820 stepper motors from an old ER1 robot from Evolution Robotics. After a small amount of reverse engineering the motors were tested with their original motor driver which, unfortunately, did not appear to provide enough current to meet the motors torque limit; because of this the TB6600 motor driver was selected instead. What was not discovered until quite late in the project, after several control algorithms had been tested, was that the acquired stepper drivers performed significantly worse than their specifications. Without any encoders closed loop control was not possible causing the actual gripper position to drift wildly from the internally recorded gripper position over a short span of time. After further consideration the stepper motors were also abandoned.
+The second prototype involved the use of SST58D3820 stepper motors from an old ER1 robot from Evolution Robotics. After a small amount of reverse engineering the motors were tested with their original motor driver which, unfortunately, did not appear to provide enough current to meet the motors torque limit; because of this the TB6600 motor driver was selected instead. What was not discovered until quite late in the project, after several control algorithms had been tested, was that the stepper drivers performed significantly worse than their specifications. Without any encoders closed loop control was not possible causing the actual gripper position to drift wildly from the internally recorded gripper position over a short span of time. After further consideration the stepper motors were also abandoned.
 
-\subsubsection{Visual Feedback Loop Hardware}
+\subsubsection{Camera}
 The first camera used to prototype various algorithms was a standard USB webcam. It quickly became apparent that objects moving at speed would either present unacceptable amounts of motion blur, or low frame-rates and high latency would not give the control system long enough to react. To resolve these issues  a high FPS camera was selected. 
 
 \subsubsection{Control Software}
