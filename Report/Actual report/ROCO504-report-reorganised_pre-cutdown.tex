@@ -848,9 +848,10 @@ Several designs were tested, varying the number and thickness of the struts. ABS
 Due to the FEA iterative design process the legs worked as expected on the first print, with only minor design modifications to attach to the frame necessary. The object to be caught was initially a stress-ball which was used to generate requirements for the passive gripper. This was eventually replaced with a tennis ball, which meant the legs were sometimes too weak to capture it. 
 \subsubsection{Soft Active Gripper}
 The soft active gripper design has the potential to guarantee that objects (if caught) won’t slip out, and can more readily accommodate a larger variety of objects. Figure \ref{active_gripper} shows an image of the finished gripper.
-\begin{figure}
+\begin{figure}\label{active_gripper}
 \centering
-\includegraphics[scale=0.2]{active_gripper.png}
+\includegraphics[scale=0.24]{active_gripper.png}
+\caption{Active Gripper}
 \end{figure}
 The design, which is predominantly a replica of FESTO’s Fin Gripper~\cite{festofin}, was selected due to its tried and tested nature and overall simplicity. A CAD model of the design was edited to add a means of actuating the gripper, three methods were considered; first was a slider-crank mechanism, however, this was decided against due to the size of the mechanism that would be needed to actuate the gripper. Second, the gripper was redesigned to add a rack-pinion gear to each finger to enable actuation. This was decided against as this would have required three extra dynamixel motors with large gears to actuate each finger at an acceptable speed. The final design altered the shaft which actuates the gripper to be used as a rack gear which could then be actuated by a single dynamixel motor.
 

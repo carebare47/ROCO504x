@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6530) (preloaded format=pdflatex 2017.12.28)  11 JAN 2018 09:37
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6530) (preloaded format=pdflatex 2017.12.28)  11 JAN 2018 09:50
 entering extended mode
 **./ROCO504-report-reorganised_pre-cutdown.tex
 (ROCO504-report-reorganised_pre-cutdown.tex
@@ -892,20 +892,15 @@ Package pdftex.def Info: fea1.png  used on input line 844.
 Missing character: There is no â in font ptmr7t!
 Missing character: There is no € in font ptmr7t!
 Missing character: There is no ™ in font ptmr7t!
-
-
-LaTeX Warning: Reference `active_gripper' on page 6 undefined on input line 850
-.
-
 <active_gripper.png, id=36, 813.0375pt x 644.4075pt>
 File: active_gripper.png Graphic file (type png)
 <use active_gripper.png>
 Package pdftex.def Info: active_gripper.png  used on input line 853.
-(pdftex.def)             Requested size: 162.60461pt x 128.87921pt.
+(pdftex.def)             Requested size: 195.13298pt x 154.66095pt.
 Missing character: There is no â in font ptmr7t!
 Missing character: There is no € in font ptmr7t!
 Missing character: There is no ™ in font ptmr7t!
-[6 <./fea1.png>] [7 <./active_gripper.png>] [8]
+ [6 <./fea1.png>] [7 <./active_gripper.png>] [8]
 (ROCO504-report-reorganised_pre-cutdown.bbl
 Missing character: There is no Ã in font ptmr7t!
 Missing character: There is no ¤ in font ptmr7t!
@@ -935,31 +930,28 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[9] (ROCO504-report-reorganised_pre-cutdown.aux)
-
-LaTeX Warning: There were undefined references.
-
- ) 
+[9] (ROCO504-report-reorganised_pre-cutdown.aux) ) 
 Here is how much of TeX's memory you used:
- 16958 strings out of 495212
- 358146 string characters out of 3181458
- 427226 words of memory out of 3000000
+ 16957 strings out of 495212
+ 358140 string characters out of 3181458
+ 427244 words of memory out of 3000000
  19909 multiletter control sequences out of 15000+200000
- 37891 words of font info for 75 fonts, out of 3000000 for 9000
+ 36784 words of font info for 74 fonts, out of 3000000 for 9000
  17 hyphenation exceptions out of 8191
  55i,13n,71p,1524b,938s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/home/tom/.miktex/texmfs/install/fonts/enc/dvips/base/8r.enc}</home/tom/.mik
-tex/texmfs/install/fonts/type1/public/amsfonts/cm/cmex10.pfb></home/tom/.miktex
-/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi10.pfb></home/tom/.miktex/te
-xmfs/install/fonts/type1/public/amsfonts/cm/cmmi7.pfb></home/tom/.miktex/texmfs
-/install/fonts/type1/public/amsfonts/cm/cmr10.pfb></home/tom/.miktex/texmfs/ins
-tall/fonts/type1/public/amsfonts/cm/cmr7.pfb></home/tom/.miktex/texmfs/install/
-fonts/type1/public/amsfonts/cm/cmsy10.pfb></home/tom/.miktex/texmfs/install/fon
-ts/type1/public/amsfonts/cm/cmsy7.pfb></home/tom/.miktex/texmfs/install/fonts/t
-ype1/urw/times/utmb8a.pfb></home/tom/.miktex/texmfs/install/fonts/type1/urw/tim
-es/utmbi8a.pfb></home/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmr8a.p
-fb></home/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmri8a.pfb>
-Output written on ROCO504-report-reorganised_pre-cutdown.pdf (9 pages, 640228 b
+{/home/tom/.miktex/texmfs/ins
+tall/fonts/enc/dvips/base/8r.enc}</home/tom/.miktex/texmfs/install/fonts/type1/
+public/amsfonts/cm/cmex10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/pub
+lic/amsfonts/cm/cmmi10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public
+/amsfonts/cm/cmmi7.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/ams
+fonts/cm/cmr10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfont
+s/cm/cmr7.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/
+cmsy10.pfb></home/tom/.miktex/texmfs/install/fonts/type1/public/amsfonts/cm/cms
+y7.pfb></home/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmb8a.pfb></hom
+e/tom/.miktex/texmfs/install/fonts/type1/urw/times/utmbi8a.pfb></home/tom/.mikt
+ex/texmfs/install/fonts/type1/urw/times/utmr8a.pfb></home/tom/.miktex/texmfs/in
+stall/fonts/type1/urw/times/utmri8a.pfb>
+Output written on ROCO504-report-reorganised_pre-cutdown.pdf (9 pages, 639798 b
 ytes).
 PDF statistics:
  88 PDF objects out of 1000 (max. 8388607)
