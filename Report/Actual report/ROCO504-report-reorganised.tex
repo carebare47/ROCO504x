@@ -389,7 +389,7 @@
 	% As a general rule, do not put math, special symbols or citations
 	% in the abstract
 	\begin{abstract}
-		The abstract goes here.
+This article discusses the development and construction of a Translational Planar 4-cable Cable-Direct-Driven Robot (CDDR), using soft robotics practices, and its applications in catching and throwing. The CDDR is tested for performance and reliability.
 	\end{abstract}
 	
 	% no keywords
@@ -411,17 +411,11 @@
 	
 	\section{Introduction}
 	% no \IEEEPARstart
-	This article discusses the development and construction of a Translational Planar 4-cable Cable-Direct-Driven Robot (CDDR), using soft robotics practices, and its applications in catching and throwing. 
+This article discusses the development and construction of a Translational Planar 4-cable Cable-Direct-Driven Robot (CDDR), using soft robotics practices, and its applications in catching and throwing. The CDDR is tested for performance and reliability.
+
+Section \ref{research} of this document discusses the background research, linking to the main design challenges faced when constructing a catching robot. \ref{prototypes} details the various attempted solutions and their resultant outcomes. System capabilities are experimentally analysed in \ref{experiments}, followed by an overall summary in \ref{overall}.
 	
-	
-	This demo file is intended to serve as a ``starter file''
-	for IEEE conference papers produced under \LaTeX\ using
-	IEEEtran.cls version 1.8b and later.
-	% You must have at least 2 lines in the paragraph with the drop letter
-	% (should never be an issue)
-	I wish you the best of success.
-	
-	\hfill mds
+
 	
 	\hfill January 4, 2018
 	
@@ -544,13 +538,11 @@
 	This led to re-evaluation of the kinematic solution as can be seen in section \ref{kinematic_solution_1}.
 	
 	\subsubsection{Force storage} \label{force_problem}
-	
-	
-	\subsubsection{Camera speed}
-	In order to track the target quickly, a low latency high FPS camera was needed.
-	\subsubsection{Motors}
-	Fast motors were needed to allow the gripper to keep track of the target. The working area of the frame measured XXXX 90cm by 75cm. If the gripper was initialised to the centre of the frame and a ball was thrown from three meters away, then the robot would have 0.7 seconds to move from center to the corner of the working area. PROOF
-	\subsection{Research}
+	For a robot to throw an object kinetic energy needs to be added to the system. To impart more force to the object than the motors can instantaneously provide a method of storing the force will have to be implemented.
+	\subsubsection{Hardware Requirements}
+		In order for a gripper to track a target, a low latency high FPS camera and fast motors will be needed. Section \ref{motorSpeedRequired} describes motor speed requirements and \ref{camera} describes the camera which was selected for this task.
+
+	\subsection{Research}\label{research}
 	The problem of designing and implementing a catching robot is not new, and although a thorough analysis of design considerations for catching robots in general is out of the scope of this article a brief summary of related issues will be outlined. The interested reader should reference [article reference 1] for a more detailed analysis.
 	
 	\subsubsection{Body Design}
@@ -592,11 +584,18 @@
 	Object grasping refers to post-catch manipulation of the object. More manipulability often implies more complex gripper designs. For instance [article reference 9] use a high speed 3-fingered robotic hand to perform a wide variety of tasks, however, this approach is over-engineered if all that is required of the robot is to catch, a task a standard household bin can perform with the right aim.
 	For the purposes of the project presented in this article the two tasks of interest are the catching and throwing of an object.
 	
-	\subsubsection{Motors}
+	\subsubsection{Motors}\label{motorSpeedRequired}
 	Fast motors were needed for the gripper to move quickly enough to catch an object. Our motor speed requirements were based off an object thrown from $2.5m$ away. The object would be thrown at a velocity of $5m/s$ at an angle of $45\degree$. The time of flight would be $721ms$ and the maximum height of the object would be $0.637m$. Worst case, the gripper would have to travel from corner to corner across the centre of the frame, resulting in a minimum travel speed of $1.635m/s$. If a spool diameter of $10cm$ was used, the required motor speed is $5.2\ RPS$ or $312\ RPM$.
 	
+		\subsection{Methodology}
+		Given the problem breakdown discovered in the research, it was decided to split development into three sections initially. The first focussing on the frame design and hardware; the second looking into gripper designs; and thirdly, the control system including visual feedback.
+		
+		For each section, many conceptual designs would be explored and analysed. Afterwards, all ideas would be reviewed and the most achievable and functional designs selected. Some of the analysis involved creating prototypes as there was insufficient information to make a practical decision otherwise.
+		
+		After implementing all of the selected solutions, each section was tested for functionality independently. On success, the sections were integrated together and the whole system tested. Design flaws at this stage either meant an integration fault, or that flaws in a subsection weren't readily obvious when tested in isolation and hence took longer to remedy. Finally, the system was tested for full functionality and reliability.
+	
 
-	\subsection{Prototype}
+	\subsection{Prototypes}\label{prototypes}
 	Throughout the project a lot of time was spent attempting to get a setup which could physically meet the aims of the project. To this end several design iterations occurred.
 	
 	\subsubsection{Motors}
@@ -604,14 +603,15 @@
 	
 	The second prototype involved the use of SST58D3820 stepper motors from an old ER1 robot from Evolution Robotics. These motors are specified to hold $7.3Kg.cm$, which drops to $6.5Kg.cm$ at a frequency of 1200 pulses per second (PPS). In full step mode the stepper shaft rotates $1.8\degree$ per step giving a max speed of 6RPS and thus a maximum cord velocity of $188.5cm/s$. \begin{equation}
 	\begin{aligned}
-	\frac{1.8\cdot 1200}{360} = 6 RPS
+	\frac{a\cdot p}{s} = \frac{1.8\cdot 1200}{360} = 6 RPS
 	\end{aligned}
 	\end{equation}
 	\begin{equation}
 	\begin{aligned}
-	6\cdot\pi\cdot 10 = 188.49cm/s
+	\frac{\pi\cdot d\cdot a\cdot p}{s} = \frac{\pi \cdot 10 \cdot 1.8 \cdot 1200}{360} = 188.49 cm/s\\ 
+	%6\cdot\pi\cdot 10 = 188.49cm/s
 	\end{aligned}
-	\end{equation} After a small amount of reverse engineering the motors were tested with their original motor driver which, unfortunately, did not appear to provide enough current to meet the motors torque limit; because of this the TB6600 motor driver was selected instead. What was not discovered until quite late in the project, after several control algorithms had been tested, was that the stepper drivers performed significantly worse than their specifications. Without any encoders closed loop control was not possible causing the actual gripper position to drift wildly from the internally recorded gripper position over a short span of time. After further consideration the stepper motors were also abandoned.
+	\end{equation} Where $a$ is the step angle, $p$ is pulses per second, $d$ is the spool diameter ($10cm$) and $s$ is the desired speed in RPM. After a small amount of reverse engineering the motors were tested with their original motor driver which, unfortunately, did not appear to provide enough current to meet the motors torque limit; because of this the TB6600 motor driver was selected instead. What was not discovered until quite late in the project, after several control algorithms had been tested, was that the stepper drivers performed significantly worse than their specifications. Without any encoders closed loop control was not possible causing the actual gripper position to drift wildly from the internally recorded gripper position over a short span of time. After further consideration the stepper motors were also abandoned.
 	
 	
 	
@@ -619,8 +619,13 @@
 	The first camera used to prototype various algorithms was a standard USB webcam. It quickly became apparent that objects moving at speed would either present unacceptable amounts of motion blur, or low frame-rates and high latency would not give the control system long enough to react. To resolve these issues  a high FPS camera was selected. 
 	
 		\subsubsection{Clamps}
-		To address the problem discussed in \ref{force_problem}, clamps were designed to lock each cord in place. Each clamp consisted of a high-friction surface suspended above a fixed plate via four springs. The cord to be clamped runs between the two surfaces. A dynamixel AX-12 servo is connected the suspended surface with a pulley. When actuated, the servo pulls the suspended surface towards the fixed plate, closing the gap and clamping the cord in place. When released, the four springs push the suspended surface away from the fixed plate, quickly releasing the clamped cord. A clamp was produced for each of the five cords, one for each corner of the frame and one for the throwing motor.
-		
+		To address the problem discussed in \ref{force_problem}, clamps were designed to lock each cord in place. Each clamp consisted of a high-friction surface suspended above a fixed plate via four springs. The cord to be clamped runs between the two surfaces. A dynamixel AX-12 servo is connected the suspended surface with a pulley. When actuated, the servo pulls the suspended surface towards the fixed plate, closing the gap and clamping the cord in place. When released, the four springs push the suspended surface away from the fixed plate, quickly releasing the clamped cord. A clamp was produced for each of the five cords, one for each corner of the frame and one for the throwing motor. An exploded CAD model of the developed clamp can be seen in figure \ref{explodedClamp}.
+		\begin{figure}\label{explodedClamp}
+			\centering
+
+		\includegraphics[scale=0.2]{exploded_gripper.png}
+		\caption{Exploded view of clamp}
+		\end{figure}		
 		\subsubsection{Kinematic solution 1} \label{kinematic_solution_1}
 		To address the issues discussed in \ref{initial_kinematics}, the following kinematic model was produced. Since no rotational motions and no moment resistance are required at the end-effector, our kinematic model can be simplified to assume that all cables meet at a point ~\cite{WilliamsII2003} in the centre of our end-effector.
 		\begin{figure}
@@ -806,13 +811,11 @@
 	\end{equation}
 	
 	\subsubsection{Skipping steps}\label{motor_issues}
-	The prototype was assembled with SST58D3820 stepper motors and TB6600 drivers. The TB6600 is designed to deliver up to 3.5A RMS. The drivers current can be limited down to 0.8A RMS in eight steps. Performance in the SST58D3820 datasheet is rated for when the motors are being supplied with 2.0A per phase. From this we can see that the stepper motor requires 250mA per phase more than the driver can provide. When the robot was switched on the motors could barely hold the weight of the gripper when stationary. An experiment was performed where commands were sent to the robot instructing the gripper to move to the top corner and then return to the centre, with cord lengths measured before and after. It was found that requesting any movement of the gripper resulted in the stepper motors skipping steps, often resulting in the gripper dropping tens of centimetres over short movements. Further investigation showed that the stepper drivers were drawing minimal current, and would overheat and shutdown if their current limit was set to more than half of what they were rated for. Even with a current limit set at 2.0A RMS, each stepper never drew more than 1.0A. This issue could have been partly mitigated if the motors were encoded.
+	The prototype was assembled with SST58D3820 stepper motors and TB6600 drivers. The TB6600 is designed to deliver up to 3.5A RMS. The drivers current can be limited down to 0.8A RMS in eight steps. Performance in the SST58D3820 datasheet is rated for when the motors are being supplied with 2.0A per phase. From this we can see that the stepper motor requires 250mA per phase more than the driver can provide. When the robot was switched on the motors could barely hold the weight of the gripper when stationary. Experiment \ref{stepperReliability} was performed with the results showing that the stepper driver would not be suitable for this robot. This issue could have been partly mitigated if the motors were encoded.
 
 	\subsubsection{Motor velocities}\label{motor_vel_problem}
-	For the tension to remain equal on all cords during motion of the gripper, the motors must turn at different rates. For example: if the gripper starts in the centre of the frame and moves upwards, the top two lengths will shorten and the bottom two cords will get longer. To maintain a uniform velocity of the gripper, the top two motors must slow down and the bottom two must speed up. For gripper trajectories constrained to the center of one axis this isn't much of a problem, but for trajectories traversing multiple axis xxxxxxxxxxx
-	\subsubsection{Motors}
-	\subsubsection{Arduino}
-	\subsection{Redesign}
+	For the tension to remain equal on all cords during motion of the gripper, the motors must turn at different rates. For example: if the gripper starts in the centre of the frame and moves upwards, the top two lengths will shorten and the bottom two cords will get longer. To maintain a uniform velocity of the gripper, the top two motors must slow down and the bottom two must speed up. For gripper trajectories constrained to the centre of one axis this isn't much of a problem, but for trajectories traversing multiple axis the motors pull against each other resulting in steps being skipped and tension lost.
+
 	\subsubsection{Motor velocities}\label{motor_speed_section}
 	To address the issue raised in \ref{motor_vel_problem} a simple speed scaling system was devised. This algorithm was called once per main loop after the required changes in lengths are calculated. The algorithm takes in the requested changes in length of each cord and divides each change in length by the largest. The relative speeds of each motor are then scaled by the global speed scalar.
 	\begin{equation}\label{motor_speed_equation}
@@ -830,13 +833,15 @@
 	%&s_4 = \frac{l_4}{x}\\
 	\end{aligned}
 	\end{equation}
-	Where $g$ is the global speed scalar and $s$ contains the speed of each motor.
-	\subsubsection{Servos}
+	Where $g$ is the global speed scalar and $s$ contains the speed of each motor. 
+	\subsubsection{Servos and multi-threading}
 	Due to the points mentioned in \ref{motor_issues} the decision was made to change the motors to Dynamixel MX-64 servos. The MX-64 can supply $60Kg.cm$ at 62 RPM, giving a top gripper speed of $0.32m/s$ which is considerably slower than our requirement. The MX-64 servos communicate over either an RS-485 or a TTL bus and can be daisy-chained if required. Due to the nature of the communication protocols involved in the dynamixel bus (clarify), the rate at which commands could be sent to each servo were reduced with each successive servo added to the daisy chain. Initially the four servos responsible for translating the end-effector were daisy-chained to a single dynamixel bus resulting in a command rate of 7Hz. This was increased to 15Hz by increasing the baud rate of the servos from 57.6kb/s to 1Mb/s. The reduced control rate led to the decision to use separate busses for each time-critical motor resulting in a command rate per motor of 60Hz. Another bus was used for all five clamps, and a final sixth bus was used to actuate the gripper as the uncertainty of the command latency to this servo was required to be as low as possible in order to successfully pre-empt and act upon the target landing in the gripper. 
+	
+	When a change in servo speed is requested, the dynamixel driver blocks the process thread that requested the change. The driver waits for a response from the motor before it allows the thread to continue. This reduced the rate at which motor instructions left the kinematic controller program to 10Hz. Creating four additional process threads for each of the speed-set service calls brought the loop rate back to to 60Hz.
 	
 	\subsubsection{Processor}
 	As servos were to be used instead of stepper motors, a microcontroller was no longer required for the control of the end-effector. Software previously running on the Teensy (forward/inverse kinematics, boundary checking etc...) was ported to a C++ program on a laptop running ROS on Ubuntu. 
-	\subsection{Final solution}
+
 	
 	
 	\section{Implementation}
@@ -910,8 +915,11 @@
 		\label{fig:HighLevelDiagram}
 	\end{figure}
 	
-	\subsection{Frame}
-	\subsection{Kinematics}
+\subsection{Throw Sequence}
+Once a ball is caught, the internal state machine switches to throwing mode. The first step here is to either aim where to throw the ball, or to centre the gripper to shoot forwards. This is then followed by tensioning the four outer motors, calibrating how far the ball should be thrown, and clamping their respective cables to store the energy.
+
+The firing sequence consists of pulling the gripper, using the back motor, a set distance; clamping to store the added energy; unwinding the back motor so as to be able to be able to throw continuously without the use of manual resets, and unclamping the back motor to release the gripper forwards. A short time after releaseing, the gripper opens up to release the ball and, eventually, the four side motors are similarly unclamped, ready to catch another ball.
+
 	\subsection{Grippers}
 	Due to the complexities of gripper design, two distinct grippers were constructed.
 	\subsubsection{Soft Passive Gripper}
@@ -929,7 +937,7 @@
 	
 	\subsection{Clamps}
 	
-	\subsection{Camera}
+	\subsection{Camera}\label{camera}
 	The finalised camera setup incorporated a single PS3-Eye camera in an eye-in-hand configuration. The PS3-Eye was selected due to several useful characteristics:
 	\begin{itemize}
 		\item 187fps at 320x240 resolution
@@ -975,17 +983,59 @@
 		
 		\item There is no camera calibration, introducing non-linear errors into the balls location
 	\end{itemize}
-	\section{Experiments}
-	\subsection{Method}
-	\subsection{Results}
-	\subsection{Discussion}
-	\section{Overall Discussion}
+	\section{Experiments}\label{experiments}
+	\subsection{Stepper Driver Performance}
+	\subsubsection{Method}
+	To assess the performance of the TB-6600, an experiment was performed where commands were sent to the robot instructing the gripper to move to the top corner and then return to the centre with cord lengths measured before and after. 
+	\subsubsection{Results}
+	It was found that requesting any movement of the gripper resulted in the stepper motors skipping steps, often resulting in the gripper dropping tens of centimetres over short movements. 
+	\subsubsection{Discussion}
+	Further investigation showed that the stepper drivers were drawing minimal current, and would overheat and shutdown if their current limit was set to more than half of what they were rated for. Even with a current limit set at 2.0A RMS, each stepper never drew more than 1.0A. This experiment showed that these drivers would not be suitable to drive the stepper motors in our project as they could not drive the stepper motors anywhere close to the specifications in the	 motors datasheet.
 	
-	~\cite{Sorg2003VisualTA}
+		
+		\subsection{Object tracking program rate}
+		\subsubsection{Method}
+		Timers were added to the object tracking program. The system time was taken when a camera frame entered the program and again when a CofM left the program. The difference in time was saved to a file every time the program looped. The program was run for ten minutes, after which a mean was calculated from the saved durations.
+		\subsubsection{Results}
+		The recorded loop rate of the object tracking program was $17.5ms$, or 57Hz.
+		\subsubsection{Discussion}
+		The camera frame rate during this test was set to 60Hz. As the recorded loop rate is close to 60Hz, it is believed that the object tracking module could complete a loop faster than the camera could generate frames. A useful future experiment would be to also calculate the duration between the object tracking module finishing and a new camera frame arriving.
+		
+	
+	\subsection{Kinematic controller rate}
+	\subsubsection{Method}
+	Timers were added to the kinematic controller program. The system time was taken when a coordinate entered the program and again when motor positions and speeds were published. The difference in time was saved to a file every time the program looped. The program was run for five minutes after which a mean was calculated from the saved durations.
+	\subsubsection{Results}
+	The kinematic controller takes $17ms$ to run, giving a loop rate of 60Hz.
+	\subsubsection{Discussion}
+	This experiment was performed in order to see whether latencies in the kinematic controller were preventing the robot from catching the ball. The program only runs when a CofM from the object tracking program arrives. As the camera frame rate was set to 60Hz during this experiment, it was concluded that the kinematic controller was probably completing before the next CofM arrived. A useful future experiment would be to also calculate the duration between the program finishing and a new CofM arriving. 
+	
+		\subsection{Camera latency}
+		\subsubsection{Method}
+		The camera was connected to a computer and the video feed was viewed on the computer monitor. The camera was pointed at a digital stopwatch on a smartphone so that the stopwatch could be seen on the computer monitor. A second camera was orientated so that both the stopwatch and the computer monitor showing the video of the stopwatch could be seen and a photograph was taken. 
+		\subsubsection{Results}
+		The photograph on the second camera showed a time of 4.187 seconds on the computer monitor and 4.112 seconds on the stopwatch. The difference in these times is $75ms$ which is the latency of the USB camera used to track the ball in this project.
+
+		\subsubsection{Discussion}A thrown ball travelling at $5m/s$ at 45\degree\ will be falling at approximately $3.5m/s$ when it falls past the height at which it was thrown.  A latency of $75ms$ results in the ball falling $26cm$ further than the camera reports. Without predictive algorithms this latency will prevent the system from working correctly.
+		
+
+	\subsection{Catching Performance}
+	\subsubsection{Method}
+	A ball was thrown twenty times from three meters away from the final version of the robot with the thrower aiming at the gripper, and 20 times with the thrower aiming within the frame but not at the gripper. The robot was angled so that the gripper was raised by 25\degree\ towards the ceiling. 
+	\subsubsection{Results}
+	The robot caught the ball seven out of twenty times when the ball was aimed at the gripper. When the ball was not aimed at the gripper, the robot did not catch the ball once.
+	\subsubsection{Discussion}
+	The robot does not perform as originally designed. The main issue is the speed of the servos and the camera latency.
+	
+
+	\section{Overall Discussion}\label{overall}
+	The programs written to control the rob
+		
 	\section{Conclusion}
-	~\cite{forpheus}
-	~\cite{WilliamsII2003}
-	~\cite{festofin}
+	This document has outlined the development process for a CDDR catching and throwing robot. The resulting system used under-specified components due to the originally sourced motors underperforming and budget constraints. A reliable control system with positional and object location feedback was presented. Two successful gripper designs were created for the purpose and were functionally analysed.
+	
+	Further development would involve sourcing motors capable of achieving the desired tasks, and modifying the base so as to more readily experiment with angled catchment areas. Latencies in the camera hardwareDetailed models of the stored energy in the throwback mechanism, along with expected trajectory planning, would also be of use.
+
 	% conference papers do not normally have an appendix
 	
 	
@@ -993,7 +1043,7 @@
 	\section*{Acknowledgment}
 	
 	
-	The authors would like to thank...
+	The authors would like to thank Dr Martin Stoelen for his support, resourcefulness and guidance throughout the duration of this project.
 	
 	
 	
@@ -1024,38 +1074,7 @@
 	\bibliography{ROCO504}{}
 	\bibliographystyle{IEEEtran}
 	
-	\begin{thebibliography}{30}
-		
-		
-		\bibitem{Simpson} Homer J. Simpson. \textsl{Mmmmm...donuts}.
-		Evergreen Terrace Printing Co., Springfield, SomewhereUSA, 1998
-		
-		\bibitem{rosserial} ROSserial Wiki \textsl{Mmmmm...donuts}.
-		Evergreen Terrace Printing Co., Springfield, SomewhereUSA, 1998
-		
-		
-		
-		@online{rosserial,
-			author = {Misc},
-			title = {Rosserial wiki},
-			date = {30/12/17},
-			url = {http://wiki.ros.org/rosserial},
-		}
-		\bibitem{IEEEhowto:kopka}
-		H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
-		0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
-		
-		
-		\bibitem{b1} G. Eason, B. Noble, and I. N. Sneddon, ``On certain integrals of Lipschitz-Hankel type involving products of Bessel functions,'' Phil. Trans. Roy. Soc. London, vol. A247, pp. 529--551, April 1955.
-		\bibitem{b2} J. Clerk Maxwell, A Treatise on Electricity and Magnetism, 3rd ed., vol. 2. Oxford: Clarendon, 1892, pp.68--73.
-		\bibitem{b3} I. S. Jacobs and C. P. Bean, ``Fine particles, thin films and exchange anisotropy,'' in Magnetism, vol. III, G. T. Rado and H. Suhl, Eds. New York: Academic, 1963, pp. 271--350.
-		\bibitem{b4} K. Elissa, ``Title of paper if known,'' unpublished.
-		\bibitem{b5} R. Nicole, ``Title of paper with only first word capitalized,'' J. Name Stand. Abbrev., in press.
-		\bibitem{b6} Y. Yorozu, M. Hirano, K. Oka, and Y. Tagawa, ``Electron spectroscopy studies on magneto-optical media and plastic substrate interface,'' IEEE Transl. J. Magn. Japan, vol. 2, pp. 740--741, August 1987 [Digests 9th Annual Conf. Magnetics Japan, p. 301, 1982].
-		\bibitem{b7} M. Young, The Technical Writer's Handbook. Mill Valley, CA: University Science, 1989.
-		
-		
-	\end{thebibliography}
+
 	
 	
 	% that's all folks
