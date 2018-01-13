@@ -67,7 +67,7 @@ And here are the CAD files created for this project: https://github.com/carebare
 
 
 
-![alt text](https://raw.githubusercontent.com/carebare47/ROCO504x/master/Final-ROCO504-kinematic-controller-vectorised.png)
+![alt text](https://raw.githubusercontent.com/carebare47/ROCO504x/master/ROCO504-finished-flowchart.png)
 
 TODO:
 Discuss / add license information
