@@ -66,5 +66,8 @@ Here's a video of it working: https://youtu.be/0yMIV64DRBU
 And here are the CAD files created for this project: https://github.com/carebare47/ROCO504xCAD
 
 
+
+![alt text](https://raw.githubusercontent.com/carebare47/ROCO504x/master/Final ROCO504-kinematic-controller-vectorised.png)
+
 TODO:
 Discuss / add license information
