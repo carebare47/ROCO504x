@@ -41,7 +41,7 @@ using namespace cv;
 #define MAX_H_BLUE 300
 
 // Camera Index
-int idx = 2;
+int idx = 1;
 
 int mouseflag = 0;
 int mX = -1,minX,maxX;
@@ -194,8 +194,12 @@ int main(int argc, char **argv)
 	{
 		int div = 0;
 		cap >> frame;
+
 		timer1b.header.stamp = ros::Time::now();
 		timer1.publish(timer1b);
+		ros::Time lasttime=ros::Time::now();
+
+
 		vector<vector<cv::Point> > contours;
 		vector<Vec3f> circles;
                         // >>>>> Filtering
@@ -358,12 +362,16 @@ int main(int argc, char **argv)
 						lastpoint.x = centers[index1].x;
 						lastpoint.y = centers[index1].y;
 						cv::circle(frameRes, centers[index1],int(radius[index1]), CV_RGB(255,255,255),2,8,0);
-						cout << int(radius[index1]) << endl;
+						//cout << int(radius[index1]) << endl;
 						Setpoint.x = (640 - centers[index1].x);
 						Setpoint.y = (480 - centers[index1].y);
 						Setpoint.z = 0;
 						Setpoint_Pub.publish(Setpoint);
-
+						ros::Time currtime=ros::Time::now();
+						ros::Duration diff=currtime-lasttime;
+						cout<<diff<<endl;
+						double d_time = diff.toSec();
+						timer2b.point.x = d_time;
 						timer2b.header.stamp = ros::Time::now();
 						timer2.publish(timer2b);
 

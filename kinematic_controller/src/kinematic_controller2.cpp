@@ -70,7 +70,7 @@ int main(int argc, char **argv)
 			XY.x = newLengths.x;
 			XY.y = newLengths.y;
 			lengths.x = newLengths.nl1;
-			lengths.y = newLengths.nl2;
+			lengths.y = newLengths.nl2;	
 			lengths.z = newLengths.nl3;
 			lengths.w = newLengths.nl4;
 			positions.x = m1Position;

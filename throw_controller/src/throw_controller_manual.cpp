@@ -4,7 +4,7 @@
 #include "std_msgs/Float64.h"
 #include <stdlib.h>
 bool throwControl = false;
-const float clampClose = 5.0;
+const float clampClose = 5.1;
 //clamp1 = 5
 //clamp2 = 5.2
 //clamp3 = 5.2
