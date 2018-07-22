@@ -61,7 +61,7 @@ rosrun hough_ball_tracker hough_ball_tracker
 If you wish to visualise where the robot thinks the gripper is, then run `rosrun catch_bot_plot 3_catch_bot_plot.py`
 
 
-Here's a video of it working: https://youtu.be/0yMIV64DRBU
+Here's a video of it working: https://youtu.be/lfRBLpXKWZI
 
 And here are the CAD files created for this project: https://github.com/carebare47/ROCO504xCAD
 
