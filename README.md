@@ -2,6 +2,8 @@
 
 Video of the catch-bot working: https://youtu.be/lfRBLpXKWZI
 
+
+
 This is the git repository for the ROCO504 catching and throwing robot project.
 
 Written for use with ROS Kinetic.
@@ -68,6 +70,3 @@ Here are the CAD files created for this project: https://github.com/carebare47/R
 
 
 ![alt text](https://raw.githubusercontent.com/carebare47/ROCO504x/master/ROCO504-finished-flowchart.png)
-
-TODO:
-Discuss / add license information
