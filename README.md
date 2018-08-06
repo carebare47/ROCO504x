@@ -1,4 +1,4 @@
-# ROCO504x
+# ROCO504x - CatchBot
 
 Video of the catch-bot working: https://youtu.be/lfRBLpXKWZI
 
