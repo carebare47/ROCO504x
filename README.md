@@ -74,5 +74,5 @@ If you wish to visualise where the robot thinks the gripper is, then run `rosrun
 Here are the CAD files created for this project: https://github.com/carebare47/ROCO504xCAD
 
 
-## Flowchart 
+## Vectorized Flowchart (Only describes tracking algorithm)
 ![alt text](https://raw.githubusercontent.com/carebare47/ROCO504x/master/ROCO504-finished-flowchart.png)
